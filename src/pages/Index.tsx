@@ -6,7 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import ViewStats from '@/components/ViewStats';
 import OptimizedVideoBackground from '@/components/OptimizedVideoBackground';
 import CursorStyle from '@/components/CursorStyle';
+import ClickToEnter from '@/components/ClickToEnter';
 import { Settings, LogOut } from 'lucide-react';
+import { useState } from 'react';
 
 // Default fallback values - no longer needed
 // Removed DEFAULT_USERNAME and DEFAULT_BIO
@@ -15,6 +17,7 @@ const Index = () => {
   const { user, signOut, loading: authLoading } = useAuth();
   const { profile, socialLinks, loading: profileLoading } = useProfile();
   const navigate = useNavigate();
+  const [hasEntered, setHasEntered] = useState(false);
 
   const isLoading = authLoading || profileLoading;
 
@@ -25,6 +28,11 @@ const Index = () => {
   const handleSignOut = async () => {
     await signOut();
   };
+
+  // Show click to enter screen first
+  if (!hasEntered) {
+    return <ClickToEnter onEnter={() => setHasEntered(true)} />;
+  }
 
   // If not authenticated, show login landing page
   if (!isLoading && !user) {

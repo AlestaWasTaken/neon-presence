@@ -31,6 +31,7 @@ import {
   Volume2,
   Trash2
 } from 'lucide-react';
+import ColorCustomizer from '@/components/ColorCustomizer';
 import { Link } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
 
@@ -248,7 +249,7 @@ export default function Settings() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-smoke-950 flex">
       <OptimizedVideoBackground 
-        key={profile?.background_video_url || 'no-video'} 
+        key={`${profile?.background_video_url}-${Date.now()}`} 
         profileUserId={user.id} 
       />
       <CursorStyle profileUserId={user.id} />
@@ -339,11 +340,13 @@ export default function Settings() {
                     {profile?.background_video_url ? (
                       <div className="aspect-video bg-smoke-800/50 rounded-lg overflow-hidden relative group/video">
                         <video 
+                          key={profile.background_video_url}
                           src={profile.background_video_url}
                           className="w-full h-full object-cover animate-scale-in"
                           muted
                           loop
                           autoPlay
+                          playsInline
                         />
                         <button
                           onClick={() => {
@@ -593,49 +596,14 @@ export default function Settings() {
               </Card>
 
               {/* Color Customization */}
-              <Card className="glass border-smoke-700/30">
-                <CardHeader>
-                  <CardTitle className="text-smoke-100">Color Customization</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="space-y-2">
-                      <Label className="text-smoke-200">Primary Color</Label>
-                      <Input 
-                        type="color"
-                        value={tempProfile.primary_color !== undefined ? tempProfile.primary_color : (profile?.primary_color || '#00ff9f')}
-                        onChange={(e) => handleProfileChange('primary_color', e.target.value)}
-                        className="h-10 w-full cursor-pointer transition-all hover:scale-105 focus:ring-2 focus:ring-primary/20"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-smoke-200">Accent Color</Label>
-                      <Input 
-                        type="color"
-                        value={tempProfile.accent_color !== undefined ? tempProfile.accent_color : (profile?.accent_color || '#ff0080')}
-                        onChange={(e) => handleProfileChange('accent_color', e.target.value)}
-                        className="h-10 w-full cursor-pointer transition-all hover:scale-105 focus:ring-2 focus:ring-accent/20"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-smoke-200">Text Color</Label>
-                      <Input 
-                        type="color"
-                        defaultValue="#ffffff"
-                        className="h-10 w-full cursor-pointer transition-all hover:scale-105"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-smoke-200">Background Color</Label>
-                      <Input 
-                        type="color"
-                        defaultValue="#000000"
-                        className="h-10 w-full cursor-pointer transition-all hover:scale-105"
-                      />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <ColorCustomizer 
+                onColorChange={handleProfileChange}
+                currentColors={{
+                  primary_color: tempProfile.primary_color || profile?.primary_color,
+                  accent_color: tempProfile.accent_color || profile?.accent_color,
+                  theme: tempProfile.theme || profile?.theme
+                }}
+              />
 
               {/* Other Customization */}
               <Card className="glass border-smoke-700/30">
