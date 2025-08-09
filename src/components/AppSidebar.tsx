@@ -49,10 +49,10 @@ export function AppSidebar() {
 
   return (
     <Sidebar
-      className={`bg-background border-r border-smoke-800/50 relative z-20 ${collapsed ? "w-14" : "w-64"}`}
+      className={`bg-background/95 backdrop-blur-sm border-r border-smoke-800/50 relative z-30 ${collapsed ? "w-14" : "w-64"}`}
       collapsible="icon"
     >
-      <SidebarContent className="bg-background">
+      <SidebarContent className="bg-background/95 backdrop-blur-sm h-full">
         {/* Header */}
         <div className={`p-4 border-b border-smoke-800/50 ${collapsed ? "px-2" : ""}`}>
           {!collapsed ? (
