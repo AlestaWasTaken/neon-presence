@@ -35,13 +35,13 @@ export default function NewSettings() {
       <CursorStyle profileUserId={user.id} />
       
       <SidebarProvider>
-        <div className="flex min-h-screen w-full">
+        <div className="flex min-h-screen w-full relative z-10">
           <AppSidebar />
           
           {/* Main Content */}
-          <div className="flex-1 flex flex-col">
+          <div className="flex-1 flex flex-col relative z-10">
             {/* Header with Sidebar Toggle */}
-            <header className="h-16 flex items-center justify-between border-b border-smoke-700/50 glass px-6">
+            <header className="h-16 flex items-center justify-between border-b border-smoke-700/50 glass px-6 relative z-20">
               <div className="flex items-center gap-4">
                 <SidebarTrigger className="text-smoke-300 hover:text-smoke-100" />
                 <h1 className="text-xl font-black text-smoke-100">Assets Uploader</h1>
@@ -66,7 +66,7 @@ export default function NewSettings() {
             </header>
 
             {/* Content Area */}
-            <main className="flex-1 p-6">
+            <main className="flex-1 p-6 relative z-10">
               <div className="max-w-7xl mx-auto">
                 {activeTab === 'account' && (
                   <>
@@ -134,9 +134,82 @@ export default function NewSettings() {
                 )}
 
                 {activeTab === 'customize' && (
-                  <div className="bg-smoke-900/50 border border-smoke-700/50 rounded-lg p-6">
-                    <h2 className="text-2xl font-bold text-smoke-100 mb-6">Customize</h2>
-                    <p className="text-smoke-400">Customization options will be available here.</p>
+                  <div className="space-y-6">
+                    {/* Theme Settings */}
+                    <div className="bg-smoke-900/50 border border-smoke-700/50 rounded-lg p-6">
+                      <h2 className="text-xl font-bold text-smoke-100 mb-4">Theme Settings</h2>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <label className="block text-sm font-medium text-smoke-200 mb-2">Primary Color</label>
+                          <div className="flex gap-2">
+                            <input type="color" className="w-12 h-10 rounded border-2 border-smoke-600" defaultValue="#8b5cf6" />
+                            <input type="text" className="flex-1 bg-smoke-800 border border-smoke-600 rounded px-3 py-2 text-smoke-100" placeholder="#8b5cf6" />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-smoke-200 mb-2">Background Style</label>
+                          <select className="w-full bg-smoke-800 border border-smoke-600 rounded px-3 py-2 text-smoke-100">
+                            <option>Gradient</option>
+                            <option>Solid Color</option>
+                            <option>Video</option>
+                            <option>Image</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Layout Customization */}
+                    <div className="bg-smoke-900/50 border border-smoke-700/50 rounded-lg p-6">
+                      <h2 className="text-xl font-bold text-smoke-100 mb-4">Layout Options</h2>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="text-center">
+                          <div className="bg-smoke-800 border border-smoke-600 rounded-lg p-4 mb-2 cursor-pointer hover:border-primary">
+                            <div className="w-full h-20 bg-smoke-700 rounded mb-2"></div>
+                            <div className="text-xs text-smoke-300">Centered</div>
+                          </div>
+                        </div>
+                        <div className="text-center">
+                          <div className="bg-smoke-800 border border-smoke-600 rounded-lg p-4 mb-2 cursor-pointer hover:border-primary">
+                            <div className="w-full h-20 bg-smoke-700 rounded mb-2 flex">
+                              <div className="w-1/3 bg-smoke-600 mr-2"></div>
+                              <div className="flex-1 bg-smoke-600"></div>
+                            </div>
+                            <div className="text-xs text-smoke-300">Split</div>
+                          </div>
+                        </div>
+                        <div className="text-center">
+                          <div className="bg-smoke-800 border border-smoke-600 rounded-lg p-4 mb-2 cursor-pointer hover:border-primary">
+                            <div className="w-full h-20 bg-smoke-700 rounded mb-2 grid grid-cols-2 gap-1">
+                              <div className="bg-smoke-600"></div>
+                              <div className="bg-smoke-600"></div>
+                              <div className="bg-smoke-600"></div>
+                              <div className="bg-smoke-600"></div>
+                            </div>
+                            <div className="text-xs text-smoke-300">Grid</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Font & Typography */}
+                    <div className="bg-smoke-900/50 border border-smoke-700/50 rounded-lg p-6">
+                      <h2 className="text-xl font-bold text-smoke-100 mb-4">Typography</h2>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <label className="block text-sm font-medium text-smoke-200 mb-2">Font Family</label>
+                          <select className="w-full bg-smoke-800 border border-smoke-600 rounded px-3 py-2 text-smoke-100">
+                            <option>Inter</option>
+                            <option>Roboto</option>
+                            <option>Poppins</option>
+                            <option>Montserrat</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-smoke-200 mb-2">Text Size</label>
+                          <input type="range" min="12" max="24" className="w-full" />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 )}
 
