@@ -107,6 +107,16 @@ export default {
 						transform: 'translateY(0)'
 					}
 				},
+				"fade-out": {
+					"0%": {
+						opacity: "1",
+						transform: "translateY(0)"
+					},
+					"100%": {
+						opacity: "0",
+						transform: "translateY(10px)"
+					}
+				},
 				slideUp: {
 					'0%': {
 						opacity: '0',
@@ -117,6 +127,28 @@ export default {
 						transform: 'translateY(0)'
 					}
 				},
+				"slide-in-right": {
+					"0%": { transform: "translateX(100%)" },
+					"100%": { transform: "translateX(0)" }
+				},
+				"slide-out-right": {
+					"0%": { transform: "translateX(0)" },
+					"100%": { transform: "translateX(100%)" }
+				},
+				"scale-in": {
+					"0%": {
+						transform: "scale(0.95)",
+						opacity: "0"
+					},
+					"100%": {
+						transform: "scale(1)",
+						opacity: "1"
+					}
+				},
+				"scale-out": {
+					from: { transform: "scale(1)", opacity: "1" },
+					to: { transform: "scale(0.95)", opacity: "0" }
+				},
 				pulseNeon: {
 					'0%, 100%': {
 						textShadow: '0 0 10px hsl(var(--neon-pink) / 0.5)'
@@ -124,18 +156,47 @@ export default {
 					'50%': {
 						textShadow: '0 0 20px hsl(var(--neon-pink) / 0.8), 0 0 30px hsl(var(--neon-pink) / 0.3)'
 					}
+				},
+				"glow-pulse": {
+					"0%, 100%": { 
+						boxShadow: "0 0 20px hsl(var(--primary) / 0.2)"
+					},
+					"50%": { 
+						boxShadow: "0 0 40px hsl(var(--primary) / 0.4), 0 0 60px hsl(var(--primary) / 0.2)"
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'fade-in': 'fadeIn 0.8s ease-out forwards',
+				'fade-out': 'fade-out 0.3s ease-out',
 				'fade-in-delay': 'fadeIn 0.8s ease-out 0.3s forwards',
 				'fade-in-delay-2': 'fadeIn 0.8s ease-out 0.6s forwards',
 				'slide-up': 'slideUp 0.8s ease-out forwards',
-				'pulse-neon': 'pulseNeon 2s ease-in-out infinite'
+				'slide-in-right': 'slide-in-right 0.3s ease-out',
+				'slide-out-right': 'slide-out-right 0.3s ease-out',
+				'scale-in': 'scale-in 0.2s ease-out',
+				'scale-out': 'scale-out 0.2s ease-out',
+				'pulse-neon': 'pulseNeon 2s ease-in-out infinite',
+				'glow-pulse': 'glow-pulse 2s ease-in-out infinite'
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [
+		require("tailwindcss-animate"),
+		function({ addUtilities }: any) {
+			addUtilities({
+				'.hover-scale': {
+					'@apply': 'transition-transform duration-200 hover:scale-105'
+				},
+				'.hover-glow': {
+					'@apply': 'transition-shadow duration-300 hover:shadow-lg hover:shadow-primary/20'
+				},
+				'.glass': {
+					'@apply': 'backdrop-blur-sm bg-white/5 border border-white/10'
+				}
+			})
+		}
+	]
 } satisfies Config;

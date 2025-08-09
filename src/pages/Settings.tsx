@@ -45,6 +45,8 @@ export default function Settings() {
   const [avatarUrl, setAvatarUrl] = useState('');
   const [audioUrl, setAudioUrl] = useState('');
   const [isPlaying, setIsPlaying] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false);
+  const [tempProfile, setTempProfile] = useState<any>({});
   
   const videoFileRef = useRef<HTMLInputElement>(null);
   const avatarFileRef = useRef<HTMLInputElement>(null);
@@ -192,6 +194,38 @@ export default function Settings() {
     }
   };
 
+  // Handle profile changes tracking
+  const handleProfileChange = (field: string, value: any) => {
+    setTempProfile({ ...tempProfile, [field]: value });
+    setHasChanges(true);
+  };
+
+  const saveChanges = async () => {
+    if (!hasChanges || Object.keys(tempProfile).length === 0) return;
+    
+    try {
+      await updateProfile(tempProfile);
+      setTempProfile({});
+      setHasChanges(false);
+      
+      toast({
+        title: "Changes saved successfully",
+        description: "Your profile has been updated.",
+      });
+    } catch (error: any) {
+      toast({
+        variant: "destructive", 
+        title: "Failed to save changes",
+        description: error.message
+      });
+    }
+  };
+
+  const resetChanges = () => {
+    setTempProfile({});
+    setHasChanges(false);
+  };
+
   const toggleAudio = () => {
     if (!audioRef.current) return;
     
@@ -213,32 +247,36 @@ export default function Settings() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-smoke-950 flex">
-      <OptimizedVideoBackground profileUserId={user.id} />
+      <OptimizedVideoBackground 
+        key={profile?.background_video_url || 'no-video'} 
+        profileUserId={user.id} 
+      />
       <CursorStyle profileUserId={user.id} />
       
       {/* Sidebar */}
-      <div className="w-64 glass border-r border-smoke-700/30 relative z-20">
+      <div className="w-64 glass border-r border-smoke-700/30 relative z-20 animate-slide-in-right">
         {/* Header */}
         <div className="p-6 border-b border-smoke-700/30">
           <Link to="/" className="flex items-center gap-3">
-            <Button variant="ghost" size="sm" className="text-smoke-300 hover:text-smoke-100">
+            <Button variant="ghost" size="sm" className="text-smoke-300 hover:text-smoke-100 hover-scale">
               <ArrowLeft className="w-4 h-4" />
             </Button>
-            <h1 className="text-lg font-bold text-smoke-100">Dashboard</h1>
+            <h1 className="text-lg font-bold text-smoke-100 animate-fade-in">Dashboard</h1>
           </Link>
         </div>
 
         {/* Navigation */}
         <nav className="p-4 space-y-2">
-          {sidebarItems.map((item) => (
+          {sidebarItems.map((item, index) => (
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all hover-scale animate-fade-in ${
                 activeTab === item.id 
-                  ? 'bg-smoke-800/50 text-smoke-100 border border-smoke-600/30' 
+                  ? 'bg-smoke-800/50 text-smoke-100 border border-smoke-600/30 shadow-lg shadow-primary/20' 
                   : 'text-smoke-400 hover:text-smoke-200 hover:bg-smoke-800/30'
               }`}
+              style={{ animationDelay: `${index * 0.1}s` }}
             >
               <item.icon className="w-4 h-4" />
               <span className="text-sm font-medium">{item.label}</span>
@@ -249,16 +287,37 @@ export default function Settings() {
 
       {/* Main Content */}
       <div className="flex-1 relative z-10 overflow-y-auto">
-        {/* Header */}
+        {/* Header with Save Changes */}
         <div className="border-b border-smoke-700/30 glass">
           <div className="px-8 py-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-smoke-100">Assets Uploader</h2>
-              <Link to={`/${profile?.username || user.id}`}>
-                <Button variant="ghost" size="sm" className="text-smoke-300 hover:text-smoke-100">
-                  View Profile
-                </Button>
-              </Link>
+              <h2 className="text-2xl font-bold text-smoke-100 animate-fade-in">Assets Uploader</h2>
+              <div className="flex items-center gap-4">
+                {hasChanges && (
+                  <div className="flex items-center gap-2 animate-scale-in">
+                    <Button 
+                      onClick={resetChanges}
+                      variant="ghost" 
+                      size="sm" 
+                      className="text-smoke-400 hover:text-smoke-200"
+                    >
+                      Reset
+                    </Button>
+                    <Button 
+                      onClick={saveChanges}
+                      size="sm" 
+                      className="bg-gradient-to-r from-primary/20 to-accent/20 text-primary border border-primary/30 hover:bg-primary/10 shadow-lg shadow-primary/20 animate-pulse"
+                    >
+                      Save Changes
+                    </Button>
+                  </div>
+                )}
+                <Link to={`/${profile?.username || user.id}`}>
+                  <Button variant="ghost" size="sm" className="text-smoke-300 hover:text-smoke-100 hover-scale">
+                    View Profile
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -268,28 +327,32 @@ export default function Settings() {
           {activeTab === 'customize' && (
             <div className="space-y-8">
               {/* Assets Uploader Grid */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 animate-fade-in">
                 {/* Background Video */}
-                <Card className="glass border-smoke-700/30 hover-lift">
-                  <CardHeader className="pb-3">
+                <Card className="glass border-smoke-700/30 hover-scale hover-glow group relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+                  <CardHeader className="pb-3 relative z-10">
                     <CardTitle className="text-sm text-smoke-200 flex items-center gap-2">
-                      <Video className="w-4 h-4" />
+                      <Video className="w-4 h-4 text-primary animate-glow-pulse" />
                       Background
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-4 relative z-10">
                     {profile?.background_video_url ? (
-                      <div className="aspect-video bg-smoke-800/50 rounded-lg overflow-hidden relative group">
+                      <div className="aspect-video bg-smoke-800/50 rounded-lg overflow-hidden relative group/video">
                         <video 
                           src={profile.background_video_url}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover animate-scale-in"
                           muted
                           loop
                           autoPlay
                         />
                         <button
-                          onClick={() => updateProfile({ background_video_url: null })}
-                          className="absolute top-2 right-2 p-1 bg-red-500/80 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={() => {
+                            updateProfile({ background_video_url: null });
+                            setHasChanges(false);
+                          }}
+                          className="absolute top-2 right-2 p-1 bg-red-500/80 text-white rounded-full opacity-0 group-hover/video:opacity-100 transition-all hover-scale"
                         >
                           <X className="w-3 h-3" />
                         </button>
@@ -297,10 +360,10 @@ export default function Settings() {
                     ) : (
                       <div 
                         onClick={() => videoFileRef.current?.click()}
-                        className="aspect-video bg-smoke-800/30 border border-dashed border-smoke-600/50 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-smoke-500/50 transition-colors"
+                        className="aspect-video bg-smoke-800/30 border border-dashed border-smoke-600/50 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-primary/50 transition-all hover:bg-primary/5 group/upload"
                       >
-                        <Upload className="w-6 h-6 text-smoke-400 mb-2" />
-                        <span className="text-xs text-smoke-400">Click to upload</span>
+                        <Upload className="w-6 h-6 text-smoke-400 mb-2 group-hover/upload:text-primary transition-colors animate-pulse" />
+                        <span className="text-xs text-smoke-400 group-hover/upload:text-smoke-200 transition-colors">Click to upload</span>
                       </div>
                     )}
                     <input
@@ -317,31 +380,41 @@ export default function Settings() {
                       onClick={() => videoFileRef.current?.click()}
                       disabled={uploading}
                       size="sm"
-                      className="w-full"
+                      className="w-full hover-glow relative overflow-hidden group/btn"
                       variant="outline"
                     >
-                      {uploading ? 'Uploading...' : 'Upload Video'}
+                      <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 opacity-0 group-hover/btn:opacity-100 transition-all"></div>
+                      <span className="relative z-10">
+                        {uploading ? 'Uploading...' : 'Upload Video'}
+                      </span>
                     </Button>
                   </CardContent>
                 </Card>
 
                 {/* Audio */}
-                <Card className="glass border-smoke-700/30 hover-lift">
-                  <CardHeader className="pb-3">
+                <Card className="glass border-smoke-700/30 hover-scale hover-glow group relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-primary/5 opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+                  <CardHeader className="pb-3 relative z-10">
                     <CardTitle className="text-sm text-smoke-200 flex items-center gap-2">
-                      <Music className="w-4 h-4" />
+                      <Music className="w-4 h-4 text-accent animate-glow-pulse" />
                       Audio
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-4 relative z-10">
                     {profile?.audio_url ? (
                       <div className="space-y-3">
-                        <div className="p-4 bg-smoke-800/30 rounded-lg">
+                        <div className="p-4 bg-smoke-800/30 rounded-lg group/audio">
                           <div className="flex items-center justify-between">
-                            <span className="text-xs text-smoke-300">Background Music</span>
+                            <span className="text-xs text-smoke-300 flex items-center gap-2">
+                              <Volume2 className="w-3 h-3 text-accent" />
+                              Background Music
+                            </span>
                             <button
-                              onClick={() => updateProfile({ audio_url: null })}
-                              className="text-red-400 hover:text-red-300"
+                              onClick={() => {
+                                updateProfile({ audio_url: null });
+                                setHasChanges(false);
+                              }}
+                              className="text-red-400 hover:text-red-300 hover-scale"
                             >
                               <Trash2 className="w-3 h-3" />
                             </button>
@@ -351,19 +424,22 @@ export default function Settings() {
                           onClick={toggleAudio}
                           size="sm"
                           variant="outline"
-                          className="w-full"
+                          className="w-full hover-glow relative overflow-hidden group/play"
                         >
-                          {isPlaying ? <Pause className="w-3 h-3 mr-2" /> : <Play className="w-3 h-3 mr-2" />}
-                          {isPlaying ? 'Pause' : 'Play'}
+                          <div className="absolute inset-0 bg-gradient-to-r from-accent/10 to-primary/10 opacity-0 group-hover/play:opacity-100 transition-all"></div>
+                          <span className="relative z-10 flex items-center gap-2">
+                            {isPlaying ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
+                            {isPlaying ? 'Pause' : 'Play'}
+                          </span>
                         </Button>
                       </div>
                     ) : (
                       <div 
                         onClick={() => audioFileRef.current?.click()}
-                        className="aspect-video bg-smoke-800/30 border border-dashed border-smoke-600/50 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-smoke-500/50 transition-colors"
+                        className="aspect-video bg-smoke-800/30 border border-dashed border-smoke-600/50 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-accent/50 transition-all hover:bg-accent/5 group/upload"
                       >
-                        <Music className="w-6 h-6 text-smoke-400 mb-2" />
-                        <span className="text-xs text-smoke-400">Click to upload</span>
+                        <Music className="w-6 h-6 text-smoke-400 mb-2 group-hover/upload:text-accent transition-colors animate-pulse" />
+                        <span className="text-xs text-smoke-400 group-hover/upload:text-smoke-200 transition-colors">Click to upload</span>
                       </div>
                     )}
                     <input
@@ -381,34 +457,41 @@ export default function Settings() {
                         onClick={() => audioFileRef.current?.click()}
                         disabled={uploading}
                         size="sm"
-                        className="w-full"
+                        className="w-full hover-glow relative overflow-hidden group/btn"
                         variant="outline"
                       >
-                        {uploading ? 'Uploading...' : 'Upload Audio'}
+                        <div className="absolute inset-0 bg-gradient-to-r from-accent/10 to-primary/10 opacity-0 group-hover/btn:opacity-100 transition-all"></div>
+                        <span className="relative z-10">
+                          {uploading ? 'Uploading...' : 'Upload Audio'}
+                        </span>
                       </Button>
                     )}
                   </CardContent>
                 </Card>
 
                 {/* Profile Avatar */}
-                <Card className="glass border-smoke-700/30 hover-lift">
-                  <CardHeader className="pb-3">
+                <Card className="glass border-smoke-700/30 hover-scale hover-glow group relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-smoke-600/5 to-smoke-400/5 opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+                  <CardHeader className="pb-3 relative z-10">
                     <CardTitle className="text-sm text-smoke-200 flex items-center gap-2">
-                      <User className="w-4 h-4" />
+                      <User className="w-4 h-4 text-smoke-300 animate-glow-pulse" />
                       Profile Avatar
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-4 relative z-10">
                     {profile?.avatar_url ? (
-                      <div className="aspect-square bg-smoke-800/50 rounded-lg overflow-hidden relative group">
+                      <div className="aspect-square bg-smoke-800/50 rounded-lg overflow-hidden relative group/avatar">
                         <img 
                           src={profile.avatar_url}
                           alt="Avatar"
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover animate-scale-in hover-scale"
                         />
                         <button
-                          onClick={() => updateProfile({ avatar_url: null })}
-                          className="absolute top-2 right-2 p-1 bg-red-500/80 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={() => {
+                            updateProfile({ avatar_url: null });
+                            setHasChanges(false);
+                          }}
+                          className="absolute top-2 right-2 p-1 bg-red-500/80 text-white rounded-full opacity-0 group-hover/avatar:opacity-100 transition-all hover-scale"
                         >
                           <X className="w-3 h-3" />
                         </button>
@@ -416,10 +499,10 @@ export default function Settings() {
                     ) : (
                       <div 
                         onClick={() => avatarFileRef.current?.click()}
-                        className="aspect-square bg-smoke-800/30 border border-dashed border-smoke-600/50 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-smoke-500/50 transition-colors"
+                        className="aspect-square bg-smoke-800/30 border border-dashed border-smoke-600/50 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-smoke-400/50 transition-all hover:bg-smoke-400/5 group/upload"
                       >
-                        <User className="w-6 h-6 text-smoke-400 mb-2" />
-                        <span className="text-xs text-smoke-400">Click to upload</span>
+                        <User className="w-6 h-6 text-smoke-400 mb-2 group-hover/upload:text-smoke-200 transition-colors animate-pulse" />
+                        <span className="text-xs text-smoke-400 group-hover/upload:text-smoke-200 transition-colors">Click to upload</span>
                       </div>
                     )}
                     <input
@@ -436,26 +519,30 @@ export default function Settings() {
                       onClick={() => avatarFileRef.current?.click()}
                       disabled={uploading}
                       size="sm"
-                      className="w-full"
+                      className="w-full hover-glow relative overflow-hidden group/btn"
                       variant="outline"
                     >
-                      {uploading ? 'Uploading...' : 'Upload Avatar'}
+                      <div className="absolute inset-0 bg-gradient-to-r from-smoke-400/10 to-smoke-300/10 opacity-0 group-hover/btn:opacity-100 transition-all"></div>
+                      <span className="relative z-10">
+                        {uploading ? 'Uploading...' : 'Upload Avatar'}
+                      </span>
                     </Button>
                   </CardContent>
                 </Card>
 
                 {/* Custom Cursor */}
-                <Card className="glass border-smoke-700/30 hover-lift">
-                  <CardHeader className="pb-3">
+                <Card className="glass border-smoke-700/30 hover-scale hover-glow group relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-smoke-500/5 to-smoke-600/5 opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+                  <CardHeader className="pb-3 relative z-10">
                     <CardTitle className="text-sm text-smoke-200 flex items-center gap-2">
-                      <Mouse className="w-4 h-4" />
+                      <Mouse className="w-4 h-4 text-smoke-400 animate-glow-pulse" />
                       Custom Cursor
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <div className="aspect-square bg-smoke-800/30 border border-dashed border-smoke-600/50 rounded-lg flex flex-col items-center justify-center">
-                      <Mouse className="w-6 h-6 text-smoke-400 mb-2" />
-                      <span className="text-xs text-smoke-400">Coming Soon</span>
+                  <CardContent className="relative z-10">
+                    <div className="aspect-square bg-smoke-800/30 border border-dashed border-smoke-600/50 rounded-lg flex flex-col items-center justify-center group/cursor">
+                      <Mouse className="w-6 h-6 text-smoke-400 mb-2 group-hover/cursor:text-smoke-300 transition-colors" />
+                      <span className="text-xs text-smoke-400 group-hover/cursor:text-smoke-200 transition-colors">Coming Soon</span>
                     </div>
                   </CardContent>
                 </Card>
@@ -474,11 +561,11 @@ export default function Settings() {
                     <div className="space-y-2">
                       <Label className="text-smoke-200">Description</Label>
                       <Textarea 
-                        placeholder={profile?.bio || "Enter your bio..."}
-                        className="bg-smoke-800/30 border-smoke-600/30 text-smoke-200"
+                        placeholder="Enter your bio..."
+                        className="bg-smoke-800/30 border-smoke-600/30 text-smoke-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all"
                         rows={3}
-                        value={profile?.bio || ''}
-                        onChange={(e) => updateProfile({ bio: e.target.value })}
+                        value={tempProfile.bio !== undefined ? tempProfile.bio : (profile?.bio || '')}
+                        onChange={(e) => handleProfileChange('bio', e.target.value)}
                       />
                     </div>
 
@@ -487,9 +574,9 @@ export default function Settings() {
                       <Label className="text-smoke-200">Username</Label>
                       <Input 
                         placeholder="Enter username..."
-                        className="bg-smoke-800/30 border-smoke-600/30 text-smoke-200"
-                        value={profile?.username || ''}
-                        onChange={(e) => updateProfile({ username: e.target.value })}
+                        className="bg-smoke-800/30 border-smoke-600/30 text-smoke-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all"
+                        value={tempProfile.username !== undefined ? tempProfile.username : (profile?.username || '')}
+                        onChange={(e) => handleProfileChange('username', e.target.value)}
                       />
                     </div>
 
@@ -518,18 +605,18 @@ export default function Settings() {
                       <Label className="text-smoke-200">Primary Color</Label>
                       <Input 
                         type="color"
-                        value={profile?.primary_color || '#00ff9f'}
-                        onChange={(e) => updateProfile({ primary_color: e.target.value })}
-                        className="h-10 w-full"
+                        value={tempProfile.primary_color !== undefined ? tempProfile.primary_color : (profile?.primary_color || '#00ff9f')}
+                        onChange={(e) => handleProfileChange('primary_color', e.target.value)}
+                        className="h-10 w-full cursor-pointer transition-all hover:scale-105 focus:ring-2 focus:ring-primary/20"
                       />
                     </div>
                     <div className="space-y-2">
                       <Label className="text-smoke-200">Accent Color</Label>
                       <Input 
                         type="color"
-                        value={profile?.accent_color || '#ff0080'}
-                        onChange={(e) => updateProfile({ accent_color: e.target.value })}
-                        className="h-10 w-full"
+                        value={tempProfile.accent_color !== undefined ? tempProfile.accent_color : (profile?.accent_color || '#ff0080')}
+                        onChange={(e) => handleProfileChange('accent_color', e.target.value)}
+                        className="h-10 w-full cursor-pointer transition-all hover:scale-105 focus:ring-2 focus:ring-accent/20"
                       />
                     </div>
                     <div className="space-y-2">
@@ -537,7 +624,7 @@ export default function Settings() {
                       <Input 
                         type="color"
                         defaultValue="#ffffff"
-                        className="h-10 w-full"
+                        className="h-10 w-full cursor-pointer transition-all hover:scale-105"
                       />
                     </div>
                     <div className="space-y-2">
@@ -545,7 +632,7 @@ export default function Settings() {
                       <Input 
                         type="color"
                         defaultValue="#000000"
-                        className="h-10 w-full"
+                        className="h-10 w-full cursor-pointer transition-all hover:scale-105"
                       />
                     </div>
                   </div>
