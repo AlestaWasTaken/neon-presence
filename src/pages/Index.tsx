@@ -133,7 +133,7 @@ const Index = () => {
       {/* Cursor Style */}
       <CursorStyle profileUserId={user?.id} />
       
-      <div className="relative z-10 container mx-auto px-6 py-16 sm:py-24">
+      <div className="relative z-20 container mx-auto px-6 py-16 sm:py-24">
         <div className="max-w-xl mx-auto space-y-12">
           
           {/* Header Section */}
