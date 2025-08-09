@@ -6,7 +6,6 @@ import { useAuth } from '@/hooks/useAuth';
 import { useProfileViews } from '@/hooks/useProfileViews';
 import { Button } from '@/components/ui/button';
 import ProfileSettings from '@/components/ProfileSettings';
-import ViewStats from '@/components/ViewStats';
 import ViewAnalytics from '@/components/ViewAnalytics';
 import VideoBackground from '@/components/VideoBackground';
 import CursorStyle from '@/components/CursorStyle';
@@ -198,18 +197,16 @@ const UserProfile = () => {
                     key={link.id}
                     variant="outline"
                     size="lg"
-                    asChild
                     className="group transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/25"
+                    onClick={() => {
+                      // Ensure URL has protocol
+                      const url = link.url.startsWith('http') ? link.url : `https://${link.url}`;
+                      window.open(url, '_blank', 'noopener,noreferrer');
+                    }}
                   >
-                    <a
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 px-6 py-3"
-                      style={{ color: link.color }}
-                    >
+                    <span className="flex items-center gap-3 px-6 py-3" style={{ color: link.color }}>
                       <span className="text-lg font-medium">{link.name}</span>
-                    </a>
+                    </span>
                   </Button>
                 ))}
             </div>
