@@ -5,6 +5,8 @@ import { useProfile } from '@/hooks/useProfile';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import ProfileSettings from '@/components/ProfileSettings';
+import ViewStats from '@/components/ViewStats';
+import ViewAnalytics from '@/components/ViewAnalytics';
 import { LogOut } from 'lucide-react';
 
 // Default fallback values
@@ -79,10 +81,14 @@ const Index = () => {
             <div className="w-24 h-0.5 bg-gradient-primary mx-auto rounded-full" />
           </div>
 
+          {/* View Statistics - Only for profile owner */}
+          <ViewStats profileUserId={user?.id} />
+
           {/* User Actions */}
           {user && (
             <div className="flex justify-center gap-4">
               <ProfileSettings />
+              <ViewAnalytics />
               <Button 
                 variant="outline" 
                 onClick={handleSignOut}
