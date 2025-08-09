@@ -138,6 +138,22 @@ const Index = () => {
           
           {/* Header Section */}
           <div className="text-center space-y-8 animate-fade-in">
+            {/* Avatar */}
+            {profile?.avatar_url && (
+              <div className="flex justify-center">
+                <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-smoke-600/30 animate-scale-in">
+                  <img 
+                    src={profile.avatar_url} 
+                    alt={`${username}'s avatar`}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+            
             <div className="space-y-4">
               <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-none">
                 <span className="text-gradient bg-gradient-to-r from-smoke-100 to-smoke-300 bg-clip-text text-transparent">
