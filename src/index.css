@@ -2,64 +2,64 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Minimal dark theme - clean and modern */
+/* Digital hideout theme - understated cool */
 
 @layer base {
   :root {
-    /* Minimal dark theme base colors */
-    --background: 0 0% 3%;
-    --foreground: 0 0% 98%;
+    /* Deep blacks and smoky grays */
+    --background: 0 0% 2%;
+    --foreground: 0 0% 95%;
 
-    --card: 0 0% 6%;
-    --card-foreground: 0 0% 98%;
+    --card: 0 0% 4%;
+    --card-foreground: 0 0% 92%;
 
-    --popover: 0 0% 6%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 0 0% 4%;
+    --popover-foreground: 0 0% 92%;
 
-    /* Subtle primary colors - white with subtle accent */
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
+    /* Subtle white accent */
+    --primary: 0 0% 96%;
+    --primary-foreground: 0 0% 8%;
 
-    /* Gray tones for hierarchy */
-    --secondary: 0 0% 12%;
-    --secondary-foreground: 0 0% 85%;
+    /* Smoky gray hierarchy */
+    --secondary: 0 0% 8%;
+    --secondary-foreground: 0 0% 80%;
 
-    --muted: 0 0% 8%;
-    --muted-foreground: 0 0% 50%;
+    --muted: 0 0% 6%;
+    --muted-foreground: 0 0% 45%;
 
-    /* Minimal accent - just slightly lighter */
-    --accent: 0 0% 15%;
-    --accent-foreground: 0 0% 98%;
+    /* Barely there accent */
+    --accent: 0 0% 10%;
+    --accent-foreground: 0 0% 90%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 85.7% 97.3%;
+    --destructive: 0 50% 25%;
+    --destructive-foreground: 0 85% 95%;
 
-    --border: 0 0% 15%;
-    --input: 0 0% 12%;
-    --ring: 0 0% 25%;
+    --border: 0 0% 12%;
+    --input: 0 0% 8%;
+    --ring: 0 0% 20%;
 
-    /* Minimal color palette */
-    --gray-50: 0 0% 98%;
-    --gray-100: 0 0% 96%;
-    --gray-200: 0 0% 85%;
-    --gray-300: 0 0% 70%;
-    --gray-400: 0 0% 50%;
-    --gray-500: 0 0% 35%;
-    --gray-600: 0 0% 25%;
-    --gray-700: 0 0% 15%;
-    --gray-800: 0 0% 9%;
-    --gray-900: 0 0% 6%;
-    --gray-950: 0 0% 3%;
+    /* Smoky palette */
+    --smoke-100: 0 0% 95%;
+    --smoke-200: 0 0% 80%;
+    --smoke-300: 0 0% 65%;
+    --smoke-400: 0 0% 45%;
+    --smoke-500: 0 0% 30%;
+    --smoke-600: 0 0% 20%;
+    --smoke-700: 0 0% 12%;
+    --smoke-800: 0 0% 6%;
+    --smoke-900: 0 0% 4%;
+    --smoke-950: 0 0% 2%;
     
-    /* Subtle gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(0 0% 6%), hsl(0 0% 9%));
-    --gradient-background: linear-gradient(180deg, hsl(0 0% 3%), hsl(0 0% 1%));
-    --gradient-card: linear-gradient(135deg, hsl(0 0% 6%), hsl(0 0% 8%));
+    /* Subtle gradients for depth */
+    --gradient-primary: linear-gradient(135deg, hsl(0 0% 4%), hsl(0 0% 8%));
+    --gradient-background: linear-gradient(180deg, hsl(0 0% 2%), hsl(0 0% 0%));
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 4%), hsl(0 0% 6%));
+    --gradient-smoke: linear-gradient(135deg, hsl(0 0% 6% / 0.8), hsl(0 0% 10% / 0.4));
     
-    /* Minimal shadows */
-    --shadow-subtle: 0 1px 3px 0 hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-    --shadow-medium: 0 4px 6px -1px hsl(0 0% 0% / 0.1), 0 2px 4px -2px hsl(0 0% 0% / 0.1);
-    --shadow-large: 0 10px 15px -3px hsl(0 0% 0% / 0.1), 0 4px 6px -4px hsl(0 0% 0% / 0.1);
+    /* Whisper-soft shadows */
+    --shadow-whisper: 0 1px 2px 0 hsl(0 0% 0% / 0.2);
+    --shadow-soft: 0 2px 8px 0 hsl(0 0% 0% / 0.15);
+    --shadow-deep: 0 8px 24px 0 hsl(0 0% 0% / 0.25);
 
     --radius: 0.75rem;
 
@@ -92,6 +92,7 @@
     @apply bg-background text-foreground;
     background: var(--gradient-background);
     font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   }
   
   /* Smooth scrolling */
@@ -101,25 +102,29 @@
 }
 
 @layer utilities {
-  /* Minimal text effects */
+  /* Understated text effects */
   .text-gradient {
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, hsl(var(--smoke-100)), hsl(var(--smoke-300)));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
   
-  /* Subtle shadows */
-  .shadow-subtle {
-    box-shadow: var(--shadow-subtle);
+  .text-smoke {
+    color: hsl(var(--smoke-300));
   }
   
-  .shadow-medium {
-    box-shadow: var(--shadow-medium);
+  /* Whisper-soft shadows */
+  .shadow-whisper {
+    box-shadow: var(--shadow-whisper);
   }
   
-  .shadow-large {
-    box-shadow: var(--shadow-large);
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+  
+  .shadow-deep {
+    box-shadow: var(--shadow-deep);
   }
   
   /* Gradient backgrounds */
@@ -131,43 +136,64 @@
     background: var(--gradient-card);
   }
   
-  /* Animation utilities */
+  .bg-gradient-smoke {
+    background: var(--gradient-smoke);
+  }
+  
+  /* Smooth animations */
   .animate-fade-in {
-    animation: fadeIn 0.6s ease-out forwards;
+    animation: fadeIn 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
   }
   
   .animate-fade-in-delay {
-    animation: fadeIn 0.6s ease-out 0.2s forwards;
+    animation: fadeIn 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) 0.3s forwards;
     opacity: 0;
   }
   
   .animate-slide-up {
-    animation: slideUp 0.6s ease-out forwards;
+    animation: slideUp 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
   }
   
-  /* Custom cursor styles - minimal */
-  .cursor-minimal-dot {
+  /* Hover effects */
+  .hover-lift {
+    transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-soft);
+  }
+  
+  /* Custom cursor - refined */
+  .cursor-hideout {
     cursor: none !important;
   }
   
-  /* Minimal dot cursor effect */
-  body.cursor-minimal-dot::before {
+  body.cursor-hideout::before {
     content: '';
     position: fixed;
     top: 0;
     left: 0;
-    width: 8px;
-    height: 8px;
-    background: hsl(var(--foreground));
+    width: 6px;
+    height: 6px;
+    background: hsl(var(--smoke-100));
     border-radius: 50%;
     pointer-events: none;
     z-index: 10000;
     transform: translate(-50%, -50%);
-    transition: all 0.1s ease;
+    transition: all 0.15s cubic-bezier(0.25, 0.1, 0.25, 1);
+    opacity: 0.8;
   }
   
-  body.cursor-minimal-dot {
+  body.cursor-hideout {
     cursor: none !important;
+  }
+  
+  /* Glass morphism effect */
+  .glass {
+    background: hsl(var(--smoke-900) / 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid hsl(var(--smoke-700) / 0.3);
   }
 }
 

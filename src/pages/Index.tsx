@@ -1,21 +1,16 @@
-import { DiscordStatus } from '@/components/DiscordStatus';
 import { SocialLinks } from '@/components/SocialLinks';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import ProfileSettings from '@/components/ProfileSettings';
 import ViewStats from '@/components/ViewStats';
-import ViewAnalytics from '@/components/ViewAnalytics';
-import VideoBackground from '@/components/VideoBackground';
+import OptimizedVideoBackground from '@/components/OptimizedVideoBackground';
 import CursorStyle from '@/components/CursorStyle';
-import VideoTestButton from '@/components/VideoTestButton';
-import { LogOut } from 'lucide-react';
+import { Settings, LogOut, Eye } from 'lucide-react';
 
 // Default fallback values
-const DEFAULT_DISCORD_ID = "YOUR_DISCORD_ID";
-const DEFAULT_USERNAME = "username";
-const DEFAULT_BIO = "digital nomad / hacker / dreamer";
+const DEFAULT_USERNAME = "anonymous";
+const DEFAULT_BIO = "digital wanderer";
 
 const Index = () => {
   const { user, signOut, loading: authLoading } = useAuth();
@@ -27,7 +22,6 @@ const Index = () => {
   // Use profile data if available, otherwise use defaults
   const username = profile?.username || DEFAULT_USERNAME;
   const bio = profile?.bio || DEFAULT_BIO;
-  const discordId = DEFAULT_DISCORD_ID; // This could be added to profile later
   
   const handleSignOut = async () => {
     await signOut();
@@ -36,18 +30,27 @@ const Index = () => {
   // If not authenticated, show login prompt
   if (!isLoading && !user) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 pointer-events-none" />
+      <div className="min-h-screen bg-gradient-to-br from-background via-smoke-950 to-background flex items-center justify-center p-6">
+        <OptimizedVideoBackground />
         
-        <div className="text-center space-y-6">
-          <h1 className="text-4xl font-black text-gradient">
-            Create Your Profile
-          </h1>
-          <p className="text-lg text-muted-foreground">
-            Sign in to create your personal landing page
-          </p>
-          <Button onClick={() => navigate('/auth')} size="lg">
-            Sign In / Sign Up
+        <div className="relative z-10 text-center space-y-8 max-w-md">
+          <div className="space-y-4">
+            <h1 className="text-3xl sm:text-4xl font-black">
+              <span className="text-gradient bg-gradient-to-r from-smoke-100 to-smoke-300 bg-clip-text text-transparent">
+                Enter the hideout
+              </span>
+            </h1>
+            <p className="text-smoke-400 text-sm leading-relaxed">
+              Create your minimal digital presence
+            </p>
+          </div>
+          
+          <Button 
+            onClick={() => navigate('/auth')} 
+            size="lg"
+            className="glass hover-lift bg-smoke-800/50 text-smoke-100 border-smoke-600/30 hover:bg-smoke-700/50"
+          >
+            Sign In
           </Button>
         </div>
       </div>
@@ -56,108 +59,117 @@ const Index = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-foreground animate-pulse text-xl">Loading...</div>
+      <div className="min-h-screen bg-gradient-to-br from-background to-smoke-950 flex items-center justify-center">
+        <OptimizedVideoBackground />
+        <div className="relative z-10 text-smoke-300 animate-pulse text-sm font-light tracking-wider">
+          loading...
+        </div>
       </div>
     );
   }
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-gray-950">
-      {/* Video Background */}
-      <VideoBackground profileUserId={user?.id} />
+    <div className="min-h-screen bg-gradient-to-b from-background to-smoke-950">
+      {/* Optimized Video Background */}
+      <OptimizedVideoBackground profileUserId={user?.id} />
       
       {/* Cursor Style */}
       <CursorStyle profileUserId={user?.id} />
       
-      <div className="relative z-10 container mx-auto px-4 py-12 sm:py-20">
-        <div className="max-w-2xl mx-auto space-y-8">
+      <div className="relative z-10 container mx-auto px-6 py-16 sm:py-24">
+        <div className="max-w-xl mx-auto space-y-12">
           
           {/* Header Section */}
-          <div className="text-center space-y-6 animate-fade-in">
-            <div className="space-y-2">
-              <h1 className="text-5xl sm:text-7xl font-black tracking-tight">
-                <span className="text-gradient">{username}</span>
+          <div className="text-center space-y-8 animate-fade-in">
+            <div className="space-y-4">
+              <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-none">
+                <span className="text-gradient bg-gradient-to-r from-smoke-100 to-smoke-300 bg-clip-text text-transparent">
+                  {username}
+                </span>
               </h1>
-              <p className="text-lg sm:text-xl text-muted-foreground font-light tracking-wide">
+              <p className="text-base sm:text-lg text-smoke-400 font-light tracking-wide max-w-md mx-auto">
                 {bio}
               </p>
             </div>
             
-            {/* Minimal decorative line */}
-            <div className="w-16 h-px bg-gradient-primary mx-auto" />
+            {/* Minimal accent */}
+            <div className="w-8 h-px bg-smoke-600 mx-auto" />
           </div>
 
-          {/* Profile URL Info */}
+          {/* Profile URL - Subtle */}
           {user && profile && (
-            <div className="text-center animate-fade-in">
-              <p className="text-sm text-muted-foreground">
-                Your profile:{' '}
-                <span className="text-foreground font-mono">
-                  {window.location.origin}/{profile.username}
-                </span>
+            <div className="text-center animate-fade-in-delay">
+              <p className="text-xs text-smoke-500 font-mono">
+                {window.location.origin}/{profile.username}
               </p>
             </div>
           )}
 
-          {/* View Statistics - Only for profile owner */}
-          <ViewStats profileUserId={user?.id} />
+          {/* View Statistics */}
+          <div className="animate-fade-in-delay">
+            <ViewStats profileUserId={user?.id} />
+          </div>
 
-          {/* User Actions */}
+          {/* Actions - Minimal and refined */}
           {user && (
-            <div className="flex justify-center gap-3">
+            <div className="flex justify-center gap-2 animate-fade-in-delay">
               <Button 
-                variant="default" 
+                variant="ghost"
+                size="sm"
                 onClick={() => navigate('/settings')}
-                className="flex items-center gap-2"
+                className="glass hover-lift text-smoke-300 hover:text-smoke-100 border-smoke-700/30"
               >
-                Settings
+                <Settings className="h-4 w-4 mr-2" />
+                Customize
               </Button>
-              <ViewAnalytics />
               <Button 
-                variant="outline" 
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate(`/${profile?.username}`)}
+                className="glass hover-lift text-smoke-300 hover:text-smoke-100 border-smoke-700/30"
+              >
+                <Eye className="h-4 w-4 mr-2" />
+                View
+              </Button>
+              <Button 
+                variant="ghost"
+                size="sm"
                 onClick={handleSignOut}
-                className="flex items-center gap-2"
+                className="text-smoke-400 hover:text-smoke-200"
               >
                 <LogOut className="h-4 w-4" />
-                Sign Out
               </Button>
             </div>
           )}
 
-          {/* Social Links - Show user's custom links if available */}
-          {socialLinks.length > 0 ? (
-            <div className="flex flex-wrap justify-center gap-3">
-              {socialLinks
-                .filter(link => link.is_visible)
-                .sort((a, b) => a.order_index - b.order_index)
-                .map((link) => (
-                  <Button
-                    key={link.id}
-                    variant="outline"
-                    size="lg"
-                    asChild
-                    className="group transition-all duration-200 hover:scale-105 shadow-subtle hover:shadow-medium"
-                  >
-                    <a
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 px-6 py-3"
+          {/* Social Links - Refined presentation */}
+          <div className="animate-fade-in-delay">
+            {socialLinks.length > 0 ? (
+              <div className="flex flex-wrap justify-center gap-2">
+                {socialLinks
+                  .filter(link => link.is_visible)
+                  .sort((a, b) => a.order_index - b.order_index)
+                  .map((link) => (
+                    <Button
+                      key={link.id}
+                      variant="ghost"
+                      size="sm"
+                      asChild
+                      className="glass hover-lift text-smoke-300 hover:text-smoke-100 border-smoke-700/20"
                     >
-                      <span className="font-medium">{link.name}</span>
-                    </a>
-                  </Button>
-                ))}
-            </div>
-          ) : (
-            <SocialLinks />
-          )}
-
-          {/* Footer */}
-          <div className="text-center pt-8 animate-fade-in-delay">
-            <p className="text-sm text-muted-foreground">
-              Minimal profile page
-            </p>
+                      <a
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-4 py-2"
+                      >
+                        {link.name}
+                      </a>
+                    </Button>
+                  ))}
+              </div>
+            ) : (
+              <SocialLinks />
+            )}
           </div>
 
         </div>

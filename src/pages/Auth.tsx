@@ -2,19 +2,22 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Label } from '@/components/ui/label';
 import { useNavigate } from 'react-router-dom';
+import OptimizedVideoBackground from '@/components/OptimizedVideoBackground';
 
-const Auth = () => {
+export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  
   const { user, signIn, signUp } = useAuth();
   const navigate = useNavigate();
 
+  // Redirect if already logged in
   useEffect(() => {
     if (user) {
       navigate('/');
@@ -23,122 +26,156 @@ const Auth = () => {
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+    setLoading(true);
     await signIn(email, password);
-    setIsLoading(false);
+    setLoading(false);
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+    setLoading(true);
     await signUp(email, password, username);
-    setIsLoading(false);
+    setLoading(false);
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10 pointer-events-none" />
+    <div className="min-h-screen bg-gradient-to-br from-background via-smoke-950 to-background flex items-center justify-center p-6">
+      <OptimizedVideoBackground />
       
-      <Card className="w-full max-w-md relative z-10 bg-card/80 backdrop-blur border-primary/20">
-        <CardHeader className="text-center space-y-4">
-          <CardTitle className="text-3xl font-black text-neon">
-            Giriş Yap
-          </CardTitle>
-          <CardDescription>
-            Profilinizi özelleştirmek için hesabınıza giriş yapın
-          </CardDescription>
-        </CardHeader>
+      <div className="relative z-10 w-full max-w-md">
+        <div className="text-center mb-8 space-y-4">
+          <h1 className="text-2xl font-black">
+            <span className="text-gradient bg-gradient-to-r from-smoke-100 to-smoke-300 bg-clip-text text-transparent">
+              Welcome to the hideout
+            </span>
+          </h1>
+          <p className="text-smoke-400 text-sm">
+            Enter your credentials to access the darkroom
+          </p>
+        </div>
+
+        <Card className="glass border-smoke-700/30 shadow-deep">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-smoke-100 text-center text-lg">Access Control</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Tabs defaultValue="signin" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 glass border-smoke-700/30 mb-6">
+                <TabsTrigger value="signin" className="text-smoke-400 data-[state=active]:text-smoke-100">
+                  Sign In
+                </TabsTrigger>
+                <TabsTrigger value="signup" className="text-smoke-400 data-[state=active]:text-smoke-100">
+                  Sign Up
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="signin">
+                <form onSubmit={handleSignIn} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="text-smoke-300 text-xs uppercase tracking-wider">
+                      Email
+                    </Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="Enter your email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="glass border-smoke-700/30 text-smoke-100 placeholder:text-smoke-500"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="password" className="text-smoke-300 text-xs uppercase tracking-wider">
+                      Password
+                    </Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="Enter your password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      className="glass border-smoke-700/30 text-smoke-100 placeholder:text-smoke-500"
+                    />
+                  </div>
+                  <Button 
+                    type="submit" 
+                    className="w-full glass hover-lift bg-smoke-800/50 text-smoke-100 border-smoke-600/30 hover:bg-smoke-700/50"
+                    disabled={loading}
+                  >
+                    {loading ? 'Accessing...' : 'Enter'}
+                  </Button>
+                </form>
+              </TabsContent>
+
+              <TabsContent value="signup">
+                <form onSubmit={handleSignUp} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-email" className="text-smoke-300 text-xs uppercase tracking-wider">
+                      Email
+                    </Label>
+                    <Input
+                      id="signup-email"
+                      type="email"
+                      placeholder="Enter your email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="glass border-smoke-700/30 text-smoke-100 placeholder:text-smoke-500"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="username" className="text-smoke-300 text-xs uppercase tracking-wider">
+                      Username
+                    </Label>
+                    <Input
+                      id="username"
+                      type="text"
+                      placeholder="Choose a username"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      required
+                      className="glass border-smoke-700/30 text-smoke-100 placeholder:text-smoke-500"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-password" className="text-smoke-300 text-xs uppercase tracking-wider">
+                      Password
+                    </Label>
+                    <Input
+                      id="signup-password"
+                      type="password"
+                      placeholder="Create a password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      className="glass border-smoke-700/30 text-smoke-100 placeholder:text-smoke-500"
+                    />
+                  </div>
+                  <Button 
+                    type="submit" 
+                    className="w-full glass hover-lift bg-smoke-800/50 text-smoke-100 border-smoke-600/30 hover:bg-smoke-700/50"
+                    disabled={loading}
+                  >
+                    {loading ? 'Creating...' : 'Create Account'}
+                  </Button>
+                </form>
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
         
-        <CardContent>
-          <Tabs defaultValue="signin" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="signin">Giriş Yap</TabsTrigger>
-              <TabsTrigger value="signup">Kayıt Ol</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="signin" className="space-y-4 mt-6">
-              <form onSubmit={handleSignIn} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email">E-posta</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="email@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="password">Şifre</Label>
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                </div>
-                <Button 
-                  type="submit" 
-                  className="w-full" 
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Giriş yapılıyor..." : "Giriş Yap"}
-                </Button>
-              </form>
-            </TabsContent>
-            
-            <TabsContent value="signup" className="space-y-4 mt-6">
-              <form onSubmit={handleSignUp} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="signup-username">Kullanıcı Adı</Label>
-                  <Input
-                    id="signup-username"
-                    type="text"
-                    placeholder="kullaniciadi"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="signup-email">E-posta</Label>
-                  <Input
-                    id="signup-email"
-                    type="email"
-                    placeholder="email@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="signup-password">Şifre</Label>
-                  <Input
-                    id="signup-password"
-                    type="password"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                </div>
-                <Button 
-                  type="submit" 
-                  className="w-full" 
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Kayıt olunuyor..." : "Kayıt Ol"}
-                </Button>
-              </form>
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
+        <div className="text-center mt-6">
+          <Button 
+            variant="ghost"
+            onClick={() => navigate('/')}
+            className="text-smoke-400 hover:text-smoke-200 text-xs"
+          >
+            ← Back to main
+          </Button>
+        </div>
+      </div>
     </div>
   );
-};
-
-export default Auth;
+}
