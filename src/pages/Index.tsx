@@ -1,12 +1,61 @@
 import { DiscordStatus } from '@/components/DiscordStatus';
 import { SocialLinks } from '@/components/SocialLinks';
+import { useAuth } from '@/hooks/useAuth';
+import { useProfile } from '@/hooks/useProfile';
+import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
+import ProfileSettings from '@/components/ProfileSettings';
+import { LogOut } from 'lucide-react';
 
-// Configure your personal information here
-const DISCORD_USER_ID = "YOUR_DISCORD_ID"; // Replace with your Discord ID
-const USERNAME = "username"; // Replace with your username
-const BIO = "digital nomad / hacker / dreamer"; // Replace with your bio
+// Default fallback values
+const DEFAULT_DISCORD_ID = "YOUR_DISCORD_ID";
+const DEFAULT_USERNAME = "username";
+const DEFAULT_BIO = "digital nomad / hacker / dreamer";
 
 const Index = () => {
+  const { user, signOut, loading: authLoading } = useAuth();
+  const { profile, socialLinks, loading: profileLoading } = useProfile();
+  const navigate = useNavigate();
+
+  const isLoading = authLoading || profileLoading;
+
+  // Use profile data if available, otherwise use defaults
+  const username = profile?.username || DEFAULT_USERNAME;
+  const bio = profile?.bio || DEFAULT_BIO;
+  const discordId = DEFAULT_DISCORD_ID; // This could be added to profile later
+  
+  const handleSignOut = async () => {
+    await signOut();
+  };
+
+  // If not authenticated, show login prompt
+  if (!isLoading && !user) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 pointer-events-none" />
+        
+        <div className="relative z-10 text-center space-y-6">
+          <h1 className="text-4xl font-black text-neon">
+            Profilinizi Özelleştirin
+          </h1>
+          <p className="text-lg text-muted-foreground">
+            Kendi kişisel landing sayfanızı oluşturmak için giriş yapın
+          </p>
+          <Button onClick={() => navigate('/auth')} size="lg">
+            Giriş Yap / Kayıt Ol
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-neon animate-pulse text-xl">Yükleniyor...</div>
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen bg-background">
       {/* Background gradient overlay */}
@@ -19,10 +68,10 @@ const Index = () => {
           <div className="text-center space-y-6 animate-fade-in">
             <div className="space-y-2">
               <h1 className="text-5xl sm:text-7xl font-black tracking-tight">
-                <span className="text-neon animate-pulse-neon">{USERNAME}</span>
+                <span className="text-neon animate-pulse-neon">{username}</span>
               </h1>
               <p className="text-lg sm:text-xl text-muted-foreground font-light tracking-wide">
-                {BIO}
+                {bio}
               </p>
             </div>
             
@@ -30,11 +79,53 @@ const Index = () => {
             <div className="w-24 h-0.5 bg-gradient-primary mx-auto rounded-full" />
           </div>
 
-          {/* Discord Status */}
-          <DiscordStatus userId={DISCORD_USER_ID} />
+          {/* User Actions */}
+          {user && (
+            <div className="flex justify-center gap-4">
+              <ProfileSettings />
+              <Button 
+                variant="outline" 
+                onClick={handleSignOut}
+                className="flex items-center gap-2"
+              >
+                <LogOut className="h-4 w-4" />
+                Çıkış Yap
+              </Button>
+            </div>
+          )}
 
-          {/* Social Links */}
-          <SocialLinks />
+          {/* Discord Status */}
+          <DiscordStatus userId={discordId} />
+
+          {/* Social Links - Show user's custom links if available */}
+          {socialLinks.length > 0 ? (
+            <div className="flex flex-wrap justify-center gap-4">
+              {socialLinks
+                .filter(link => link.is_visible)
+                .sort((a, b) => a.order_index - b.order_index)
+                .map((link) => (
+                  <Button
+                    key={link.id}
+                    variant="outline"
+                    size="lg"
+                    asChild
+                    className="group transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/25"
+                  >
+                    <a
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 px-6 py-3"
+                      style={{ color: link.color }}
+                    >
+                      <span className="text-lg font-medium">{link.name}</span>
+                    </a>
+                  </Button>
+                ))}
+            </div>
+          ) : (
+            <SocialLinks />
+          )}
 
           {/* Footer */}
           <div className="text-center pt-8 animate-fade-in-delay-2">
