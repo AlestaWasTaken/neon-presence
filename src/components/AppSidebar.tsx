@@ -23,9 +23,9 @@ import {
 } from "@/components/ui/sidebar"
 
 const menuItems = [
-  { title: "Account", url: "/dashboard", icon: User },
-  { title: "Customize", url: "/dashboard", icon: Palette },
-  { title: "Links", url: "/dashboard", icon: LinkIcon },
+  { title: "Account", url: "/dashboard?tab=account", icon: User },
+  { title: "Customize", url: "/dashboard?tab=customize", icon: Palette },
+  { title: "Links", url: "/dashboard?tab=links", icon: LinkIcon },
   { title: "Premium", url: "/premium", icon: Crown },
   { title: "Image Host", url: "/image-host", icon: Image },
   { title: "Templates", url: "/templates", icon: Layout },
@@ -37,7 +37,15 @@ export function AppSidebar() {
   const currentPath = location.pathname
   const collapsed = state === "collapsed"
 
-  const isActive = (path: string) => currentPath === path || (path === "/dashboard" && currentPath.startsWith("/dashboard"))
+  const isActive = (path: string) => {
+    if (path.includes('?tab=')) {
+      const [pathname, search] = path.split('?')
+      const urlParams = new URLSearchParams(location.search)
+      const tabParam = new URLSearchParams(search).get('tab')
+      return currentPath === pathname && urlParams.get('tab') === tabParam
+    }
+    return currentPath === path || (path === "/dashboard" && currentPath.startsWith("/dashboard"))
+  }
 
   return (
     <Sidebar

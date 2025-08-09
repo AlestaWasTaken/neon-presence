@@ -1,6 +1,6 @@
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useSearchParams } from 'react-router-dom';
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from '@/components/AppSidebar';
 import OptimizedVideoBackground from '@/components/OptimizedVideoBackground';
@@ -11,6 +11,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 export default function NewSettings() {
   const { user, loading: authLoading } = useAuth();
   const { profile, loading: profileLoading } = useProfile();
+  const [searchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'account';
 
   if (authLoading || profileLoading) {
     return (
@@ -66,66 +68,84 @@ export default function NewSettings() {
             {/* Content Area */}
             <main className="flex-1 p-6">
               <div className="max-w-7xl mx-auto">
-                {/* Top Section - Background, Audio, Profile Avatar, Custom Cursor */}
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
-                  <div className="bg-smoke-900/50 border border-smoke-700/50 rounded-lg p-4">
-                    <h3 className="text-smoke-100 font-medium mb-3">Background</h3>
-                    <div className="aspect-video bg-smoke-800/50 rounded border border-smoke-700/30 flex items-center justify-center">
-                      <span className="text-xs text-smoke-400">HAVAYOLU PERSONELİ</span>
-                    </div>
-                    <div className="mt-3 flex gap-2">
-                      <button className="text-xs text-smoke-400 hover:text-smoke-200">MP4</button>
-                      <button className="text-xs text-red-400 hover:text-red-300">✕</button>
-                    </div>
-                  </div>
+                {activeTab === 'account' && (
+                  <>
+                    {/* Top Section - Background, Audio, Profile Avatar, Custom Cursor */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+                      <div className="bg-smoke-900/50 border border-smoke-700/50 rounded-lg p-4">
+                        <h3 className="text-smoke-100 font-medium mb-3">Background</h3>
+                        <div className="aspect-video bg-smoke-800/50 rounded border border-smoke-700/30 flex items-center justify-center">
+                          <span className="text-xs text-smoke-400">HAVAYOLU PERSONELİ</span>
+                        </div>
+                        <div className="mt-3 flex gap-2">
+                          <button className="text-xs text-smoke-400 hover:text-smoke-200">MP4</button>
+                          <button className="text-xs text-red-400 hover:text-red-300">✕</button>
+                        </div>
+                      </div>
 
-                  <div className="bg-smoke-900/50 border border-smoke-700/50 rounded-lg p-4">
-                    <h3 className="text-smoke-100 font-medium mb-3">Audio</h3>
-                    <div className="aspect-video bg-smoke-800/50 rounded border border-smoke-700/30 flex items-center justify-center">
-                      <div className="text-smoke-400 text-center">
-                        <div className="w-8 h-8 mx-auto mb-2 opacity-50">📁</div>
-                        <span className="text-xs">Click to upload/change</span>
+                      <div className="bg-smoke-900/50 border border-smoke-700/50 rounded-lg p-4">
+                        <h3 className="text-smoke-100 font-medium mb-3">Audio</h3>
+                        <div className="aspect-video bg-smoke-800/50 rounded border border-smoke-700/30 flex items-center justify-center">
+                          <div className="text-smoke-400 text-center">
+                            <div className="w-8 h-8 mx-auto mb-2 opacity-50">📁</div>
+                            <span className="text-xs">Click to upload/change</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="bg-smoke-900/50 border border-smoke-700/50 rounded-lg p-4">
+                        <h3 className="text-smoke-100 font-medium mb-3">Profile Avatar</h3>
+                        <div className="aspect-video bg-smoke-800/50 rounded border border-smoke-700/30 overflow-hidden">
+                          <div className="w-full h-full bg-gradient-to-br from-smoke-600 to-smoke-800 flex items-center justify-center">
+                            <div className="w-12 h-12 bg-smoke-200 rounded-full"></div>
+                          </div>
+                        </div>
+                        <div className="mt-3 flex justify-between">
+                          <span className="text-xs text-smoke-400">WEBP</span>
+                          <button className="text-xs text-red-400 hover:text-red-300">✕</button>
+                        </div>
+                      </div>
+
+                      <div className="bg-smoke-900/50 border border-smoke-700/50 rounded-lg p-4">
+                        <h3 className="text-smoke-100 font-medium mb-3">Custom Cursor</h3>
+                        <div className="aspect-video bg-smoke-800/50 rounded border border-smoke-700/30 flex items-center justify-center">
+                          <div className="text-smoke-400 text-center">
+                            <div className="w-8 h-8 mx-auto mb-2 opacity-50">🎯</div>
+                            <span className="text-xs">WEBP</span>
+                          </div>
+                        </div>
+                        <div className="mt-3 flex justify-between">
+                          <span className="text-xs text-smoke-400">WEBP</span>
+                          <button className="text-xs text-red-400 hover:text-red-300">✕</button>
+                        </div>
                       </div>
                     </div>
+
+                    {/* Want exclusive features banner */}
+                    <div className="bg-gradient-to-r from-purple-900/50 to-pink-900/50 border border-purple-700/50 rounded-lg p-4 mb-8 text-center">
+                      <span className="text-purple-200 text-sm">Want exclusive features? Unlock more with ❤️ Premium</span>
+                    </div>
+
+                    {/* Profile Settings */}
+                    <div className="bg-smoke-900/50 border border-smoke-700/50 rounded-lg p-6">
+                      <ProfileSettings />
+                    </div>
+                  </>
+                )}
+
+                {activeTab === 'customize' && (
+                  <div className="bg-smoke-900/50 border border-smoke-700/50 rounded-lg p-6">
+                    <h2 className="text-2xl font-bold text-smoke-100 mb-6">Customize</h2>
+                    <p className="text-smoke-400">Customization options will be available here.</p>
                   </div>
+                )}
 
-                  <div className="bg-smoke-900/50 border border-smoke-700/50 rounded-lg p-4">
-                    <h3 className="text-smoke-100 font-medium mb-3">Profile Avatar</h3>
-                    <div className="aspect-video bg-smoke-800/50 rounded border border-smoke-700/30 overflow-hidden">
-                      <div className="w-full h-full bg-gradient-to-br from-smoke-600 to-smoke-800 flex items-center justify-center">
-                        <div className="w-12 h-12 bg-smoke-200 rounded-full"></div>
-                      </div>
-                    </div>
-                    <div className="mt-3 flex justify-between">
-                      <span className="text-xs text-smoke-400">WEBP</span>
-                      <button className="text-xs text-red-400 hover:text-red-300">✕</button>
-                    </div>
+                {activeTab === 'links' && (
+                  <div className="bg-smoke-900/50 border border-smoke-700/50 rounded-lg p-6">
+                    <h2 className="text-2xl font-bold text-smoke-100 mb-6">Social Links</h2>
+                    <p className="text-smoke-400">Manage your social links here.</p>
                   </div>
-
-                  <div className="bg-smoke-900/50 border border-smoke-700/50 rounded-lg p-4">
-                    <h3 className="text-smoke-100 font-medium mb-3">Custom Cursor</h3>
-                    <div className="aspect-video bg-smoke-800/50 rounded border border-smoke-700/30 flex items-center justify-center">
-                      <div className="text-smoke-400 text-center">
-                        <div className="w-8 h-8 mx-auto mb-2 opacity-50">🎯</div>
-                        <span className="text-xs">WEBP</span>
-                      </div>
-                    </div>
-                    <div className="mt-3 flex justify-between">
-                      <span className="text-xs text-smoke-400">WEBP</span>
-                      <button className="text-xs text-red-400 hover:text-red-300">✕</button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Want exclusive features banner */}
-                <div className="bg-gradient-to-r from-purple-900/50 to-pink-900/50 border border-purple-700/50 rounded-lg p-4 mb-8 text-center">
-                  <span className="text-purple-200 text-sm">Want exclusive features? Unlock more with ❤️ Premium</span>
-                </div>
-
-                {/* Profile Settings */}
-                <div className="bg-smoke-900/50 border border-smoke-700/50 rounded-lg p-6">
-                  <ProfileSettings />
-                </div>
+                )}
               </div>
             </main>
           </div>
