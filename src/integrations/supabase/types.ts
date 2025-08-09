@@ -44,6 +44,8 @@ export type Database = {
       profiles: {
         Row: {
           accent_color: string | null
+          audio_url: string | null
+          avatar_url: string | null
           background_video_url: string | null
           bio: string | null
           created_at: string
@@ -51,6 +53,7 @@ export type Database = {
           custom_cursor_url: string | null
           id: string
           primary_color: string | null
+          sequential_id: number
           theme: string | null
           updated_at: string
           user_id: string
@@ -59,6 +62,8 @@ export type Database = {
         }
         Insert: {
           accent_color?: string | null
+          audio_url?: string | null
+          avatar_url?: string | null
           background_video_url?: string | null
           bio?: string | null
           created_at?: string
@@ -66,6 +71,7 @@ export type Database = {
           custom_cursor_url?: string | null
           id?: string
           primary_color?: string | null
+          sequential_id?: number
           theme?: string | null
           updated_at?: string
           user_id: string
@@ -74,6 +80,8 @@ export type Database = {
         }
         Update: {
           accent_color?: string | null
+          audio_url?: string | null
+          avatar_url?: string | null
           background_video_url?: string | null
           bio?: string | null
           created_at?: string
@@ -81,6 +89,7 @@ export type Database = {
           custom_cursor_url?: string | null
           id?: string
           primary_color?: string | null
+          sequential_id?: number
           theme?: string | null
           updated_at?: string
           user_id?: string
@@ -151,6 +160,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      assign_sequential_ids: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       get_user_roles: {
         Args: { _user_id: string }
         Returns: {

@@ -64,11 +64,7 @@ export function useProfile() {
         description: error.message
       });
     } else {
-      setProfile({
-        ...data,
-        avatar_url: data.avatar_url || null,
-        audio_url: data.audio_url || null
-      } as Profile);
+      setProfile(data as any as Profile);
     }
     setLoading(false);
   };
