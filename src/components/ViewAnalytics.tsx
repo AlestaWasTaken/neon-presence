@@ -91,7 +91,9 @@ const ViewAnalytics = () => {
                     <div key={view.id} className="flex justify-between items-center p-2 rounded bg-muted/50 text-sm">
                       <div>
                         <span className="font-medium">
-                          {view.viewer_user_id ? 'Kayıtlı Kullanıcı' : 'Anonim Ziyaretçi'}
+                          {view.viewer_user_id && view.viewer_profile?.username 
+                            ? `@${view.viewer_profile.username}` 
+                            : 'Anonim Ziyaretçi'}
                         </span>
                       </div>
                       <div className="text-muted-foreground">

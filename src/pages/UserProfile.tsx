@@ -154,19 +154,6 @@ const UserProfile = () => {
             <div className="w-24 h-0.5 bg-gradient-primary mx-auto rounded-full" />
           </div>
 
-          {/* View Statistics - Show for both own profile and public view */}
-          <div className="flex justify-center gap-4 animate-fade-in">
-            <div className="bg-card/50 backdrop-blur border-primary/20 rounded-lg px-4 py-2 border">
-              <span className="text-sm font-medium">
-                👀 {viewCount} görüntüleme
-              </span>
-            </div>
-            <div className="bg-card/50 backdrop-blur border-primary/20 rounded-lg px-4 py-2 border">
-              <span className="text-sm font-medium">
-                🟢 {activeViewers} aktif ziyaretçi
-              </span>
-            </div>
-          </div>
 
           {/* User Actions - Only show if it's own profile */}
           {isOwnProfile && (

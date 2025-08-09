@@ -9,6 +9,9 @@ export interface ProfileView {
   viewer_ip?: string;
   user_agent?: string;
   created_at: string;
+  viewer_profile?: {
+    username: string;
+  };
 }
 
 export function useProfileViews(profileUserId?: string) {
@@ -97,15 +100,48 @@ export function useProfileViews(profileUserId?: string) {
   const fetchRecentViews = async () => {
     if (!profileUserId || !user || user.id !== profileUserId) return;
 
-    const { data, error } = await supabase
+    // First, get the profile views
+    const { data: views, error } = await supabase
       .from('profile_views')
       .select('*')
       .eq('profile_user_id', profileUserId)
       .order('created_at', { ascending: false })
       .limit(10);
 
-    if (data && !error) {
-      setRecentViews(data);
+    if (error || !views) return;
+
+    // Get unique viewer user IDs (excluding nulls)
+    const viewerIds = [...new Set(views.map(v => v.viewer_user_id).filter(Boolean))];
+
+    if (viewerIds.length > 0) {
+      // Fetch usernames for those viewer IDs
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('user_id, username')
+        .in('user_id', viewerIds);
+
+      // Create a map of user_id to username
+      const usernameMap = new Map();
+      profiles?.forEach(profile => {
+        usernameMap.set(profile.user_id, profile.username);
+      });
+
+      // Add viewer profile data to views
+      const viewsWithUsernames = views.map(view => ({
+        ...view,
+        viewer_profile: view.viewer_user_id ? {
+          username: usernameMap.get(view.viewer_user_id) || 'Unknown User'
+        } : undefined
+      }));
+
+      setRecentViews(viewsWithUsernames);
+    } else {
+      // No registered viewers, just set the anonymous views
+      const viewsWithUsernames = views.map(view => ({
+        ...view,
+        viewer_profile: undefined
+      }));
+      setRecentViews(viewsWithUsernames);
     }
   };
 
