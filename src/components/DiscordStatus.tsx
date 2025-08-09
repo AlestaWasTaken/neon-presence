@@ -66,7 +66,7 @@ export function DiscordStatus({ userId }: DiscordStatusProps) {
   useEffect(() => {
     const fetchDiscordData = async () => {
       try {
-        const response = await fetch(`https://api.lanyard.rest/v1/users/${userId}`);
+        const response = await fetch(`https://api.lanyard.rest/v1/users/331421456695296001`);
         if (!response.ok) {
           throw new Error('Failed to fetch Discord data');
         }
