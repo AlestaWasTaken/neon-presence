@@ -7,6 +7,7 @@ import ViewStats from '@/components/ViewStats';
 import OptimizedVideoBackground from '@/components/OptimizedVideoBackground';
 import CursorStyle from '@/components/CursorStyle';
 import ClickToEnter from '@/components/ClickToEnter';
+import { SocialLinksDisplay } from '@/components/SocialLinksDisplay';
 import { Settings, LogOut } from 'lucide-react';
 import { useState } from 'react';
 
@@ -191,33 +192,7 @@ const Index = () => {
 
           {/* Social Links - Refined presentation */}
           <div className="animate-fade-in-delay">
-            {socialLinks.length > 0 ? (
-              <div className="flex flex-wrap justify-center gap-2">
-                {socialLinks
-                  .filter(link => link.is_visible)
-                  .sort((a, b) => a.order_index - b.order_index)
-                  .map((link) => (
-                    <Button
-                      key={link.id}
-                      variant="ghost"
-                      size="sm"
-                      asChild
-                      className="glass hover-lift text-smoke-300 hover:text-smoke-100 border-smoke-700/20"
-                    >
-                      <a
-                        href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-4 py-2"
-                      >
-                        {link.name}
-                      </a>
-                    </Button>
-                  ))}
-              </div>
-            ) : (
-              <SocialLinks />
-            )}
+            <SocialLinksDisplay socialLinks={socialLinks} />
           </div>
 
         </div>

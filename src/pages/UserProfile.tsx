@@ -10,6 +10,7 @@ import ProfileSettings from '@/components/ProfileSettings';
 import ViewAnalytics from '@/components/ViewAnalytics';
 import OptimizedVideoBackground from '@/components/OptimizedVideoBackground';
 import CursorStyle from '@/components/CursorStyle';
+import { SocialLinksDisplay } from '@/components/SocialLinksDisplay';
 import { LogOut, ArrowLeft, Settings } from 'lucide-react';
 
 interface UserProfileData {
@@ -205,27 +206,7 @@ const UserProfile = () => {
 
           {/* Social Links - Refined presentation */}
           <div className="animate-fade-in-delay">
-            {socialLinks.length > 0 ? (
-              <div className="flex flex-wrap justify-center gap-2">
-                {socialLinks
-                  .filter(link => link.is_visible)
-                  .sort((a, b) => a.order_index - b.order_index)
-                  .map((link) => (
-                    <EmbeddedView
-                      key={link.id}
-                      url={link.url}
-                      name={link.name}
-                      color={link.color}
-                    />
-                  ))}
-              </div>
-            ) : (
-              <div className="text-center">
-                <p className="text-xs text-smoke-500 font-mono">
-                  no connections yet
-                </p>
-              </div>
-            )}
+            <SocialLinksDisplay socialLinks={socialLinks} />
           </div>
 
           {/* Footer */}

@@ -6,6 +6,7 @@ import OptimizedVideoBackground from '@/components/OptimizedVideoBackground';
 import CursorStyle from '@/components/CursorStyle';
 import ColorCustomizer from '@/components/ColorCustomizer';
 import { SocialLinksManager } from '@/components/SocialLinksManager';
+import { VideoTestButton } from '@/components/VideoTestButton';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -378,18 +379,21 @@ export default function Settings() {
                         if (file) handleVideoUpload(file);
                       }}
                     />
-                    <Button
-                      onClick={() => videoFileRef.current?.click()}
-                      disabled={uploading}
-                      size="sm"
-                      className="w-full hover-glow relative overflow-hidden group/btn"
-                      variant="outline"
-                    >
-                      <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 opacity-0 group-hover/btn:opacity-100 transition-all"></div>
-                      <span className="relative z-10">
-                        {uploading ? 'Uploading...' : 'Upload Video'}
-                      </span>
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={() => videoFileRef.current?.click()}
+                        disabled={uploading}
+                        size="sm"
+                        className="flex-1 hover-glow relative overflow-hidden group/btn"
+                        variant="outline"
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 opacity-0 group-hover/btn:opacity-100 transition-all"></div>
+                        <span className="relative z-10">
+                          {uploading ? 'Uploading...' : 'Upload Video'}
+                        </span>
+                      </Button>
+                      <VideoTestButton videoUrl={profile?.background_video_url} />
+                    </div>
                   </CardContent>
                 </Card>
 

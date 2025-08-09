@@ -1,89 +1,92 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { useProfile } from '@/hooks/useProfile';
-import { Play, Pause } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
 
-const VideoTestButton = () => {
-  const { profile, updateProfile } = useProfile();
-  const [isTestingVideo, setIsTestingVideo] = useState(false);
+interface VideoTestButtonProps {
+  videoUrl: string | null;
+}
 
-  const testVideos = [
-    {
-      name: 'Çalışan Video Test',
-      url: 'https://www.w3schools.com/html/mov_bbb.mp4'
-    },
-    {
-      name: 'Başka Test Video',
-      url: 'https://sample-videos.com/zip/10/mp4/SampleVideo_640x360_1mb.mp4'
+export function VideoTestButton({ videoUrl }: VideoTestButtonProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  if (!videoUrl) return null;
+
+  const togglePlay = () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (isPlaying) {
+      video.pause();
+    } else {
+      video.play();
     }
-  ];
-
-  const handleTestVideo = async (videoUrl: string) => {
-    setIsTestingVideo(true);
-    console.log('Testing video URL:', videoUrl);
-    
-    try {
-      await updateProfile({ background_video_url: videoUrl });
-      console.log('Video URL updated successfully');
-    } catch (error) {
-      console.error('Failed to update video URL:', error);
-    } finally {
-      setIsTestingVideo(false);
-    }
+    setIsPlaying(!isPlaying);
   };
 
-  const handleRemoveVideo = async () => {
-    setIsTestingVideo(true);
-    try {
-      await updateProfile({ background_video_url: null });
-      console.log('Video removed successfully');
-    } catch (error) {
-      console.error('Failed to remove video:', error);
-    } finally {
-      setIsTestingVideo(false);
-    }
+  const toggleMute = () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.muted = !video.muted;
+    setIsMuted(video.muted);
   };
 
-  if (!profile) return null;
+  const handleVideoEnded = () => {
+    setIsPlaying(false);
+  };
 
   return (
-    <div className="fixed bottom-4 left-4 z-50 space-y-2">
-      <div className="bg-card/90 backdrop-blur border rounded-lg p-3 space-y-2">
-        <p className="text-xs text-muted-foreground">Video Test</p>
-        
-        {testVideos.map((video, index) => (
-          <Button
-            key={index}
-            size="sm"
-            variant="outline"
-            onClick={() => handleTestVideo(video.url)}
-            disabled={isTestingVideo}
-            className="w-full justify-start"
-          >
-            <Play className="h-3 w-3 mr-2" />
-            {video.name}
-          </Button>
-        ))}
-        
-        <Button
-          size="sm"
-          variant="destructive"
-          onClick={handleRemoveVideo}
-          disabled={isTestingVideo}
-          className="w-full justify-start"
-        >
-          <Pause className="h-3 w-3 mr-2" />
-          Video Kaldır
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline" size="sm" className="w-full">
+          Test Video
         </Button>
-        
-        {profile.background_video_url && (
-          <p className="text-xs text-muted-foreground break-all">
-            Aktif: {profile.background_video_url.slice(0, 30)}...
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[600px] bg-background/95 backdrop-blur-sm border-white/10">
+        <DialogHeader>
+          <DialogTitle>Video Preview</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
+            <video
+              ref={videoRef}
+              src={videoUrl}
+              className="w-full h-full object-cover"
+              loop
+              muted={isMuted}
+              playsInline
+              onPlay={() => setIsPlaying(true)}
+              onPause={() => setIsPlaying(false)}
+              onEnded={handleVideoEnded}
+            />
+            <div className="absolute bottom-4 left-4 flex gap-2">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={togglePlay}
+                className="bg-black/50 hover:bg-black/70 text-white border-none"
+              >
+                {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={toggleMute}
+                className="bg-black/50 hover:bg-black/70 text-white border-none"
+              >
+                {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+              </Button>
+            </div>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            This is how your background video will appear on your profile.
           </p>
-        )}
-      </div>
-    </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
-};
-
-export default VideoTestButton;
+}
