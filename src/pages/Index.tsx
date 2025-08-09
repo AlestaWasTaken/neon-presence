@@ -7,7 +7,6 @@ import ViewStats from '@/components/ViewStats';
 import OptimizedVideoBackground from '@/components/OptimizedVideoBackground';
 import CursorStyle from '@/components/CursorStyle';
 import { Settings, LogOut } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 // Default fallback values - no longer needed
 // Removed DEFAULT_USERNAME and DEFAULT_BIO
@@ -132,20 +131,9 @@ const Index = () => {
           <div className="text-center space-y-8 animate-fade-in">
             <div className="space-y-4">
               <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-none">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <span className="text-gradient bg-gradient-to-r from-smoke-100 to-smoke-300 bg-clip-text text-transparent cursor-default">
-                        {username}
-                      </span>
-                    </TooltipTrigger>
-                    {profile?.sequential_id && (
-                      <TooltipContent>
-                        <p>User ID: #{profile.sequential_id}</p>
-                      </TooltipContent>
-                    )}
-                  </Tooltip>
-                </TooltipProvider>
+                <span className="text-gradient bg-gradient-to-r from-smoke-100 to-smoke-300 bg-clip-text text-transparent">
+                  {username}
+                </span>
               </h1>
               <p className="text-base sm:text-lg text-smoke-400 font-light tracking-wide max-w-md mx-auto">
                 {bio}

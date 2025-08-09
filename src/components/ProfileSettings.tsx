@@ -154,8 +154,8 @@ const ProfileSettings = () => {
         </Card>
       )}
 
-      {/* Main Content Grid - Only Basic Profile Settings and Cursor */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Main Content Grid - Horizontal Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
         {/* Basic Profile Settings */}
         <Card className="lg:col-span-1">
           <CardHeader>
@@ -180,6 +180,111 @@ const ProfileSettings = () => {
                 placeholder="digital nomad / hacker / dreamer"
                 rows={3}
               />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Visual Customization */}
+        <Card className="lg:col-span-1">
+          <CardHeader>
+            <CardTitle>Görsel Özelleştirme</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label>Tema</Label>
+              <Select 
+                value={formData.theme} 
+                onValueChange={(value) => handleFormChange('theme', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="neon">Neon</SelectItem>
+                  <SelectItem value="minimal">Minimal</SelectItem>
+                  <SelectItem value="cyberpunk">Cyberpunk</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="background-video">Arka Plan Video URL</Label>
+              <Input
+                id="background-video"
+                value={formData.background_video_url}
+                onChange={(e) => handleFormChange('background_video_url', e.target.value)}
+                placeholder="https://example.com/video.mp4"
+              />
+              <p className="text-xs text-muted-foreground">
+                MP4 formatında video URL'si girin. Boş bırakırsanız gradient arka plan kullanılır.
+              </p>
+              <div className="flex gap-1 flex-wrap">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => handleFormChange('background_video_url', 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4')}
+                  className="text-xs"
+                >
+                  Test 1
+                </Button>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => handleFormChange('background_video_url', 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4')}
+                  className="text-xs"
+                >
+                  Test 2
+                </Button>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => handleFormChange('background_video_url', '')}
+                  className="text-xs"
+                >
+                  Temizle
+                </Button>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="primary-color">Ana Renk</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="primary-color"
+                    type="color"
+                    value={formData.primary_color}
+                    onChange={(e) => handleFormChange('primary_color', e.target.value)}
+                    className="w-12 h-10"
+                  />
+                  <Input
+                    value={formData.primary_color}
+                    onChange={(e) => handleFormChange('primary_color', e.target.value)}
+                    placeholder="#00ff9f"
+                  />
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="accent-color">Vurgu Rengi</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="accent-color"
+                    type="color"
+                    value={formData.accent_color}
+                    onChange={(e) => handleFormChange('accent_color', e.target.value)}
+                    className="w-12 h-10"
+                  />
+                  <Input
+                    value={formData.accent_color}
+                    onChange={(e) => handleFormChange('accent_color', e.target.value)}
+                    placeholder="#ff0080"
+                  />
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>

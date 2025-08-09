@@ -14,10 +14,6 @@ export interface Profile {
   background_video_url: string | null;
   cursor_style: 'default' | 'pointer' | 'crosshair' | 'neon-dot' | 'custom';
   custom_cursor_url: string | null;
-  sequential_id?: number;
-  view_count?: number;
-  created_at?: string;
-  updated_at?: string;
 }
 
 export interface SocialLink {

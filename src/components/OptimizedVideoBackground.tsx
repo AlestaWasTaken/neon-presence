@@ -14,9 +14,6 @@ export default function OptimizedVideoBackground({ profileUserId }: OptimizedVid
   const { profile } = useProfile();
   const videoUrl = profile?.background_video_url;
 
-  console.log('Video component - Profile:', profile);
-  console.log('Video component - Video URL:', videoUrl);
-
   const resetVideo = useCallback(() => {
     setIsLoaded(false);
     setIsPlaying(false);
