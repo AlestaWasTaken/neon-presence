@@ -14,6 +14,8 @@ export interface Profile {
   background_video_url: string | null;
   cursor_style: 'default' | 'pointer' | 'crosshair' | 'neon-dot' | 'custom';
   custom_cursor_url: string | null;
+  avatar_url: string | null;
+  audio_url: string | null;
 }
 
 export interface SocialLink {
@@ -62,7 +64,11 @@ export function useProfile() {
         description: error.message
       });
     } else {
-      setProfile(data as Profile);
+      setProfile({
+        ...data,
+        avatar_url: data.avatar_url || null,
+        audio_url: data.audio_url || null
+      } as Profile);
     }
     setLoading(false);
   };
