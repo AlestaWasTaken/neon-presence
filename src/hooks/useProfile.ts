@@ -102,7 +102,8 @@ export function useProfile() {
       });
       throw error;
     } else {
-      setProfile({ ...profile, ...updates });
+      // Profile'ı yeniden fetch et ki güncel veri gelsin
+      await fetchProfile();
       toast({
         title: "Profil güncellendi",
         description: "Değişiklikler kaydedildi."
