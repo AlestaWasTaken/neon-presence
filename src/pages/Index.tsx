@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import ViewStats from '@/components/ViewStats';
 import OptimizedVideoBackground from '@/components/OptimizedVideoBackground';
 import CursorStyle from '@/components/CursorStyle';
-import { Settings, LogOut, Eye } from 'lucide-react';
+import { Settings, LogOut } from 'lucide-react';
 
 // Default fallback values
 const DEFAULT_USERNAME = "anonymous";
@@ -120,15 +120,6 @@ const Index = () => {
               >
                 <Settings className="h-4 w-4 mr-2" />
                 Customize
-              </Button>
-              <Button 
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate(`/${profile?.username}`)}
-                className="glass hover-lift text-smoke-300 hover:text-smoke-100 border-smoke-700/30"
-              >
-                <Eye className="h-4 w-4 mr-2" />
-                View
               </Button>
               <Button 
                 variant="ghost"
