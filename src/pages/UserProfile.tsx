@@ -5,6 +5,7 @@ import { DiscordStatus } from '@/components/DiscordStatus';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfileViews } from '@/hooks/useProfileViews';
 import { Button } from '@/components/ui/button';
+import EmbeddedView from '@/components/EmbeddedView';
 import ProfileSettings from '@/components/ProfileSettings';
 import ViewAnalytics from '@/components/ViewAnalytics';
 import VideoBackground from '@/components/VideoBackground';
@@ -193,21 +194,12 @@ const UserProfile = () => {
               {socialLinks
                 .sort((a, b) => a.order_index - b.order_index)
                 .map((link) => (
-                  <Button
+                  <EmbeddedView
                     key={link.id}
-                    variant="outline"
-                    size="lg"
-                    className="group transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/25"
-                    onClick={() => {
-                      // Ensure URL has protocol
-                      const url = link.url.startsWith('http') ? link.url : `https://${link.url}`;
-                      window.open(url, '_blank', 'noopener,noreferrer');
-                    }}
-                  >
-                    <span className="flex items-center gap-3 px-6 py-3" style={{ color: link.color }}>
-                      <span className="text-lg font-medium">{link.name}</span>
-                    </span>
-                  </Button>
+                    url={link.url}
+                    name={link.name}
+                    color={link.color}
+                  />
                 ))}
             </div>
           )}
