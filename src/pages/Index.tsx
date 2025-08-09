@@ -164,7 +164,7 @@ const Index = () => {
               <Button 
                 variant="ghost"
                 size="sm"
-                onClick={() => navigate('/settings')}
+                onClick={() => navigate('/dashboard')}
                 className="glass hover-lift text-smoke-300 hover:text-smoke-100 border-smoke-700/30"
               >
                 <Settings className="h-4 w-4 mr-2" />

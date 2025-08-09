@@ -6,14 +6,12 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Settings, Plus, Trash2, Eye, EyeOff, Save, RotateCcw } from 'lucide-react';
+import { Plus, Trash2, Eye, EyeOff, Save, RotateCcw } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const ProfileSettings = () => {
   const { profile, socialLinks, updateProfile, addSocialLink, updateSocialLink, deleteSocialLink } = useProfile();
   const { toast } = useToast();
-  const [isOpen, setIsOpen] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   
@@ -132,44 +130,29 @@ const ProfileSettings = () => {
   ];
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline" size="icon" className="fixed top-4 right-4 z-50">
-          <Settings className="h-4 w-4" />
-        </Button>
-      </DialogTrigger>
-      
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Profil Ayarları</DialogTitle>
-          <DialogDescription>
-            Profilinizi özelleştirin ve sosyal medya linklerinizi yönetin.
-          </DialogDescription>
-        </DialogHeader>
-
-        <div className="space-y-6">
-          {/* Save/Reset Actions */}
-          {hasChanges && (
-            <Card className="bg-primary/5 border-primary/20">
-              <CardContent className="p-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">
-                    Kaydedilmemiş değişiklikler var
-                  </span>
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm" onClick={handleReset}>
-                      <RotateCcw className="h-4 w-4 mr-2" />
-                      Sıfırla
-                    </Button>
-                    <Button size="sm" onClick={handleSave} disabled={isSaving}>
-                      <Save className="h-4 w-4 mr-2" />
-                      {isSaving ? 'Kaydediliyor...' : 'Kaydet'}
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          )}
+    <div className="space-y-6">
+      {/* Save/Reset Actions */}
+      {hasChanges && (
+        <Card className="bg-primary/5 border-primary/20">
+          <CardContent className="p-4">
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-muted-foreground">
+                Kaydedilmemiş değişiklikler var
+              </span>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" onClick={handleReset}>
+                  <RotateCcw className="h-4 w-4 mr-2" />
+                  Sıfırla
+                </Button>
+                <Button size="sm" onClick={handleSave} disabled={isSaving}>
+                  <Save className="h-4 w-4 mr-2" />
+                  {isSaving ? 'Kaydediliyor...' : 'Kaydet'}
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
           {/* Basic Profile Settings */}
           <Card>
@@ -449,21 +432,16 @@ const ProfileSettings = () => {
           </Card>
 
           {/* Final Save Button */}
-          <div className="flex justify-end gap-2 pt-4 border-t">
-            <Button variant="outline" onClick={() => setIsOpen(false)}>
-              Kapat
-            </Button>
-            {hasChanges && (
-              <Button onClick={handleSave} disabled={isSaving}>
+          {hasChanges && (
+            <div className="flex justify-end pt-4 border-t">
+              <Button onClick={handleSave} disabled={isSaving} size="lg">
                 <Save className="h-4 w-4 mr-2" />
                 {isSaving ? 'Kaydediliyor...' : 'Değişiklikleri Kaydet'}
               </Button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
-      </DialogContent>
-    </Dialog>
-  );
+    );
 };
 
 export default ProfileSettings;

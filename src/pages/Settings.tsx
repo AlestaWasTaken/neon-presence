@@ -50,7 +50,7 @@ export default function Settings() {
                     Back
                   </Button>
                 </Link>
-                <h1 className="text-xl font-black text-smoke-100">Hideout Settings</h1>
+                <h1 className="text-xl font-black text-smoke-100">Dashboard</h1>
               </div>
               <Link to={`/${profile?.username || user.id}`}>
                 <Button variant="ghost" size="sm" className="text-smoke-300 hover:text-smoke-100">

@@ -171,15 +171,15 @@ const UserProfile = () => {
           {/* Actions - Minimal and refined */}
           {isOwnProfile ? (
             <div className="flex justify-center gap-2 animate-fade-in-delay">
-              <Button 
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate('/settings')}
-                className="glass hover-lift text-smoke-300 hover:text-smoke-100 border-smoke-700/30"
-              >
-                <Settings className="h-4 w-4 mr-2" />
-                Customize
-              </Button>
+                <Button 
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => navigate('/dashboard')}
+                  className="glass hover-lift text-smoke-300 hover:text-smoke-100 border-smoke-700/30"
+                >
+                  <Settings className="h-4 w-4 mr-2" />
+                  Customize
+                </Button>
               <Button 
                 variant="ghost"
                 size="sm"
