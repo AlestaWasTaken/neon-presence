@@ -66,25 +66,31 @@ export default function OptimizedVideoBackground({ profileUserId }: OptimizedVid
     setIsLoaded(true);
     
   // Attempt to play with better error handling
-  setTimeout(() => {
-    const playPromise = video.play();
-    
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => {
-          console.log('Video playing successfully');
-          setIsPlaying(true);
-          setError(false);
-        })
-        .catch((playError) => {
-          console.log('Auto-play prevented or failed:', playError);
-          // Don't set error for auto-play prevention
-          if (playError.name !== 'NotAllowedError') {
-            setError(true);
-          }
-        });
-    }
-  }, 100);
+  video.muted = true;
+  video.playsInline = true;
+  video.loop = true;
+  
+  const playPromise = video.play();
+  
+  if (playPromise !== undefined) {
+    playPromise
+      .then(() => {
+        console.log('Video playing successfully');
+        setIsPlaying(true);
+        setError(false);
+      })
+      .catch((playError) => {
+        console.log('Auto-play prevented or failed:', playError);
+        // Try user interaction workaround
+        document.addEventListener('click', () => {
+          video.play().catch(console.error);
+        }, { once: true });
+        
+        if (playError.name !== 'NotAllowedError') {
+          setError(true);
+        }
+      });
+  }
   }, []);
 
   const handleVideoError = useCallback((e: any) => {

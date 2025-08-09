@@ -5,26 +5,43 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useProfile, SocialLink } from '@/hooks/useProfile';
 import { useToast } from '@/hooks/use-toast';
-import { X, Link as LinkIcon } from 'lucide-react';
+import { 
+  X, 
+  Link as LinkIcon, 
+  Instagram, 
+  Youtube, 
+  Twitter, 
+  Linkedin, 
+  Github, 
+  Music,
+  MessageCircle,
+  Twitch,
+  Heart,
+  Send,
+  Mail,
+  Globe,
+  Camera,
+  Pin
+} from 'lucide-react';
 
 // Popular social platforms with their configurations
 const SOCIAL_PLATFORMS = [
-  { name: 'Instagram', icon: '📷', baseUrl: 'https://instagram.com/', usernameOnly: true, color: '#E4405F' },
-  { name: 'TikTok', icon: '🎵', baseUrl: 'https://tiktok.com/@', usernameOnly: true, color: '#000000' },
-  { name: 'YouTube', icon: '📺', baseUrl: 'https://youtube.com/c/', usernameOnly: true, color: '#FF0000' },
-  { name: 'Twitter', icon: '🐦', baseUrl: 'https://twitter.com/', usernameOnly: true, color: '#1DA1F2' },
-  { name: 'LinkedIn', icon: '💼', baseUrl: 'https://linkedin.com/in/', usernameOnly: true, color: '#0077B5' },
-  { name: 'GitHub', icon: '🐱', baseUrl: 'https://github.com/', usernameOnly: true, color: '#333333' },
-  { name: 'Spotify', icon: '🎧', baseUrl: 'https://open.spotify.com/user/', usernameOnly: true, color: '#1DB954' },
-  { name: 'Discord', icon: '💬', baseUrl: 'https://discord.gg/', usernameOnly: true, color: '#5865F2' },
-  { name: 'Twitch', icon: '📹', baseUrl: 'https://twitch.tv/', usernameOnly: true, color: '#9146FF' },
-  { name: 'OnlyFans', icon: '🔥', baseUrl: 'https://onlyfans.com/', usernameOnly: true, color: '#00AFF0' },
-  { name: 'Reddit', icon: '📰', baseUrl: 'https://reddit.com/u/', usernameOnly: true, color: '#FF4500' },
-  { name: 'Snapchat', icon: '👻', baseUrl: 'https://snapchat.com/add/', usernameOnly: true, color: '#FFFC00' },
-  { name: 'Pinterest', icon: '📌', baseUrl: 'https://pinterest.com/', usernameOnly: true, color: '#E60023' },
-  { name: 'Telegram', icon: '✈️', baseUrl: 'https://t.me/', usernameOnly: true, color: '#0088CC' },
-  { name: 'Email', icon: '📧', baseUrl: 'mailto:', usernameOnly: false, color: '#EA4335' },
-  { name: 'Website', icon: '🌐', baseUrl: '', usernameOnly: false, color: '#6366F1' },
+  { name: 'Instagram', icon: Instagram, baseUrl: 'https://instagram.com/', usernameOnly: true, color: '#E4405F' },
+  { name: 'TikTok', icon: Music, baseUrl: 'https://tiktok.com/@', usernameOnly: true, color: '#000000' },
+  { name: 'YouTube', icon: Youtube, baseUrl: 'https://youtube.com/c/', usernameOnly: true, color: '#FF0000' },
+  { name: 'Twitter', icon: Twitter, baseUrl: 'https://twitter.com/', usernameOnly: true, color: '#1DA1F2' },
+  { name: 'LinkedIn', icon: Linkedin, baseUrl: 'https://linkedin.com/in/', usernameOnly: true, color: '#0077B5' },
+  { name: 'GitHub', icon: Github, baseUrl: 'https://github.com/', usernameOnly: true, color: '#333333' },
+  { name: 'Spotify', icon: Music, baseUrl: 'https://open.spotify.com/user/', usernameOnly: true, color: '#1DB954' },
+  { name: 'Discord', icon: MessageCircle, baseUrl: 'https://discord.gg/', usernameOnly: true, color: '#5865F2' },
+  { name: 'Twitch', icon: Twitch, baseUrl: 'https://twitch.tv/', usernameOnly: true, color: '#9146FF' },
+  { name: 'OnlyFans', icon: Heart, baseUrl: 'https://onlyfans.com/', usernameOnly: true, color: '#00AFF0' },
+  { name: 'Reddit', icon: MessageCircle, baseUrl: 'https://reddit.com/u/', usernameOnly: true, color: '#FF4500' },
+  { name: 'Snapchat', icon: Camera, baseUrl: 'https://snapchat.com/add/', usernameOnly: true, color: '#FFFC00' },
+  { name: 'Pinterest', icon: Pin, baseUrl: 'https://pinterest.com/', usernameOnly: true, color: '#E60023' },
+  { name: 'Telegram', icon: Send, baseUrl: 'https://t.me/', usernameOnly: true, color: '#0088CC' },
+  { name: 'Email', icon: Mail, baseUrl: 'mailto:', usernameOnly: false, color: '#EA4335' },
+  { name: 'Website', icon: Globe, baseUrl: '', usernameOnly: false, color: '#6366F1' },
 ];
 
 interface SocialLinkDialogProps {
@@ -53,7 +70,7 @@ function SocialLinkDialog({ platform, existingLink, isOpen, onClose }: SocialLin
       }
       finalUrl = customUrl;
       linkName = 'Custom Link';
-      linkIcon = '🔗';
+      linkIcon = 'Link';
     } else {
       if (!username.trim()) {
         toast({ variant: "destructive", title: "Kullanıcı adı gerekli", description: "Lütfen kullanıcı adınızı girin." });
@@ -61,7 +78,7 @@ function SocialLinkDialog({ platform, existingLink, isOpen, onClose }: SocialLin
       }
       finalUrl = platform.baseUrl + username;
       linkName = platform.name;
-      linkIcon = platform.icon;
+      linkIcon = platform.icon.name;
     }
 
     try {
@@ -96,7 +113,7 @@ function SocialLinkDialog({ platform, existingLink, isOpen, onClose }: SocialLin
         <DialogTitle className="flex items-center gap-2 text-foreground">
           {platform ? (
             <>
-              <span className="text-lg">{platform.icon}</span>
+              <platform.icon className="h-5 w-5" />
               {platform.name} {existingLink ? 'Düzenle' : 'Ekle'}
             </>
           ) : (
@@ -213,7 +230,7 @@ export function SocialLinksManager() {
               className="relative group aspect-square p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors flex items-center justify-center"
               title={platform.name}
             >
-              <span className="text-xl">{platform.icon}</span>
+              <platform.icon className="h-5 w-5" style={{ color: platform.color }} />
               {existingLink && (
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-primary rounded-full border-2 border-background" />
               )}
@@ -242,7 +259,10 @@ export function SocialLinksManager() {
                 className="flex items-center justify-between p-3 rounded-lg bg-muted/30"
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-lg">{link.icon}</span>
+                  {(() => {
+                    const IconComponent = SOCIAL_PLATFORMS.find(p => p.name === link.name)?.icon || LinkIcon;
+                    return <IconComponent className="h-5 w-5" style={{ color: link.color }} />;
+                  })()}
                   <div>
                     <p className="text-sm font-medium text-foreground">{link.name}</p>
                     <p className="text-xs text-muted-foreground truncate max-w-[200px]">{link.url}</p>
