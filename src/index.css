@@ -2,58 +2,64 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Dark neon theme inspired by guns.lol aesthetic */
+/* Minimal dark theme - clean and modern */
 
 @layer base {
   :root {
-    /* Dark theme base colors */
-    --background: 220 20% 8%;
-    --foreground: 0 0% 95%;
+    /* Minimal dark theme base colors */
+    --background: 0 0% 3%;
+    --foreground: 0 0% 98%;
 
-    --card: 220 20% 10%;
-    --card-foreground: 0 0% 95%;
+    --card: 0 0% 6%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 220 20% 10%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 0 0% 6%;
+    --popover-foreground: 0 0% 98%;
 
-    /* Neon primary colors */
-    --primary: 315 100% 70%;
-    --primary-foreground: 220 20% 8%;
-    --primary-glow: 315 100% 80%;
+    /* Subtle primary colors - white with subtle accent */
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
 
-    /* Secondary dark tones */
-    --secondary: 220 20% 15%;
-    --secondary-foreground: 0 0% 90%;
+    /* Gray tones for hierarchy */
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 85%;
 
-    --muted: 220 20% 12%;
-    --muted-foreground: 0 0% 65%;
+    --muted: 0 0% 8%;
+    --muted-foreground: 0 0% 50%;
 
-    /* Neon accent */
-    --accent: 285 100% 65%;
-    --accent-foreground: 220 20% 8%;
-    --accent-glow: 285 100% 75%;
+    /* Minimal accent - just slightly lighter */
+    --accent: 0 0% 15%;
+    --accent-foreground: 0 0% 98%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 85.7% 97.3%;
 
-    --border: 220 20% 20%;
-    --input: 220 20% 15%;
-    --ring: 315 100% 70%;
+    --border: 0 0% 15%;
+    --input: 0 0% 12%;
+    --ring: 0 0% 25%;
 
-    /* Custom neon colors */
-    --neon-pink: 315 100% 70%;
-    --neon-purple: 285 100% 65%;
-    --neon-cyan: 180 100% 70%;
+    /* Minimal color palette */
+    --gray-50: 0 0% 98%;
+    --gray-100: 0 0% 96%;
+    --gray-200: 0 0% 85%;
+    --gray-300: 0 0% 70%;
+    --gray-400: 0 0% 50%;
+    --gray-500: 0 0% 35%;
+    --gray-600: 0 0% 25%;
+    --gray-700: 0 0% 15%;
+    --gray-800: 0 0% 9%;
+    --gray-900: 0 0% 6%;
+    --gray-950: 0 0% 3%;
     
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(315 100% 70%), hsl(285 100% 65%));
-    --gradient-background: linear-gradient(180deg, hsl(220 20% 8%), hsl(240 25% 6%));
-    --gradient-card: linear-gradient(135deg, hsl(220 20% 10%), hsl(240 20% 12%));
+    /* Subtle gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(0 0% 6%), hsl(0 0% 9%));
+    --gradient-background: linear-gradient(180deg, hsl(0 0% 3%), hsl(0 0% 1%));
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 6%), hsl(0 0% 8%));
     
-    /* Shadows and glows */
-    --glow-primary: 0 0 20px hsl(315 100% 70% / 0.3);
-    --glow-accent: 0 0 20px hsl(285 100% 65% / 0.3);
-    --shadow-neon: 0 0 30px hsl(315 100% 70% / 0.5);
+    /* Minimal shadows */
+    --shadow-subtle: 0 1px 3px 0 hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
+    --shadow-medium: 0 4px 6px -1px hsl(0 0% 0% / 0.1), 0 2px 4px -2px hsl(0 0% 0% / 0.1);
+    --shadow-large: 0 10px 15px -3px hsl(0 0% 0% / 0.1), 0 4px 6px -4px hsl(0 0% 0% / 0.1);
 
     --radius: 0.75rem;
 
@@ -95,33 +101,25 @@
 }
 
 @layer utilities {
-  /* Neon text effects */
-  .text-neon {
-    color: hsl(var(--neon-pink));
-    text-shadow: 0 0 10px hsl(var(--neon-pink) / 0.5);
+  /* Minimal text effects */
+  .text-gradient {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
   
-  .text-neon-purple {
-    color: hsl(var(--neon-purple));
-    text-shadow: 0 0 10px hsl(var(--neon-purple) / 0.5);
+  /* Subtle shadows */
+  .shadow-subtle {
+    box-shadow: var(--shadow-subtle);
   }
   
-  .text-neon-cyan {
-    color: hsl(var(--neon-cyan));
-    text-shadow: 0 0 10px hsl(var(--neon-cyan) / 0.5);
+  .shadow-medium {
+    box-shadow: var(--shadow-medium);
   }
   
-  /* Glow effects */
-  .glow-primary {
-    box-shadow: var(--glow-primary);
-  }
-  
-  .glow-accent {
-    box-shadow: var(--glow-accent);
-  }
-  
-  .shadow-neon {
-    box-shadow: var(--shadow-neon);
+  .shadow-large {
+    box-shadow: var(--shadow-large);
   }
   
   /* Gradient backgrounds */
@@ -135,52 +133,40 @@
   
   /* Animation utilities */
   .animate-fade-in {
-    animation: fadeIn 0.8s ease-out forwards;
+    animation: fadeIn 0.6s ease-out forwards;
   }
   
   .animate-fade-in-delay {
-    animation: fadeIn 0.8s ease-out 0.3s forwards;
-    opacity: 0;
-  }
-  
-  .animate-fade-in-delay-2 {
-    animation: fadeIn 0.8s ease-out 0.6s forwards;
+    animation: fadeIn 0.6s ease-out 0.2s forwards;
     opacity: 0;
   }
   
   .animate-slide-up {
-    animation: slideUp 0.8s ease-out forwards;
+    animation: slideUp 0.6s ease-out forwards;
   }
   
-  .animate-pulse-neon {
-    animation: pulseNeon 2s ease-in-out infinite;
-  }
-  
-  /* Custom cursor styles */
-  .cursor-neon-dot {
+  /* Custom cursor styles - minimal */
+  .cursor-minimal-dot {
     cursor: none !important;
   }
   
-  /* Neon dot cursor effect */
-  body.cursor-neon-dot::before {
+  /* Minimal dot cursor effect */
+  body.cursor-minimal-dot::before {
     content: '';
     position: fixed;
     top: 0;
     left: 0;
-    width: 12px;
-    height: 12px;
-    background: hsl(var(--primary));
+    width: 8px;
+    height: 8px;
+    background: hsl(var(--foreground));
     border-radius: 50%;
     pointer-events: none;
     z-index: 10000;
-    box-shadow: 0 0 20px hsl(var(--primary)), 0 0 40px hsl(var(--primary));
     transform: translate(-50%, -50%);
-    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    mix-blend-mode: difference;
+    transition: all 0.1s ease;
   }
   
-  /* Track mouse movement for neon cursor */
-  body.cursor-neon-dot {
+  body.cursor-minimal-dot {
     cursor: none !important;
   }
 }
