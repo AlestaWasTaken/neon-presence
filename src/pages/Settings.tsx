@@ -72,13 +72,18 @@ export default function Settings() {
     setUploading(true);
     try {
       const fileExt = file.name.split('.').pop();
-      const fileName = `${user.id}-${Date.now()}.${fileExt}`;
+      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+      
+      console.log('Uploading video with fileName:', fileName);
       
       const { error: uploadError } = await supabase.storage
         .from('backgrounds')
         .upload(fileName, file);
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.error('Upload error:', uploadError);
+        throw uploadError;
+      }
 
       const { data } = supabase.storage
         .from('backgrounds')
@@ -92,6 +97,7 @@ export default function Settings() {
         description: "Background video has been updated."
       });
     } catch (error: any) {
+      console.error('Video upload error:', error);
       toast({
         variant: "destructive",
         title: "Upload failed",
@@ -108,13 +114,18 @@ export default function Settings() {
     setUploading(true);
     try {
       const fileExt = file.name.split('.').pop();
-      const fileName = `${user.id}-${Date.now()}.${fileExt}`;
+      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+      
+      console.log('Uploading avatar with fileName:', fileName);
       
       const { error: uploadError } = await supabase.storage
         .from('avatars')
         .upload(fileName, file);
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.error('Avatar upload error:', uploadError);
+        throw uploadError;
+      }
 
       const { data } = supabase.storage
         .from('avatars')
@@ -128,6 +139,7 @@ export default function Settings() {
         description: "Profile avatar has been updated."
       });
     } catch (error: any) {
+      console.error('Avatar upload error:', error);
       toast({
         variant: "destructive",
         title: "Upload failed",
@@ -144,13 +156,18 @@ export default function Settings() {
     setUploading(true);
     try {
       const fileExt = file.name.split('.').pop();
-      const fileName = `${user.id}-${Date.now()}.${fileExt}`;
+      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+      
+      console.log('Uploading audio with fileName:', fileName);
       
       const { error: uploadError } = await supabase.storage
         .from('audio')
         .upload(fileName, file);
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.error('Audio upload error:', uploadError);
+        throw uploadError;
+      }
 
       const { data } = supabase.storage
         .from('audio')
@@ -164,6 +181,7 @@ export default function Settings() {
         description: "Background audio has been updated."
       });
     } catch (error: any) {
+      console.error('Audio upload error:', error);
       toast({
         variant: "destructive",
         title: "Upload failed",
