@@ -81,6 +81,18 @@ const Index = () => {
             <div className="w-24 h-0.5 bg-gradient-primary mx-auto rounded-full" />
           </div>
 
+          {/* Profile URL Info */}
+          {user && profile && (
+            <div className="text-center animate-fade-in">
+              <p className="text-sm text-muted-foreground">
+                Profiliniz: {' '}
+                <span className="text-neon font-mono">
+                  {window.location.origin}/{profile.username}
+                </span>
+              </p>
+            </div>
+          )}
+
           {/* View Statistics - Only for profile owner */}
           <ViewStats profileUserId={user?.id} />
 

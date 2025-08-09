@@ -23,12 +23,17 @@ export function useProfileViews(profileUserId?: string) {
     // Get initial view count
     fetchViewCount();
     
-    // Track current view if not own profile
-    if (user && user.id !== profileUserId) {
-      trackView();
-    } else if (!user) {
-      // Anonymous view
-      trackView();
+    // Check if we should track this view (prevent F5 spam)
+    const shouldTrack = shouldTrackView(profileUserId);
+    
+    if (shouldTrack) {
+      // Track current view if not own profile
+      if (user && user.id !== profileUserId) {
+        trackView();
+      } else if (!user) {
+        // Anonymous view
+        trackView();
+      }
     }
 
     // Set up real-time presence tracking
@@ -58,6 +63,22 @@ export function useProfileViews(profileUserId?: string) {
       supabase.removeChannel(channel);
     };
   }, [profileUserId, user]);
+
+  // Function to check if we should track a view (prevent F5 spam)
+  const shouldTrackView = (userId: string): boolean => {
+    const storageKey = `profile_view_${userId}`;
+    const lastView = localStorage.getItem(storageKey);
+    const now = Date.now();
+    const viewCooldown = 5 * 60 * 1000; // 5 minutes cooldown
+
+    if (lastView && (now - parseInt(lastView)) < viewCooldown) {
+      return false; // Don't track if viewed recently
+    }
+
+    // Update last view time
+    localStorage.setItem(storageKey, now.toString());
+    return true;
+  };
 
   const fetchViewCount = async () => {
     if (!profileUserId) return;
