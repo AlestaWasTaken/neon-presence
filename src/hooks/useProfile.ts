@@ -86,17 +86,21 @@ export function useProfile() {
   const updateProfile = async (updates: Partial<Profile>) => {
     if (!user || !profile) return;
 
+    console.log('Updating profile with:', updates);
+
     const { error } = await supabase
       .from('profiles')
       .update(updates)
       .eq('user_id', user.id);
 
     if (error) {
+      console.error('Profile update error:', error);
       toast({
         variant: "destructive",
         title: "Profil güncellenemedi",
         description: error.message
       });
+      throw error;
     } else {
       setProfile({ ...profile, ...updates });
       toast({

@@ -18,6 +18,7 @@ const VideoBackground = ({ profileUserId }: VideoBackgroundProps) => {
       fetchOtherUserProfile();
     } else if (user?.id === profileUserId && profile) {
       // Use current user's profile
+      console.log('Setting video URL from profile:', profile.background_video_url);
       setProfileVideoUrl(profile.background_video_url);
     }
   }, [profileUserId, user, profile]);
@@ -25,16 +26,20 @@ const VideoBackground = ({ profileUserId }: VideoBackgroundProps) => {
   const fetchOtherUserProfile = async () => {
     if (!profileUserId) return;
 
-    const { data } = await supabase
+    console.log('Fetching video URL for user:', profileUserId);
+    const { data, error } = await supabase
       .from('profiles')
       .select('background_video_url')
       .eq('user_id', profileUserId)
       .single();
 
+    console.log('Fetched video data:', data, 'Error:', error);
     if (data) {
       setProfileVideoUrl(data.background_video_url);
     }
   };
+
+  console.log('VideoBackground render - profileVideoUrl:', profileVideoUrl);
 
   if (!profileVideoUrl) {
     return (
@@ -51,6 +56,9 @@ const VideoBackground = ({ profileUserId }: VideoBackgroundProps) => {
         playsInline
         className="absolute inset-0 w-full h-full object-cover pointer-events-none"
         style={{ zIndex: -1 }}
+        onError={(e) => console.error('Video load error:', e)}
+        onLoadStart={() => console.log('Video load started')}
+        onCanPlay={() => console.log('Video can play')}
       >
         <source src={profileVideoUrl} type="video/mp4" />
       </video>

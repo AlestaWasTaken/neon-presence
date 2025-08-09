@@ -70,6 +70,7 @@ const ProfileSettings = () => {
         description: "Değişiklikler başarıyla kaydedildi."
       });
     } catch (error) {
+      console.error('Profile update error:', error);
       toast({
         variant: "destructive",
         title: "Hata",
@@ -227,6 +228,24 @@ const ProfileSettings = () => {
                 <p className="text-xs text-muted-foreground">
                   MP4 formatında video URL'si girin. Boş bırakırsanız gradient arka plan kullanılır.
                 </p>
+                <div className="flex gap-2">
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleFormChange('background_video_url', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4')}
+                  >
+                    Test Video Ekle
+                  </Button>
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleFormChange('background_video_url', '')}
+                  >
+                    Temizle
+                  </Button>
+                </div>
               </div>
               
               <div className="grid grid-cols-2 gap-4">
