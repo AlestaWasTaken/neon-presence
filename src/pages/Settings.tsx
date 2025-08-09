@@ -254,11 +254,11 @@ export default function Settings() {
       <CursorStyle profileUserId={user.id} />
       
       {/* Sidebar */}
-      <div className="w-64 glass border-r border-smoke-700/30 relative z-20 animate-slide-in-right">
+      <div className="w-64 glass border-r border-smoke-700/30 relative z-20 animate-slide-in-right backdrop-blur-sm bg-white/5 border border-white/10">
         {/* Header */}
         <div className="p-6 border-b border-smoke-700/30">
           <Link to="/" className="flex items-center gap-3">
-            <Button variant="ghost" size="sm" className="text-smoke-300 hover:text-smoke-100 hover-scale">
+            <Button variant="ghost" size="sm" className="text-smoke-300 hover:text-smoke-100 transition-transform duration-200 hover:scale-105">
               <ArrowLeft className="w-4 h-4" />
             </Button>
             <h1 className="text-lg font-bold text-smoke-100 animate-fade-in">Dashboard</h1>
@@ -271,7 +271,7 @@ export default function Settings() {
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all hover-scale animate-fade-in ${
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all transition-transform duration-200 hover:scale-105 animate-fade-in ${
                 activeTab === item.id 
                   ? 'bg-smoke-800/50 text-smoke-100 border border-smoke-600/30 shadow-lg shadow-primary/20' 
                   : 'text-smoke-400 hover:text-smoke-200 hover:bg-smoke-800/30'
@@ -288,7 +288,7 @@ export default function Settings() {
       {/* Main Content */}
       <div className="flex-1 relative z-10 overflow-y-auto">
         {/* Header with Save Changes */}
-        <div className="border-b border-smoke-700/30 glass">
+        <div className="border-b border-smoke-700/30 backdrop-blur-sm bg-white/5 border border-white/10">
           <div className="px-8 py-6">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold text-smoke-100 animate-fade-in">Assets Uploader</h2>
@@ -312,11 +312,9 @@ export default function Settings() {
                     </Button>
                   </div>
                 )}
-                <Link to={`/${profile?.username || user.id}`}>
-                  <Button variant="ghost" size="sm" className="text-smoke-300 hover:text-smoke-100 hover-scale">
-                    View Profile
-                  </Button>
-                </Link>
+                <Button variant="ghost" size="sm" className="text-smoke-300 hover:text-smoke-100 transition-transform duration-200 hover:scale-105">
+                  View Profile
+                </Button>
               </div>
             </div>
           </div>
@@ -329,11 +327,11 @@ export default function Settings() {
               {/* Assets Uploader Grid */}
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 animate-fade-in">
                 {/* Background Video */}
-                <Card className="glass border-smoke-700/30 hover-scale hover-glow group relative overflow-hidden">
+                <Card className="backdrop-blur-sm bg-white/5 border border-white/10 border-smoke-700/30 transition-transform duration-200 hover:scale-105 transition-shadow duration-300 hover:shadow-lg hover:shadow-primary/20 group relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
                   <CardHeader className="pb-3 relative z-10">
                     <CardTitle className="text-sm text-smoke-200 flex items-center gap-2">
-                      <Video className="w-4 h-4 text-primary animate-glow-pulse" />
+                      <Video className="w-4 h-4 text-primary animate-pulse" />
                       Background
                     </CardTitle>
                   </CardHeader>
@@ -352,7 +350,7 @@ export default function Settings() {
                             updateProfile({ background_video_url: null });
                             setHasChanges(false);
                           }}
-                          className="absolute top-2 right-2 p-1 bg-red-500/80 text-white rounded-full opacity-0 group-hover/video:opacity-100 transition-all hover-scale"
+                          className="absolute top-2 right-2 p-1 bg-red-500/80 text-white rounded-full opacity-0 group-hover/video:opacity-100 transition-all"
                         >
                           <X className="w-3 h-3" />
                         </button>

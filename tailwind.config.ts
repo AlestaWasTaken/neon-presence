@@ -183,20 +183,5 @@ export default {
 			}
 		}
 	},
-	plugins: [
-		require("tailwindcss-animate"),
-		function({ addUtilities }: any) {
-			addUtilities({
-				'.hover-scale': {
-					'@apply': 'transition-transform duration-200 hover:scale-105'
-				},
-				'.hover-glow': {
-					'@apply': 'transition-shadow duration-300 hover:shadow-lg hover:shadow-primary/20'
-				},
-				'.glass': {
-					'@apply': 'backdrop-blur-sm bg-white/5 border border-white/10'
-				}
-			})
-		}
-	]
+	plugins: [require("tailwindcss-animate")],
 } satisfies Config;
