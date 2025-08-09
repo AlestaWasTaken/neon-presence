@@ -27,31 +27,81 @@ const Index = () => {
     await signOut();
   };
 
-  // If not authenticated, show login prompt
+  // If not authenticated, show login landing page
   if (!isLoading && !user) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-smoke-950 to-background flex items-center justify-center p-6">
         <OptimizedVideoBackground />
         
-        <div className="relative z-10 text-center space-y-8 max-w-md">
+        <div className="relative z-10 w-full max-w-md space-y-8">
+          {/* Header */}
+          <div className="text-center space-y-6">
+            <div className="space-y-4">
+              <h1 className="text-4xl sm:text-5xl font-black">
+                <span className="text-gradient bg-gradient-to-r from-smoke-100 to-smoke-300 bg-clip-text text-transparent">
+                  Enter the hideout
+                </span>
+              </h1>
+              <p className="text-smoke-400 text-sm leading-relaxed max-w-sm mx-auto">
+                Create your minimal digital presence in the shadows
+              </p>
+            </div>
+            
+            {/* Minimal accent line */}
+            <div className="w-8 h-px bg-smoke-600 mx-auto" />
+          </div>
+
+          {/* Login Actions */}
           <div className="space-y-4">
-            <h1 className="text-3xl sm:text-4xl font-black">
-              <span className="text-gradient bg-gradient-to-r from-smoke-100 to-smoke-300 bg-clip-text text-transparent">
-                Enter the hideout
-              </span>
-            </h1>
-            <p className="text-smoke-400 text-sm leading-relaxed">
-              Create your minimal digital presence
+            <Button 
+              onClick={() => navigate('/auth')} 
+              size="lg"
+              className="w-full glass hover-lift bg-smoke-800/50 text-smoke-100 border-smoke-600/30 hover:bg-smoke-700/50 h-12"
+            >
+              Sign In
+            </Button>
+            
+            <Button 
+              onClick={() => navigate('/auth')} 
+              variant="ghost"
+              size="lg"
+              className="w-full glass text-smoke-300 hover:text-smoke-100 border-smoke-700/20 hover:bg-smoke-800/30 h-12"
+            >
+              Create Account
+            </Button>
+          </div>
+
+          {/* Features Preview */}
+          <div className="space-y-4 pt-4">
+            <div className="text-center">
+              <p className="text-xs text-smoke-500 font-mono mb-4">what you get</p>
+            </div>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3 text-smoke-400 text-sm">
+                <div className="w-1 h-1 bg-smoke-500 rounded-full" />
+                <span>Your own custom URL</span>
+              </div>
+              <div className="flex items-center gap-3 text-smoke-400 text-sm">
+                <div className="w-1 h-1 bg-smoke-500 rounded-full" />
+                <span>Social links & portfolio</span>
+              </div>
+              <div className="flex items-center gap-3 text-smoke-400 text-sm">
+                <div className="w-1 h-1 bg-smoke-500 rounded-full" />
+                <span>Custom themes & cursors</span>
+              </div>
+              <div className="flex items-center gap-3 text-smoke-400 text-sm">
+                <div className="w-1 h-1 bg-smoke-500 rounded-full" />
+                <span>Video backgrounds</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="text-center pt-6">
+            <p className="text-xs text-smoke-500 font-mono">
+              bold but subtle, raw but refined
             </p>
           </div>
-          
-          <Button 
-            onClick={() => navigate('/auth')} 
-            size="lg"
-            className="glass hover-lift bg-smoke-800/50 text-smoke-100 border-smoke-600/30 hover:bg-smoke-700/50"
-          >
-            Sign In
-          </Button>
         </div>
       </div>
     );
