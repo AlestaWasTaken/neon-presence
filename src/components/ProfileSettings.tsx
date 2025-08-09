@@ -109,14 +109,18 @@ const ProfileSettings = () => {
   };
 
   const iconOptions = [
-    { value: 'globe', label: 'Website' },
+    { value: 'globe', label: 'Website / Custom URL' },
+    { value: 'link', label: 'Custom Link' },
     { value: 'github', label: 'GitHub' },
     { value: 'twitter', label: 'Twitter' },
     { value: 'instagram', label: 'Instagram' },
     { value: 'linkedin', label: 'LinkedIn' },
     { value: 'youtube', label: 'YouTube' },
+    { value: 'twitch', label: 'Twitch' },
+    { value: 'tiktok', label: 'TikTok' },
+    { value: 'discord', label: 'Discord' },
     { value: 'mail', label: 'Email' },
-    { value: 'discord', label: 'Discord' }
+    { value: 'phone', label: 'Telefon' }
   ];
 
   const cursorOptions = [
@@ -344,21 +348,49 @@ const ProfileSettings = () => {
           {/* Social Links */}
           <Card>
             <CardHeader>
-              <CardTitle>Sosyal Medya Linkleri</CardTitle>
+              <CardTitle>Bağlantılar & Custom URL</CardTitle>
               <CardDescription>
-                Profilinizde görünecek sosyal medya linklerinizi yönetin.
+                Sosyal medya linklerinizi, web sitenizi veya özel URL'lerinizi ekleyin.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* Quick Add Templates */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 p-3 bg-muted/50 rounded-lg">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setNewLink({ name: 'Website', url: 'https://', icon: 'globe', color: '#ffffff' })}
+                  className="text-sm"
+                >
+                  + Website
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setNewLink({ name: 'Portfolio', url: 'https://', icon: 'globe', color: '#ffffff' })}
+                  className="text-sm"
+                >
+                  + Portfolio
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setNewLink({ name: 'Custom Link', url: 'https://', icon: 'link', color: '#ffffff' })}
+                  className="text-sm"
+                >
+                  + Custom URL
+                </Button>
+              </div>
+
               {/* Add new link */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                 <Input
-                  placeholder="Platform adı"
+                  placeholder="Platform/Site adı"
                   value={newLink.name}
                   onChange={(e) => setNewLink({ ...newLink, name: e.target.value })}
                 />
                 <Input
-                  placeholder="URL"
+                  placeholder="https://example.com"
                   value={newLink.url}
                   onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
                 />
@@ -377,33 +409,41 @@ const ProfileSettings = () => {
                     ))}
                   </SelectContent>
                 </Select>
-                <Button onClick={handleAddLink} size="sm">
+                <Button onClick={handleAddLink} size="sm" disabled={!newLink.name || !newLink.url}>
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
 
               {/* Existing links */}
               <div className="space-y-2">
-                {socialLinks.map((link) => (
-                  <div key={link.id} className="flex items-center gap-2 p-2 border rounded">
-                    <span className="font-medium">{link.name}</span>
-                    <span className="text-sm text-muted-foreground flex-1">{link.url}</span>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => updateSocialLink(link.id, { is_visible: !link.is_visible })}
-                    >
-                      {link.is_visible ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => deleteSocialLink(link.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                {socialLinks.length === 0 ? (
+                  <div className="text-center py-4 text-muted-foreground text-sm">
+                    Henüz bağlantı eklenmemiş. Yukarıdaki formla website, sosyal medya veya özel URL'lerinizi ekleyebilirsiniz.
                   </div>
-                ))}
+                ) : (
+                  socialLinks.map((link) => (
+                    <div key={link.id} className="flex items-center gap-2 p-2 border rounded">
+                      <span className="font-medium">{link.name}</span>
+                      <span className="text-sm text-muted-foreground flex-1 truncate">{link.url}</span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => updateSocialLink(link.id, { is_visible: !link.is_visible })}
+                        title={link.is_visible ? 'Gizle' : 'Göster'}
+                      >
+                        {link.is_visible ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => deleteSocialLink(link.id)}
+                        title="Sil"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))
+                )}
               </div>
             </CardContent>
           </Card>
