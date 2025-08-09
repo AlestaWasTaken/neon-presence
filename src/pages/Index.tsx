@@ -8,9 +8,8 @@ import OptimizedVideoBackground from '@/components/OptimizedVideoBackground';
 import CursorStyle from '@/components/CursorStyle';
 import { Settings, LogOut } from 'lucide-react';
 
-// Default fallback values
-const DEFAULT_USERNAME = "anonymous";
-const DEFAULT_BIO = "digital wanderer";
+// Default fallback values - no longer needed
+// Removed DEFAULT_USERNAME and DEFAULT_BIO
 
 const Index = () => {
   const { user, signOut, loading: authLoading } = useAuth();
@@ -19,9 +18,9 @@ const Index = () => {
 
   const isLoading = authLoading || profileLoading;
 
-  // Use profile data if available, otherwise use defaults
-  const username = profile?.username || DEFAULT_USERNAME;
-  const bio = profile?.bio || DEFAULT_BIO;
+  // Use profile data if available, otherwise use defaults for authenticated users
+  const username = profile?.username || user?.user_metadata?.username || "user";
+  const bio = profile?.bio || "building something in the shadows...";
   
   const handleSignOut = async () => {
     await signOut();
