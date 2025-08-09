@@ -99,7 +99,7 @@ export default function NewSettings() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-smoke-950">
+    <div className="min-h-screen bg-gradient-to-b from-background to-smoke-950 relative">
       <OptimizedVideoBackground profileUserId={user.id} />
       <CursorStyle profileUserId={user.id} />
       
@@ -110,7 +110,7 @@ export default function NewSettings() {
           {/* Main Content */}
           <div className="flex-1 flex flex-col relative z-10">
             {/* Header with Sidebar Toggle */}
-            <header className="h-16 flex items-center justify-between border-b border-smoke-700/50 glass px-6 relative z-20">
+            <header className="h-16 flex items-center justify-between border-b border-smoke-700/50 glass px-6 sticky top-0 z-30 backdrop-blur-sm bg-background/80">
               <div className="flex items-center gap-4">
                 <SidebarTrigger className="text-smoke-300 hover:text-smoke-100" />
                 <h1 className="text-xl font-black text-smoke-100">Assets Uploader</h1>
@@ -135,7 +135,7 @@ export default function NewSettings() {
             </header>
 
             {/* Content Area */}
-            <main className="flex-1 p-6 relative z-10">
+            <main className="flex-1 p-6 relative z-10 overflow-y-auto">
               <div className="max-w-7xl mx-auto">
                 {activeTab === 'account' && (
                   <>

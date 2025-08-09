@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/sidebar"
 
 const menuItems = [
-  { title: "Account", url: "/dashboard?tab=account", icon: User },
+  { title: "Account", url: "/dashboard", icon: User },
   { title: "Customize", url: "/dashboard?tab=customize", icon: Palette },
   { title: "Links", url: "/dashboard?tab=links", icon: LinkIcon },
   { title: "Premium", url: "/premium", icon: Crown },
@@ -44,7 +44,7 @@ export function AppSidebar() {
       const tabParam = new URLSearchParams(search).get('tab')
       return currentPath === pathname && urlParams.get('tab') === tabParam
     }
-    return currentPath === path || (path === "/dashboard" && currentPath.startsWith("/dashboard"))
+    return currentPath === path && (!path.includes('dashboard') || location.search === '')
   }
 
   return (
@@ -86,7 +86,14 @@ export function AppSidebar() {
                       ${isActive(item.url) ? "bg-primary/20 text-primary border-r-2 border-primary" : ""}
                     `}
                   >
-                    <NavLink to={item.url} end={item.url === "/dashboard"}>
+                    <NavLink 
+                      to={item.url} 
+                      end={item.url === "/dashboard"}
+                      className={({ isActive: navIsActive }) => `
+                        flex items-center gap-2 w-full ${!collapsed ? 'px-3 py-2' : 'justify-center p-2'}
+                        ${isActive(item.url) ? "text-primary" : "text-smoke-400 hover:text-smoke-100"}
+                      `}
+                    >
                       <item.icon className="w-4 h-4" />
                       {!collapsed && <span className="text-sm">{item.title}</span>}
                     </NavLink>
