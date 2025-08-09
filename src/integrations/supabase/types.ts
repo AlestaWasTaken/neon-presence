@@ -51,6 +51,7 @@ export type Database = {
           custom_cursor_url: string | null
           id: string
           primary_color: string | null
+          sequential_id: number
           theme: string | null
           updated_at: string
           user_id: string
@@ -66,6 +67,7 @@ export type Database = {
           custom_cursor_url?: string | null
           id?: string
           primary_color?: string | null
+          sequential_id?: number
           theme?: string | null
           updated_at?: string
           user_id: string
@@ -81,6 +83,7 @@ export type Database = {
           custom_cursor_url?: string | null
           id?: string
           primary_color?: string | null
+          sequential_id?: number
           theme?: string | null
           updated_at?: string
           user_id?: string
@@ -151,6 +154,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      assign_sequential_ids: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       get_user_roles: {
         Args: { _user_id: string }
         Returns: {

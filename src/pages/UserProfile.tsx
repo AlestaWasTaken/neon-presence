@@ -11,6 +11,7 @@ import ViewAnalytics from '@/components/ViewAnalytics';
 import OptimizedVideoBackground from '@/components/OptimizedVideoBackground';
 import CursorStyle from '@/components/CursorStyle';
 import { LogOut, ArrowLeft, Settings } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface UserProfileData {
   id: string;
@@ -24,6 +25,7 @@ interface UserProfileData {
   background_video_url: string | null;
   cursor_style: 'default' | 'pointer' | 'crosshair' | 'neon-dot' | 'custom';
   custom_cursor_url: string | null;
+  sequential_id?: number;
 }
 
 interface UserSocialLink {
@@ -155,9 +157,20 @@ const UserProfile = () => {
           <div className="text-center space-y-8 animate-fade-in">
             <div className="space-y-4">
               <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-none">
-                <span className="text-gradient bg-gradient-to-r from-smoke-100 to-smoke-300 bg-clip-text text-transparent">
-                  {profileData.username}
-                </span>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span className="text-gradient bg-gradient-to-r from-smoke-100 to-smoke-300 bg-clip-text text-transparent cursor-default">
+                        {profileData.username}
+                      </span>
+                    </TooltipTrigger>
+                    {profileData.sequential_id && (
+                      <TooltipContent>
+                        <p>User ID: #{profileData.sequential_id}</p>
+                      </TooltipContent>
+                    )}
+                  </Tooltip>
+                </TooltipProvider>
               </h1>
               <p className="text-base sm:text-lg text-smoke-400 font-light tracking-wide max-w-md mx-auto">
                 {profileData.bio || 'digital wanderer'}
