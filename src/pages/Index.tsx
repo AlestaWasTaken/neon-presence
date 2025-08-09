@@ -9,6 +9,7 @@ import ViewStats from '@/components/ViewStats';
 import ViewAnalytics from '@/components/ViewAnalytics';
 import VideoBackground from '@/components/VideoBackground';
 import CursorStyle from '@/components/CursorStyle';
+import VideoTestButton from '@/components/VideoTestButton';
 import { LogOut } from 'lucide-react';
 
 // Default fallback values
@@ -67,6 +68,9 @@ const Index = () => {
       
       {/* Cursor Style */}
       <CursorStyle profileUserId={user?.id} />
+      
+      {/* Video Test Button - only for logged in users */}
+      {user && <VideoTestButton />}
       
       <div className="relative z-10 container mx-auto px-4 py-12 sm:py-20">
         <div className="max-w-2xl mx-auto space-y-8">

@@ -233,9 +233,17 @@ const ProfileSettings = () => {
                     type="button" 
                     variant="outline" 
                     size="sm"
-                    onClick={() => handleFormChange('background_video_url', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4')}
+                    onClick={() => handleFormChange('background_video_url', 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4')}
                   >
-                    Test Video Ekle
+                    Test Video 1
+                  </Button>
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleFormChange('background_video_url', 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4')}
+                  >
+                    Test Video 2
                   </Button>
                   <Button 
                     type="button" 
