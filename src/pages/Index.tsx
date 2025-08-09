@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import ProfileSettings from '@/components/ProfileSettings';
 import ViewStats from '@/components/ViewStats';
 import ViewAnalytics from '@/components/ViewAnalytics';
+import VideoBackground from '@/components/VideoBackground';
+import CursorStyle from '@/components/CursorStyle';
 import { LogOut } from 'lucide-react';
 
 // Default fallback values
@@ -60,8 +62,11 @@ const Index = () => {
   }
   return (
     <div className="min-h-screen bg-background">
-      {/* Background gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 pointer-events-none" />
+      {/* Video Background or Gradient */}
+      <VideoBackground profileUserId={user?.id} />
+      
+      {/* Cursor Style */}
+      <CursorStyle profileUserId={user?.id} />
       
       <div className="relative z-10 container mx-auto px-4 py-12 sm:py-20">
         <div className="max-w-2xl mx-auto space-y-8">

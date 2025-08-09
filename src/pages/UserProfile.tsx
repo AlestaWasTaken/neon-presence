@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button';
 import ProfileSettings from '@/components/ProfileSettings';
 import ViewStats from '@/components/ViewStats';
 import ViewAnalytics from '@/components/ViewAnalytics';
+import VideoBackground from '@/components/VideoBackground';
+import CursorStyle from '@/components/CursorStyle';
 import { LogOut, ArrowLeft } from 'lucide-react';
 
 interface UserProfileData {
@@ -19,6 +21,9 @@ interface UserProfileData {
   accent_color: string;
   theme: 'neon' | 'minimal' | 'cyberpunk';
   view_count: number;
+  background_video_url: string | null;
+  cursor_style: 'default' | 'pointer' | 'crosshair' | 'neon-dot' | 'custom';
+  custom_cursor_url: string | null;
 }
 
 interface UserSocialLink {
@@ -125,8 +130,11 @@ const UserProfile = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Background gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 pointer-events-none" />
+      {/* Video Background or Gradient */}
+      <VideoBackground profileUserId={profileData?.user_id} />
+      
+      {/* Cursor Style */}
+      <CursorStyle profileUserId={profileData?.user_id} />
       
       <div className="relative z-10 container mx-auto px-4 py-12 sm:py-20">
         <div className="max-w-2xl mx-auto space-y-8">

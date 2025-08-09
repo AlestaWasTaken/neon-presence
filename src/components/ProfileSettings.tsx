@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useProfile } from '@/hooks/useProfile';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,11 +7,28 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Settings, Plus, Trash2, Eye, EyeOff } from 'lucide-react';
+import { Settings, Plus, Trash2, Eye, EyeOff, Save, RotateCcw } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 const ProfileSettings = () => {
   const { profile, socialLinks, updateProfile, addSocialLink, updateSocialLink, deleteSocialLink } = useProfile();
+  const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  
+  // Form state
+  const [formData, setFormData] = useState({
+    username: '',
+    bio: '',
+    primary_color: '#00ff9f',
+    accent_color: '#ff0080',
+    theme: 'neon' as 'neon' | 'minimal' | 'cyberpunk',
+    background_video_url: '',
+    cursor_style: 'default' as 'default' | 'pointer' | 'crosshair' | 'neon-dot' | 'custom',
+    custom_cursor_url: ''
+  });
+
   const [newLink, setNewLink] = useState({
     name: '',
     url: '',
@@ -19,10 +36,64 @@ const ProfileSettings = () => {
     color: '#ffffff'
   });
 
+  // Initialize form with profile data
+  useEffect(() => {
+    if (profile) {
+      setFormData({
+        username: profile.username || '',
+        bio: profile.bio || '',
+        primary_color: profile.primary_color || '#00ff9f',
+        accent_color: profile.accent_color || '#ff0080',
+        theme: profile.theme || 'neon',
+        background_video_url: profile.background_video_url || '',
+        cursor_style: profile.cursor_style || 'default',
+        custom_cursor_url: profile.custom_cursor_url || ''
+      });
+      setHasChanges(false);
+    }
+  }, [profile]);
+
   if (!profile) return null;
 
-  const handleProfileUpdate = (field: string, value: string) => {
-    updateProfile({ [field]: value });
+  const handleFormChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    setHasChanges(true);
+  };
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      await updateProfile(formData);
+      setHasChanges(false);
+      toast({
+        title: "Profil güncellendi",
+        description: "Değişiklikler başarıyla kaydedildi."
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Hata",
+        description: "Profil güncellenirken bir hata oluştu."
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleReset = () => {
+    if (profile) {
+      setFormData({
+        username: profile.username || '',
+        bio: profile.bio || '',
+        primary_color: profile.primary_color || '#00ff9f',
+        accent_color: profile.accent_color || '#ff0080',
+        theme: profile.theme || 'neon',
+        background_video_url: profile.background_video_url || '',
+        cursor_style: profile.cursor_style || 'default',
+        custom_cursor_url: profile.custom_cursor_url || ''
+      });
+      setHasChanges(false);
+    }
   };
 
   const handleAddLink = () => {
@@ -47,6 +118,14 @@ const ProfileSettings = () => {
     { value: 'discord', label: 'Discord' }
   ];
 
+  const cursorOptions = [
+    { value: 'default', label: 'Varsayılan' },
+    { value: 'pointer', label: 'Pointer' },
+    { value: 'crosshair', label: 'Artı İşareti' },
+    { value: 'neon-dot', label: 'Neon Nokta' },
+    { value: 'custom', label: 'Özel' }
+  ];
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
@@ -55,7 +134,7 @@ const ProfileSettings = () => {
         </Button>
       </DialogTrigger>
       
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Profil Ayarları</DialogTitle>
           <DialogDescription>
@@ -64,6 +143,29 @@ const ProfileSettings = () => {
         </DialogHeader>
 
         <div className="space-y-6">
+          {/* Save/Reset Actions */}
+          {hasChanges && (
+            <Card className="bg-primary/5 border-primary/20">
+              <CardContent className="p-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">
+                    Kaydedilmemiş değişiklikler var
+                  </span>
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm" onClick={handleReset}>
+                      <RotateCcw className="h-4 w-4 mr-2" />
+                      Sıfırla
+                    </Button>
+                    <Button size="sm" onClick={handleSave} disabled={isSaving}>
+                      <Save className="h-4 w-4 mr-2" />
+                      {isSaving ? 'Kaydediliyor...' : 'Kaydet'}
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Basic Profile Settings */}
           <Card>
             <CardHeader>
@@ -74,8 +176,8 @@ const ProfileSettings = () => {
                 <Label htmlFor="username">Kullanıcı Adı</Label>
                 <Input
                   id="username"
-                  value={profile.username}
-                  onChange={(e) => handleProfileUpdate('username', e.target.value)}
+                  value={formData.username}
+                  onChange={(e) => handleFormChange('username', e.target.value)}
                 />
               </div>
               
@@ -83,25 +185,25 @@ const ProfileSettings = () => {
                 <Label htmlFor="bio">Biyografi</Label>
                 <Textarea
                   id="bio"
-                  value={profile.bio || ''}
-                  onChange={(e) => handleProfileUpdate('bio', e.target.value)}
+                  value={formData.bio}
+                  onChange={(e) => handleFormChange('bio', e.target.value)}
                   placeholder="digital nomad / hacker / dreamer"
                 />
               </div>
             </CardContent>
           </Card>
 
-          {/* Theme Settings */}
+          {/* Visual Customization */}
           <Card>
             <CardHeader>
-              <CardTitle>Tema ve Renkler</CardTitle>
+              <CardTitle>Görsel Özelleştirme</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label>Tema</Label>
                 <Select 
-                  value={profile.theme} 
-                  onValueChange={(value) => handleProfileUpdate('theme', value)}
+                  value={formData.theme} 
+                  onValueChange={(value) => handleFormChange('theme', value)}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -113,6 +215,19 @@ const ProfileSettings = () => {
                   </SelectContent>
                 </Select>
               </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="background-video">Arka Plan Video URL</Label>
+                <Input
+                  id="background-video"
+                  value={formData.background_video_url}
+                  onChange={(e) => handleFormChange('background_video_url', e.target.value)}
+                  placeholder="https://example.com/video.mp4"
+                />
+                <p className="text-xs text-muted-foreground">
+                  MP4 formatında video URL'si girin. Boş bırakırsanız gradient arka plan kullanılır.
+                </p>
+              </div>
               
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -121,13 +236,13 @@ const ProfileSettings = () => {
                     <Input
                       id="primary-color"
                       type="color"
-                      value={profile.primary_color}
-                      onChange={(e) => handleProfileUpdate('primary_color', e.target.value)}
+                      value={formData.primary_color}
+                      onChange={(e) => handleFormChange('primary_color', e.target.value)}
                       className="w-12 h-10"
                     />
                     <Input
-                      value={profile.primary_color}
-                      onChange={(e) => handleProfileUpdate('primary_color', e.target.value)}
+                      value={formData.primary_color}
+                      onChange={(e) => handleFormChange('primary_color', e.target.value)}
                       placeholder="#00ff9f"
                     />
                   </div>
@@ -139,18 +254,63 @@ const ProfileSettings = () => {
                     <Input
                       id="accent-color"
                       type="color"
-                      value={profile.accent_color}
-                      onChange={(e) => handleProfileUpdate('accent_color', e.target.value)}
+                      value={formData.accent_color}
+                      onChange={(e) => handleFormChange('accent_color', e.target.value)}
                       className="w-12 h-10"
                     />
                     <Input
-                      value={profile.accent_color}
-                      onChange={(e) => handleProfileUpdate('accent_color', e.target.value)}
+                      value={formData.accent_color}
+                      onChange={(e) => handleFormChange('accent_color', e.target.value)}
                       placeholder="#ff0080"
                     />
                   </div>
                 </div>
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Cursor Customization */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Cursor Özelleştirme</CardTitle>
+              <CardDescription>
+                Profilinizde görünen mouse cursor'ı özelleştirin.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label>Cursor Stili</Label>
+                <Select 
+                  value={formData.cursor_style} 
+                  onValueChange={(value) => handleFormChange('cursor_style', value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {cursorOptions.map(option => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {formData.cursor_style === 'custom' && (
+                <div className="space-y-2">
+                  <Label htmlFor="custom-cursor">Özel Cursor URL</Label>
+                  <Input
+                    id="custom-cursor"
+                    value={formData.custom_cursor_url}
+                    onChange={(e) => handleFormChange('custom_cursor_url', e.target.value)}
+                    placeholder="https://example.com/cursor.png"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    PNG/GIF formatında cursor dosyası URL'si girin. Önerilen boyut: 32x32px
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -220,6 +380,19 @@ const ProfileSettings = () => {
               </div>
             </CardContent>
           </Card>
+
+          {/* Final Save Button */}
+          <div className="flex justify-end gap-2 pt-4 border-t">
+            <Button variant="outline" onClick={() => setIsOpen(false)}>
+              Kapat
+            </Button>
+            {hasChanges && (
+              <Button onClick={handleSave} disabled={isSaving}>
+                <Save className="h-4 w-4 mr-2" />
+                {isSaving ? 'Kaydediliyor...' : 'Değişiklikleri Kaydet'}
+              </Button>
+            )}
+          </div>
         </div>
       </DialogContent>
     </Dialog>

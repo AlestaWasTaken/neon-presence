@@ -44,8 +44,11 @@ export type Database = {
       profiles: {
         Row: {
           accent_color: string | null
+          background_video_url: string | null
           bio: string | null
           created_at: string
+          cursor_style: string | null
+          custom_cursor_url: string | null
           id: string
           primary_color: string | null
           theme: string | null
@@ -56,8 +59,11 @@ export type Database = {
         }
         Insert: {
           accent_color?: string | null
+          background_video_url?: string | null
           bio?: string | null
           created_at?: string
+          cursor_style?: string | null
+          custom_cursor_url?: string | null
           id?: string
           primary_color?: string | null
           theme?: string | null
@@ -68,8 +74,11 @@ export type Database = {
         }
         Update: {
           accent_color?: string | null
+          background_video_url?: string | null
           bio?: string | null
           created_at?: string
+          cursor_style?: string | null
+          custom_cursor_url?: string | null
           id?: string
           primary_color?: string | null
           theme?: string | null

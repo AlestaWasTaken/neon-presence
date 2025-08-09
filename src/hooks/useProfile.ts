@@ -11,6 +11,9 @@ export interface Profile {
   primary_color: string;
   accent_color: string;
   theme: 'neon' | 'minimal' | 'cyberpunk';
+  background_video_url: string | null;
+  cursor_style: 'default' | 'pointer' | 'crosshair' | 'neon-dot' | 'custom';
+  custom_cursor_url: string | null;
 }
 
 export interface SocialLink {
