@@ -117,9 +117,21 @@ export default function OptimizedVideoBackground({ profileUserId }: OptimizedVid
       console.log('Loading video:', videoUrl);
       resetVideo();
       
+      // Set video properties before loading
+      video.muted = true;
+      video.playsInline = true;
+      video.loop = true;
+      video.autoplay = true;
+      video.preload = 'auto';
+      
       // Set video source and properties
       video.src = videoUrl;
       video.load();
+      
+      // Try to play immediately after load
+      video.addEventListener('canplay', () => {
+        video.play().catch(console.error);
+      }, { once: true });
     } else {
       resetVideo();
       video.src = '';
