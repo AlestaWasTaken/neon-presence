@@ -65,7 +65,8 @@ export default function OptimizedVideoBackground({ profileUserId }: OptimizedVid
     
     setIsLoaded(true);
     
-    // Attempt to play with better error handling
+  // Attempt to play with better error handling
+  setTimeout(() => {
     const playPromise = video.play();
     
     if (playPromise !== undefined) {
@@ -83,6 +84,7 @@ export default function OptimizedVideoBackground({ profileUserId }: OptimizedVid
           }
         });
     }
+  }, 100);
   }, []);
 
   const handleVideoError = useCallback((e: any) => {

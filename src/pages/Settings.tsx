@@ -4,6 +4,8 @@ import { useProfile } from '@/hooks/useProfile';
 import { supabase } from '@/integrations/supabase/client';
 import OptimizedVideoBackground from '@/components/OptimizedVideoBackground';
 import CursorStyle from '@/components/CursorStyle';
+import ColorCustomizer from '@/components/ColorCustomizer';
+import { SocialLinksManager } from '@/components/SocialLinksManager';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -31,7 +33,6 @@ import {
   Volume2,
   Trash2
 } from 'lucide-react';
-import ColorCustomizer from '@/components/ColorCustomizer';
 import { Link } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
 
@@ -625,6 +626,16 @@ export default function Settings() {
                       <Switch />
                     </div>
                   </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {activeTab === 'links' && (
+            <div className="space-y-8">
+              <Card className="backdrop-blur-sm bg-white/5 border border-white/10">
+                <CardContent className="p-6">
+                  <SocialLinksManager />
                 </CardContent>
               </Card>
             </div>
