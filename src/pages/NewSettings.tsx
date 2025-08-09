@@ -6,13 +6,82 @@ import { AppSidebar } from '@/components/AppSidebar';
 import OptimizedVideoBackground from '@/components/OptimizedVideoBackground';
 import CursorStyle from '@/components/CursorStyle';
 import ProfileSettings from '@/components/ProfileSettings';
+import FileUploadCard from '@/components/FileUploadCard';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useFileUpload } from '@/hooks/useFileUpload';
+import { useToast } from '@/hooks/use-toast';
 
 export default function NewSettings() {
   const { user, loading: authLoading } = useAuth();
-  const { profile, loading: profileLoading } = useProfile();
+  const { profile, loading: profileLoading, updateProfile } = useProfile();
   const [searchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'account';
+  const { toast } = useToast();
+
+  // File upload hooks
+  const backgroundUpload = useFileUpload({ 
+    bucket: 'backgrounds', 
+    allowedTypes: ['video/mp4', 'video/webm'], 
+    maxSize: 100 
+  });
+  
+  const audioUpload = useFileUpload({ 
+    bucket: 'audio', 
+    allowedTypes: ['audio/mp3', 'audio/wav', 'audio/ogg'], 
+    maxSize: 50 
+  });
+  
+  const avatarUpload = useFileUpload({ 
+    bucket: 'avatars', 
+    allowedTypes: ['image/jpeg', 'image/png', 'image/webp'], 
+    maxSize: 5 
+  });
+  
+  const cursorUpload = useFileUpload({ 
+    bucket: 'cursors', 
+    allowedTypes: ['image/png', 'image/webp'], 
+    maxSize: 2 
+  });
+
+  const handleFileUpload = async (file: File, type: 'background' | 'audio' | 'avatar' | 'cursor') => {
+    let url: string | null = null;
+    
+    switch (type) {
+      case 'background':
+        url = await backgroundUpload.uploadFile(file);
+        if (url && profile) {
+          await updateProfile({ background_video_url: url });
+        }
+        break;
+      case 'audio':
+        url = await audioUpload.uploadFile(file);
+        // TODO: Update once audio_url is available in types
+        // if (url && profile) {
+        //   await updateProfile({ audio_url: url });
+        // }
+        break;
+      case 'avatar':
+        url = await avatarUpload.uploadFile(file);
+        // TODO: Update once avatar_url is available in types  
+        // if (url && profile) {
+        //   await updateProfile({ avatar_url: url });
+        // }
+        break;
+      case 'cursor':
+        url = await cursorUpload.uploadFile(file);
+        if (url && profile) {
+          await updateProfile({ custom_cursor_url: url });
+        }
+        break;
+    }
+
+    if (url) {
+      toast({
+        title: "Upload successful",
+        description: `${type} uploaded successfully`
+      });
+    }
+  };
 
   if (authLoading || profileLoading) {
     return (
@@ -72,53 +141,45 @@ export default function NewSettings() {
                   <>
                     {/* Top Section - Background, Audio, Profile Avatar, Custom Cursor */}
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
-                      <div className="bg-smoke-900/50 border border-smoke-700/50 rounded-lg p-4">
-                        <h3 className="text-smoke-100 font-medium mb-3">Background</h3>
-                        <div className="aspect-video bg-smoke-800/50 rounded border border-smoke-700/30 flex items-center justify-center">
-                          <span className="text-xs text-smoke-400">HAVAYOLU PERSONELİ</span>
-                        </div>
-                        <div className="mt-3 flex gap-2">
-                          <button className="text-xs text-smoke-400 hover:text-smoke-200">MP4</button>
-                          <button className="text-xs text-red-400 hover:text-red-300">✕</button>
-                        </div>
-                      </div>
+                      <FileUploadCard
+                        title="Background"
+                        currentFile={profile?.background_video_url}
+                        acceptedTypes="video/*"
+                        placeholder="Upload video background"
+                        uploading={backgroundUpload.uploading}
+                        onFileSelect={(file) => handleFileUpload(file, 'background')}
+                        type="video"
+                      />
 
-                      <div className="bg-smoke-900/50 border border-smoke-700/50 rounded-lg p-4">
-                        <h3 className="text-smoke-100 font-medium mb-3">Audio</h3>
-                        <div className="aspect-video bg-smoke-800/50 rounded border border-smoke-700/30 flex items-center justify-center">
-                          <div className="text-smoke-400 text-center">
-                            <div className="w-8 h-8 mx-auto mb-2 opacity-50">📁</div>
-                            <span className="text-xs">Click to upload/change</span>
-                          </div>
-                        </div>
-                      </div>
+                      <FileUploadCard
+                        title="Audio"
+                        currentFile={undefined} // TODO: Use profile?.audio_url once types are updated
+                        acceptedTypes="audio/*"
+                        placeholder="Upload background music"
+                        uploading={audioUpload.uploading}
+                        onFileSelect={(file) => handleFileUpload(file, 'audio')}
+                        type="audio"
+                      />
 
-                      <div className="bg-smoke-900/50 border border-smoke-700/50 rounded-lg p-4">
-                        <h3 className="text-smoke-100 font-medium mb-3">Profile Avatar</h3>
-                        <div className="aspect-video bg-smoke-800/50 rounded border border-smoke-700/30 overflow-hidden">
-                          <div className="w-full h-full bg-gradient-to-br from-smoke-600 to-smoke-800 flex items-center justify-center">
-                            <div className="w-12 h-12 bg-smoke-200 rounded-full"></div>
-                          </div>
-                        </div>
-                        <div className="mt-3 flex justify-between">
-                          <span className="text-xs text-smoke-400">WEBP</span>
-                          <button className="text-xs text-red-400 hover:text-red-300">✕</button>
-                        </div>
-                      </div>
+                      <FileUploadCard
+                        title="Profile Avatar"
+                        currentFile={undefined} // TODO: Use profile?.avatar_url once types are updated
+                        acceptedTypes="image/*"
+                        placeholder="Upload profile picture"
+                        uploading={avatarUpload.uploading}
+                        onFileSelect={(file) => handleFileUpload(file, 'avatar')}
+                        type="image"
+                      />
 
-                      <div className="bg-smoke-900/50 border border-smoke-700/50 rounded-lg p-4">
-                        <h3 className="text-smoke-100 font-medium mb-3">Custom Cursor</h3>
-                        <div className="aspect-video bg-smoke-800/50 rounded border border-smoke-700/30 flex items-center justify-center">
-                          <div className="text-smoke-400 text-center">
-                            <div className="w-8 h-8 mx-auto mb-2 opacity-50">🎯</div>
-                            <span className="text-xs">WEBP</span>
-                          </div>
-                        </div>
-                        <div className="mt-3 flex justify-between">
-                          <span className="text-xs text-smoke-400">WEBP</span>
-                          <button className="text-xs text-red-400 hover:text-red-300">✕</button>
-                        </div>
-                      </div>
+                      <FileUploadCard
+                        title="Custom Cursor"
+                        currentFile={profile?.custom_cursor_url}
+                        acceptedTypes="image/png,image/webp"
+                        placeholder="Upload cursor image"
+                        uploading={cursorUpload.uploading}
+                        onFileSelect={(file) => handleFileUpload(file, 'cursor')}
+                        type="image"
+                      />
                     </div>
 
                     {/* Want exclusive features banner */}
