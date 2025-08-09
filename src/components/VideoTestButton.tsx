@@ -59,9 +59,15 @@ export function VideoTestButton({ videoUrl }: VideoTestButtonProps) {
               loop
               muted={isMuted}
               playsInline
+              crossOrigin="anonymous"
+              preload="auto"
               onPlay={() => setIsPlaying(true)}
               onPause={() => setIsPlaying(false)}
               onEnded={handleVideoEnded}
+              onLoadStart={() => console.log('Test video load started:', videoUrl)}
+              onLoadedData={() => console.log('Test video loaded successfully')}
+              onError={(e) => console.error('Test video error:', e, 'URL:', videoUrl)}
+              onCanPlay={() => console.log('Test video can play')}
             />
             <div className="absolute bottom-4 left-4 flex gap-2">
               <Button

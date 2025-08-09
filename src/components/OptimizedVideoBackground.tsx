@@ -180,12 +180,15 @@ export default function OptimizedVideoBackground({ profileUserId }: OptimizedVid
         loop
         muted
         playsInline
-        preload="metadata"
+        preload="auto"
+        crossOrigin="anonymous"
+        autoPlay
         onLoadedData={handleVideoLoad}
         onError={handleVideoError}
         onEnded={handleVideoEnded}
-        onLoadStart={() => console.log('Video load started')}
-        onCanPlay={() => console.log('Video can play')}
+        onLoadStart={() => console.log('Background video load started:', videoUrl)}
+        onCanPlay={() => console.log('Background video can play')}
+        onLoadedMetadata={() => console.log('Background video metadata loaded')}
         style={{
           filter: 'brightness(0.4) contrast(1.1) saturate(0.8)',
         }}
