@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useProfile } from '@/hooks/useProfile';
+import { supabase } from '@/integrations/supabase/client';
 
 interface OptimizedVideoBackgroundProps {
   profileUserId?: string;
@@ -10,9 +11,41 @@ export default function OptimizedVideoBackground({ profileUserId }: OptimizedVid
   const [isLoaded, setIsLoaded] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [error, setError] = useState(false);
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
   
   const { profile } = useProfile();
-  const videoUrl = profile?.background_video_url;
+
+  // Fetch profile for specific user or use current user's profile
+  useEffect(() => {
+    const fetchProfileVideo = async () => {
+      if (profileUserId) {
+        console.log('Fetching video for user:', profileUserId);
+        try {
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('background_video_url')
+            .eq('user_id', profileUserId)
+            .single();
+          
+          if (error && error.code !== 'PGRST116') {
+            console.error('Error fetching profile video:', error);
+            setVideoUrl(null);
+          } else {
+            console.log('Fetched video URL:', data?.background_video_url);
+            setVideoUrl(data?.background_video_url || null);
+          }
+        } catch (err) {
+          console.error('Error fetching profile video:', err);
+          setVideoUrl(null);
+        }
+      } else if (profile) {
+        console.log('Using current profile video:', profile.background_video_url);
+        setVideoUrl(profile.background_video_url);
+      }
+    };
+
+    fetchProfileVideo();
+  }, [profileUserId, profile]);
 
   const resetVideo = useCallback(() => {
     setIsLoaded(false);
