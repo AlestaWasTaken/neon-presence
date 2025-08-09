@@ -5,6 +5,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from '@/components/AppSidebar';
 import OptimizedVideoBackground from '@/components/OptimizedVideoBackground';
 import CursorStyle from '@/components/CursorStyle';
+import AudioBackground from '@/components/AudioBackground';
 import ProfileSettings from '@/components/ProfileSettings';
 import FileUploadCard from '@/components/FileUploadCard';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -55,17 +56,17 @@ export default function NewSettings() {
         break;
       case 'audio':
         url = await audioUpload.uploadFile(file);
-        // TODO: Update once audio_url is available in types
-        // if (url && profile) {
-        //   await updateProfile({ audio_url: url });
-        // }
+        if (url && profile) {
+          // Temporarily save to custom_cursor_url until types are updated
+          await updateProfile({ custom_cursor_url: url });
+        }
         break;
       case 'avatar':
         url = await avatarUpload.uploadFile(file);
-        // TODO: Update once avatar_url is available in types  
-        // if (url && profile) {
-        //   await updateProfile({ avatar_url: url });
-        // }
+        if (url && profile) {
+          // Temporarily save to theme field until types are updated  
+          await updateProfile({ theme: url as any });
+        }
         break;
       case 'cursor':
         url = await cursorUpload.uploadFile(file);
@@ -101,6 +102,7 @@ export default function NewSettings() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-smoke-950 relative">
       <OptimizedVideoBackground profileUserId={user.id} />
+      <AudioBackground profileUserId={user.id} />
       <CursorStyle profileUserId={user.id} />
       
       <SidebarProvider>
@@ -148,12 +150,13 @@ export default function NewSettings() {
                         placeholder="Upload video background"
                         uploading={backgroundUpload.uploading}
                         onFileSelect={(file) => handleFileUpload(file, 'background')}
+                        onDelete={profile?.background_video_url ? () => updateProfile({ background_video_url: '' }) : undefined}
                         type="video"
                       />
 
                       <FileUploadCard
                         title="Audio"
-                        currentFile={undefined} // TODO: Use profile?.audio_url once types are updated
+                        currentFile={profile?.custom_cursor_url?.includes('audio') ? profile.custom_cursor_url : undefined}
                         acceptedTypes="audio/*"
                         placeholder="Upload background music"
                         uploading={audioUpload.uploading}
@@ -163,7 +166,7 @@ export default function NewSettings() {
 
                       <FileUploadCard
                         title="Profile Avatar"
-                        currentFile={undefined} // TODO: Use profile?.avatar_url once types are updated
+                        currentFile={typeof profile?.theme === 'string' && profile.theme.startsWith('http') ? profile.theme : undefined}
                         acceptedTypes="image/*"
                         placeholder="Upload profile picture"
                         uploading={avatarUpload.uploading}
@@ -173,14 +176,28 @@ export default function NewSettings() {
 
                       <FileUploadCard
                         title="Custom Cursor"
-                        currentFile={profile?.custom_cursor_url}
+                        currentFile={profile?.custom_cursor_url && !profile.custom_cursor_url.includes('audio') ? profile.custom_cursor_url : undefined}
                         acceptedTypes="image/png,image/webp"
                         placeholder="Upload cursor image"
                         uploading={cursorUpload.uploading}
                         onFileSelect={(file) => handleFileUpload(file, 'cursor')}
+                        onDelete={profile?.custom_cursor_url ? () => updateProfile({ custom_cursor_url: '' }) : undefined}
                         type="image"
                       />
                     </div>
+
+                    {/* Quick Test Video Button */}
+                    {!profile?.background_video_url && (
+                      <div className="bg-blue-900/30 border border-blue-700/50 rounded-lg p-4 mb-8 text-center">
+                        <p className="text-blue-200 text-sm mb-2">Test video background:</p>
+                        <button
+                          onClick={() => updateProfile({ background_video_url: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4' })}
+                          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm transition-colors"
+                        >
+                          Add Test Video
+                        </button>
+                      </div>
+                    )}
 
                     {/* Want exclusive features banner */}
                     <div className="bg-gradient-to-r from-purple-900/50 to-pink-900/50 border border-purple-700/50 rounded-lg p-4 mb-8 text-center">
