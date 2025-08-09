@@ -8,9 +8,9 @@ import { Button } from '@/components/ui/button';
 import EmbeddedView from '@/components/EmbeddedView';
 import ProfileSettings from '@/components/ProfileSettings';
 import ViewAnalytics from '@/components/ViewAnalytics';
-import VideoBackground from '@/components/VideoBackground';
+import OptimizedVideoBackground from '@/components/OptimizedVideoBackground';
 import CursorStyle from '@/components/CursorStyle';
-import { LogOut, ArrowLeft } from 'lucide-react';
+import { LogOut, ArrowLeft, Settings } from 'lucide-react';
 
 interface UserProfileData {
   id: string;
@@ -99,27 +99,39 @@ const UserProfile = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-neon animate-pulse text-xl">Yükleniyor...</div>
+      <div className="min-h-screen bg-gradient-to-br from-background to-smoke-950 flex items-center justify-center">
+        <OptimizedVideoBackground />
+        <div className="relative z-10 text-smoke-300 animate-pulse text-sm font-light tracking-wider">
+          loading...
+        </div>
       </div>
     );
   }
 
   if (notFound) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 pointer-events-none" />
+      <div className="min-h-screen bg-gradient-to-br from-background to-smoke-950 flex items-center justify-center p-6">
+        <OptimizedVideoBackground />
         
-        <div className="relative z-10 text-center space-y-6">
-          <h1 className="text-4xl font-black text-neon">
-            Kullanıcı Bulunamadı
-          </h1>
-          <p className="text-lg text-muted-foreground">
-            @{username} kullanıcı adına sahip bir profil bulunamadı.
-          </p>
-          <Button onClick={() => navigate('/')} className="flex items-center gap-2">
-            <ArrowLeft className="h-4 w-4" />
-            Ana Sayfaya Dön
+        <div className="relative z-10 text-center space-y-6 max-w-md">
+          <div className="space-y-4">
+            <h1 className="text-3xl sm:text-4xl font-black">
+              <span className="text-gradient bg-gradient-to-r from-smoke-100 to-smoke-300 bg-clip-text text-transparent">
+                User not found
+              </span>
+            </h1>
+            <p className="text-smoke-400 text-sm leading-relaxed">
+              @{username} doesn't exist in this hideout
+            </p>
+          </div>
+          
+          <Button 
+            onClick={() => navigate('/')} 
+            size="sm"
+            className="glass hover-lift bg-smoke-800/50 text-smoke-100 border-smoke-600/30 hover:bg-smoke-700/50"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to hideout
           </Button>
         </div>
       </div>
@@ -129,85 +141,97 @@ const UserProfile = () => {
   if (!profileData) return null;
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Video Background or Gradient */}
-      <VideoBackground profileUserId={profileData?.user_id} />
+    <div className="min-h-screen bg-gradient-to-b from-background to-smoke-950">
+      {/* Video Background */}
+      <OptimizedVideoBackground profileUserId={profileData?.user_id} />
       
       {/* Cursor Style */}
       <CursorStyle profileUserId={profileData?.user_id} />
       
-      <div className="relative z-10 container mx-auto px-4 py-12 sm:py-20">
-        <div className="max-w-2xl mx-auto space-y-8">
+      <div className="relative z-10 container mx-auto px-6 py-16 sm:py-24">
+        <div className="max-w-xl mx-auto space-y-12">
           
           {/* Header Section */}
-          <div className="text-center space-y-6 animate-fade-in">
-            <div className="space-y-2">
-              <h1 className="text-5xl sm:text-7xl font-black tracking-tight">
-                <span className="text-neon animate-pulse-neon">{profileData.username}</span>
+          <div className="text-center space-y-8 animate-fade-in">
+            <div className="space-y-4">
+              <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-none">
+                <span className="text-gradient bg-gradient-to-r from-smoke-100 to-smoke-300 bg-clip-text text-transparent">
+                  {profileData.username}
+                </span>
               </h1>
-              <p className="text-lg sm:text-xl text-muted-foreground font-light tracking-wide">
-                {profileData.bio || 'Bu kullanıcı henüz bir bio eklememış.'}
+              <p className="text-base sm:text-lg text-smoke-400 font-light tracking-wide max-w-md mx-auto">
+                {profileData.bio || 'digital wanderer'}
               </p>
             </div>
             
-            {/* Decorative line */}
-            <div className="w-24 h-0.5 bg-gradient-primary mx-auto rounded-full" />
+            {/* Minimal accent */}
+            <div className="w-8 h-px bg-smoke-600 mx-auto" />
           </div>
 
-
-          {/* User Actions - Only show if it's own profile */}
-          {isOwnProfile && (
-            <div className="flex justify-center gap-4">
-              <ProfileSettings />
-              <ViewAnalytics />
+          {/* Actions - Minimal and refined */}
+          {isOwnProfile ? (
+            <div className="flex justify-center gap-2 animate-fade-in-delay">
               <Button 
-                variant="outline" 
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate('/settings')}
+                className="glass hover-lift text-smoke-300 hover:text-smoke-100 border-smoke-700/30"
+              >
+                <Settings className="h-4 w-4 mr-2" />
+                Customize
+              </Button>
+              <Button 
+                variant="ghost"
+                size="sm"
                 onClick={handleSignOut}
-                className="flex items-center gap-2"
+                className="text-smoke-400 hover:text-smoke-200"
               >
                 <LogOut className="h-4 w-4" />
-                Çıkış Yap
               </Button>
             </div>
-          )}
-
-          {/* Back to home if not own profile */}
-          {!isOwnProfile && (
-            <div className="flex justify-center">
+          ) : (
+            <div className="flex justify-center animate-fade-in-delay">
               <Button 
-                variant="outline" 
+                variant="ghost"
+                size="sm"
                 onClick={() => navigate('/')}
-                className="flex items-center gap-2"
+                className="glass hover-lift text-smoke-300 hover:text-smoke-100 border-smoke-700/30"
               >
-                <ArrowLeft className="h-4 w-4" />
-                Ana Sayfa
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to hideout
               </Button>
             </div>
           )}
 
-          {/* Discord Status */}
-          <DiscordStatus userId={DEFAULT_DISCORD_ID} />
-
-          {/* Social Links */}
-          {socialLinks.length > 0 && (
-            <div className="flex flex-wrap justify-center gap-4">
-              {socialLinks
-                .sort((a, b) => a.order_index - b.order_index)
-                .map((link) => (
-                  <EmbeddedView
-                    key={link.id}
-                    url={link.url}
-                    name={link.name}
-                    color={link.color}
-                  />
-                ))}
-            </div>
-          )}
+          {/* Social Links - Refined presentation */}
+          <div className="animate-fade-in-delay">
+            {socialLinks.length > 0 ? (
+              <div className="flex flex-wrap justify-center gap-2">
+                {socialLinks
+                  .filter(link => link.is_visible)
+                  .sort((a, b) => a.order_index - b.order_index)
+                  .map((link) => (
+                    <EmbeddedView
+                      key={link.id}
+                      url={link.url}
+                      name={link.name}
+                      color={link.color}
+                    />
+                  ))}
+              </div>
+            ) : (
+              <div className="text-center">
+                <p className="text-xs text-smoke-500 font-mono">
+                  no connections yet
+                </p>
+              </div>
+            )}
+          </div>
 
           {/* Footer */}
-          <div className="text-center pt-8 animate-fade-in-delay-2">
-            <p className="text-sm text-muted-foreground">
-              Profil sahibi: <span className="text-neon">@{profileData.username}</span>
+          <div className="text-center pt-12 animate-fade-in-delay-2">
+            <p className="text-xs text-smoke-500 font-mono">
+              {window.location.origin}/{profileData.username}
             </p>
           </div>
 
