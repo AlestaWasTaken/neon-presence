@@ -186,27 +186,28 @@ const UserProfile = () => {
             <div className="w-8 h-px bg-smoke-600 mx-auto" />
           </div>
 
-          {/* Actions - Minimal and refined */}
-          {isOwnProfile ? (
-            <div className="flex justify-center gap-2 animate-fade-in-delay">
-                <Button 
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => navigate('/dashboard')}
-                  className="glass hover-lift text-smoke-300 hover:text-smoke-100 border-smoke-700/30"
-                >
-                  <Settings className="h-4 w-4 mr-2" />
-                  Customize
-                </Button>
-              <Button 
-                variant="ghost"
-                size="sm"
-                onClick={handleSignOut}
-                className="text-smoke-400 hover:text-smoke-200"
-              >
-                <LogOut className="h-4 w-4" />
-              </Button>
-            </div>
+           {/* Actions - Minimal and refined */}
+           {isOwnProfile ? (
+             <div className="flex justify-center gap-2 animate-fade-in-delay">
+                 <Button 
+                   variant="ghost"
+                   size="sm"
+                   onClick={() => navigate('/dashboard')}
+                   className="glass hover-lift text-smoke-300 hover:text-smoke-100 border-smoke-700/30"
+                 >
+                   <Settings className="h-4 w-4 mr-2" />
+                   Customize
+                 </Button>
+                 <ViewAnalytics />
+               <Button 
+                 variant="ghost"
+                 size="sm"
+                 onClick={handleSignOut}
+                 className="text-smoke-400 hover:text-smoke-200"
+               >
+                 <LogOut className="h-4 w-4" />
+               </Button>
+             </div>
           ) : (
             <div className="flex justify-center animate-fade-in-delay">
               <Button 

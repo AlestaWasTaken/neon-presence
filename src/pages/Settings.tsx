@@ -16,6 +16,7 @@ import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
+import ViewAnalytics from '@/components/ViewAnalytics';
 import { 
   ArrowLeft, 
   Upload, 
@@ -315,6 +316,7 @@ export default function Settings() {
                     </Button>
                   </div>
                 )}
+                <ViewAnalytics />
                 <Button variant="ghost" size="sm" className="text-smoke-300 hover:text-smoke-100 transition-transform duration-200 hover:scale-105">
                   View Profile
                 </Button>
