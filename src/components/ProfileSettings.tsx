@@ -6,8 +6,9 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Trash2, Eye, EyeOff, Save, RotateCcw } from 'lucide-react';
+import { Plus, Trash2, Eye, EyeOff, Save, RotateCcw, Upload, Video, Image } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import ColorCustomizer from '@/components/ColorCustomizer';
 
 const ProfileSettings = () => {
   const { profile, socialLinks, updateProfile, addSocialLink, updateSocialLink, deleteSocialLink } = useProfile();
@@ -19,9 +20,9 @@ const ProfileSettings = () => {
   const [formData, setFormData] = useState({
     username: '',
     bio: '',
-    primary_color: '#00ff9f',
-    accent_color: '#ff0080',
-    theme: 'neon' as 'neon' | 'minimal' | 'cyberpunk',
+    primary_color: '0 0% 96%',
+    accent_color: '0 0% 10%',
+    theme: 'dark' as 'dark' | 'light' | 'system',
     background_video_url: '',
     cursor_style: 'default' as 'default' | 'pointer' | 'crosshair' | 'neon-dot' | 'custom',
     custom_cursor_url: ''
@@ -40,9 +41,9 @@ const ProfileSettings = () => {
       setFormData({
         username: profile.username || '',
         bio: profile.bio || '',
-        primary_color: profile.primary_color || '#00ff9f',
-        accent_color: profile.accent_color || '#ff0080',
-        theme: profile.theme || 'neon',
+        primary_color: profile.primary_color || '0 0% 96%',
+        accent_color: profile.accent_color || '0 0% 10%',
+        theme: profile.theme || 'dark',
         background_video_url: profile.background_video_url || '',
         cursor_style: profile.cursor_style || 'default',
         custom_cursor_url: profile.custom_cursor_url || ''
@@ -56,6 +57,13 @@ const ProfileSettings = () => {
   const handleFormChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     setHasChanges(true);
+    
+    // Apply color changes immediately to CSS variables
+    if (field === 'primary_color') {
+      document.documentElement.style.setProperty('--primary', value);
+    } else if (field === 'accent_color') {
+      document.documentElement.style.setProperty('--accent', value);
+    }
   };
 
   const handleSave = async () => {
@@ -84,9 +92,9 @@ const ProfileSettings = () => {
       setFormData({
         username: profile.username || '',
         bio: profile.bio || '',
-        primary_color: profile.primary_color || '#00ff9f',
-        accent_color: profile.accent_color || '#ff0080',
-        theme: profile.theme || 'neon',
+        primary_color: profile.primary_color || '0 0% 96%',
+        accent_color: profile.accent_color || '0 0% 10%',
+        theme: profile.theme || 'dark',
         background_video_url: profile.background_video_url || '',
         cursor_style: profile.cursor_style || 'default',
         custom_cursor_url: profile.custom_cursor_url || ''
@@ -200,92 +208,74 @@ const ProfileSettings = () => {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="neon">Neon</SelectItem>
-                  <SelectItem value="minimal">Minimal</SelectItem>
-                  <SelectItem value="cyberpunk">Cyberpunk</SelectItem>
+                  <SelectItem value="dark">Koyu</SelectItem>
+                  <SelectItem value="light">Açık</SelectItem>
+                  <SelectItem value="system">Sistem</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="background-video">Arka Plan Video URL</Label>
-              <Input
-                id="background-video"
-                value={formData.background_video_url}
-                onChange={(e) => handleFormChange('background_video_url', e.target.value)}
-                placeholder="https://example.com/video.mp4"
-              />
-              <p className="text-xs text-muted-foreground">
-                MP4 formatında video URL'si girin. Boş bırakırsanız gradient arka plan kullanılır.
-              </p>
-              <div className="flex gap-1 flex-wrap">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label className="flex items-center gap-2">
+                  <Video className="w-4 h-4" />
+                  Arka Plan Video/Fotoğraf
+                </Label>
+                <Input
+                  value={formData.background_video_url}
+                  onChange={(e) => handleFormChange('background_video_url', e.target.value)}
+                  placeholder="https://example.com/video.mp4 veya .jpg/.png"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Video (.mp4) veya resim (.jpg, .png) URL'si girin. Boş bırakırsanız gradient arka plan kullanılır.
+                </p>
+                
+                {/* Quick action buttons */}
+                <div className="grid grid-cols-2 gap-2">
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleFormChange('background_video_url', 'https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=1920')}
+                    className="text-xs flex items-center gap-1"
+                  >
+                    <Image className="w-3 h-3" />
+                    Test Resim
+                  </Button>
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleFormChange('background_video_url', 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4')}
+                    className="text-xs flex items-center gap-1"
+                  >
+                    <Video className="w-3 h-3" />
+                    Test Video
+                  </Button>
+                </div>
+                
                 <Button 
                   type="button" 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => handleFormChange('background_video_url', 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4')}
-                  className="text-xs"
-                >
-                  Test 1
-                </Button>
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => handleFormChange('background_video_url', 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4')}
-                  className="text-xs"
-                >
-                  Test 2
-                </Button>
-                <Button 
-                  type="button" 
-                  variant="outline" 
+                  variant="ghost" 
                   size="sm"
                   onClick={() => handleFormChange('background_video_url', '')}
-                  className="text-xs"
+                  className="text-xs w-full"
                 >
                   Temizle
                 </Button>
               </div>
+
+              {/* Color Customizer Integration */}
+              <ColorCustomizer 
+                onColorChange={handleFormChange}
+                currentColors={{
+                  primary_color: formData.primary_color,
+                  accent_color: formData.accent_color,
+                  theme: formData.theme
+                }}
+              />
             </div>
             
-            <div className="grid grid-cols-1 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="primary-color">Ana Renk</Label>
-                <div className="flex gap-2">
-                  <Input
-                    id="primary-color"
-                    type="color"
-                    value={formData.primary_color}
-                    onChange={(e) => handleFormChange('primary_color', e.target.value)}
-                    className="w-12 h-10"
-                  />
-                  <Input
-                    value={formData.primary_color}
-                    onChange={(e) => handleFormChange('primary_color', e.target.value)}
-                    placeholder="#00ff9f"
-                  />
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="accent-color">Vurgu Rengi</Label>
-                <div className="flex gap-2">
-                  <Input
-                    id="accent-color"
-                    type="color"
-                    value={formData.accent_color}
-                    onChange={(e) => handleFormChange('accent_color', e.target.value)}
-                    className="w-12 h-10"
-                  />
-                  <Input
-                    value={formData.accent_color}
-                    onChange={(e) => handleFormChange('accent_color', e.target.value)}
-                    placeholder="#ff0080"
-                  />
-                </div>
-              </div>
-            </div>
           </CardContent>
         </Card>
 

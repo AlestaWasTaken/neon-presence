@@ -60,26 +60,39 @@ const VideoBackground = ({ profileUserId }: VideoBackgroundProps) => {
     );
   }
 
+  // Check if the URL is an image or video
+  const isImage = profileVideoUrl.match(/\.(jpg|jpeg|png|gif|webp)$/i);
+
   return (
     <>
-      <video
-        key={profileVideoUrl} // Force re-render when URL changes
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-        style={{ zIndex: -1 }}
-        onError={(e) => {
-          console.error('Video load error:', e);
-          console.error('Failed video URL:', profileVideoUrl);
-        }}
-        onLoadStart={() => console.log('Video load started:', profileVideoUrl)}
-        onCanPlay={() => console.log('Video can play:', profileVideoUrl)}
-        onLoadedData={() => console.log('Video loaded data:', profileVideoUrl)}
-      >
-        <source src={profileVideoUrl} type="video/mp4" />
-      </video>
+      {isImage ? (
+        <div 
+          className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat pointer-events-none"
+          style={{ 
+            backgroundImage: `url(${profileVideoUrl})`,
+            zIndex: -1 
+          }}
+        />
+      ) : (
+        <video
+          key={profileVideoUrl} // Force re-render when URL changes
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+          style={{ zIndex: -1 }}
+          onError={(e) => {
+            console.error('Video load error:', e);
+            console.error('Failed video URL:', profileVideoUrl);
+          }}
+          onLoadStart={() => console.log('Video load started:', profileVideoUrl)}
+          onCanPlay={() => console.log('Video can play:', profileVideoUrl)}
+          onLoadedData={() => console.log('Video loaded data:', profileVideoUrl)}
+        >
+          <source src={profileVideoUrl} type="video/mp4" />
+        </video>
+      )}
       {/* Overlay to ensure text readability */}
       <div className="absolute inset-0 bg-black/30 pointer-events-none" />
       {/* Gradient overlay for better text contrast */}

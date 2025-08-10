@@ -213,29 +213,39 @@ export default function OptimizedVideoBackground({ profileUserId }: OptimizedVid
     );
   }
 
+  // Check if the URL is an image or video
+  const isImage = videoUrl.match(/\.(jpg|jpeg|png|gif|webp)$/i);
+
   return (
     <>
-      {/* Video Background */}
-      <video
-        ref={videoRef}
-        className="fixed inset-0 w-full h-full object-cover z-0"
-        loop
-        muted={isMuted}
-        playsInline
-        preload="auto"
-        crossOrigin="anonymous"
-        autoPlay
-        onLoadedData={handleVideoLoad}
-        onError={handleVideoError}
-        onEnded={handleVideoEnded}
-        onLoadStart={() => console.log('Background video load started:', videoUrl)}
-        onCanPlay={() => console.log('Background video can play')}
-        onLoadedMetadata={() => console.log('Background video metadata loaded')}
-        onMouseEnter={() => setShowControls(true)}
-        style={{
-          filter: 'brightness(0.4) contrast(1.1) saturate(0.8)',
-        }}
-      />
+      {/* Image or Video Background */}
+      {isImage ? (
+        <div 
+          className="fixed inset-0 w-full h-full bg-cover bg-center bg-no-repeat z-0"
+          style={{ backgroundImage: `url(${videoUrl})` }}
+        />
+      ) : (
+        <video
+          ref={videoRef}
+          className="fixed inset-0 w-full h-full object-cover z-0"
+          loop
+          muted={isMuted}
+          playsInline
+          preload="auto"
+          crossOrigin="anonymous"
+          autoPlay
+          onLoadedData={handleVideoLoad}
+          onError={handleVideoError}
+          onEnded={handleVideoEnded}
+          onLoadStart={() => console.log('Background video load started:', videoUrl)}
+          onCanPlay={() => console.log('Background video can play')}
+          onLoadedMetadata={() => console.log('Background video metadata loaded')}
+          onMouseEnter={() => setShowControls(true)}
+          style={{
+            filter: 'brightness(0.4) contrast(1.1) saturate(0.8)',
+          }}
+        />
+      )}
 
       {/* Video Controls */}
       <div 

@@ -10,7 +10,7 @@ export interface Profile {
   bio: string | null;
   primary_color: string;
   accent_color: string;
-  theme: 'neon' | 'minimal' | 'cyberpunk';
+  theme: 'dark' | 'light' | 'system';
   background_video_url: string | null;
   cursor_style: 'default' | 'pointer' | 'crosshair' | 'neon-dot' | 'custom';
   custom_cursor_url: string | null;

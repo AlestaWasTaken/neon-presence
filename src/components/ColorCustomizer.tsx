@@ -13,14 +13,14 @@ interface ColorCustomizerProps {
 }
 
 const colorPresets = [
-  { name: 'Snow', icon: Circle, primary: '#ffffff', accent: '#f8fafc', bg: 'linear-gradient(135deg, #ffffff, #f8fafc)' },
-  { name: 'Ocean', icon: Circle, primary: '#0ea5e9', accent: '#06b6d4', bg: 'linear-gradient(135deg, #0ea5e9, #06b6d4)' },
-  { name: 'Forest', icon: Circle, primary: '#22c55e', accent: '#16a34a', bg: 'linear-gradient(135deg, #22c55e, #16a34a)' },
-  { name: 'Sunset', icon: Circle, primary: '#f59e0b', accent: '#ea580c', bg: 'linear-gradient(135deg, #f59e0b, #ea580c)' },
-  { name: 'Rose', icon: Heart, primary: '#ec4899', accent: '#f43f5e', bg: 'linear-gradient(135deg, #ec4899, #f43f5e)' },
-  { name: 'Purple', icon: Sparkles, primary: '#8b5cf6', accent: '#a855f7', bg: 'linear-gradient(135deg, #8b5cf6, #a855f7)' },
-  { name: 'Electric', icon: Zap, primary: '#06b6d4', accent: '#8b5cf6', bg: 'linear-gradient(135deg, #06b6d4, #8b5cf6)' },
-  { name: 'Gold', icon: Star, primary: '#eab308', accent: '#f59e0b', bg: 'linear-gradient(135deg, #eab308, #f59e0b)' },
+  { name: 'Snow', icon: Circle, primary: '0 0% 96%', accent: '210 20% 98%', bg: 'linear-gradient(135deg, hsl(0 0% 96%), hsl(210 20% 98%))' },
+  { name: 'Ocean', icon: Circle, primary: '199 89% 48%', accent: '188 85% 47%', bg: 'linear-gradient(135deg, hsl(199 89% 48%), hsl(188 85% 47%))' },
+  { name: 'Forest', icon: Circle, primary: '142 76% 47%', accent: '142 69% 42%', bg: 'linear-gradient(135deg, hsl(142 76% 47%), hsl(142 69% 42%))' },
+  { name: 'Sunset', icon: Circle, primary: '43 96% 56%', accent: '20 90% 48%', bg: 'linear-gradient(135deg, hsl(43 96% 56%), hsl(20 90% 48%))' },
+  { name: 'Rose', icon: Heart, primary: '330 81% 60%', accent: '351 83% 61%', bg: 'linear-gradient(135deg, hsl(330 81% 60%), hsl(351 83% 61%))' },
+  { name: 'Purple', icon: Sparkles, primary: '258 90% 66%', accent: '262 83% 68%', bg: 'linear-gradient(135deg, hsl(258 90% 66%), hsl(262 83% 68%))' },
+  { name: 'Electric', icon: Zap, primary: '188 85% 47%', accent: '258 90% 66%', bg: 'linear-gradient(135deg, hsl(188 85% 47%), hsl(258 90% 66%))' },
+  { name: 'Gold', icon: Star, primary: '45 93% 47%', accent: '43 96% 56%', bg: 'linear-gradient(135deg, hsl(45 93% 47%), hsl(43 96% 56%))' },
 ];
 
 const themePresets = [
@@ -36,6 +36,9 @@ export default function ColorCustomizer({ onColorChange, currentColors }: ColorC
     setSelectedColor(preset.name);
     onColorChange('primary_color', preset.primary);
     onColorChange('accent_color', preset.accent);
+    // Apply colors to CSS variables immediately
+    document.documentElement.style.setProperty('--primary', preset.primary);
+    document.documentElement.style.setProperty('--accent', preset.accent);
   };
 
   const handleThemeSelect = (theme: any) => {
