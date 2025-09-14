@@ -80,7 +80,7 @@ export function DashboardSidebar({ activeSection, onSectionChange, profile }: Si
             <span className="text-white font-bold text-lg">G</span>
           </div>
           <div>
-            <h1 className="text-white font-bold text-xl">guns.lol</h1>
+            <h1 className="text-white font-bold text-xl">devious</h1>
             <p className="text-smoke-400 text-sm">Dashboard Panel</p>
           </div>
         </div>
@@ -131,9 +131,20 @@ export function DashboardSidebar({ activeSection, onSectionChange, profile }: Si
             Account
           </h2>
           <div className="space-y-1">
-            <button className="w-full group flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium text-smoke-300 hover:text-white hover:bg-smoke-800/50 transition-all">
-              <div className="w-10 h-10 rounded-lg bg-smoke-800/50 group-hover:bg-smoke-700 flex items-center justify-center transition-all">
-                <Settings className="w-5 h-5 text-smoke-400 group-hover:text-white" />
+            <button 
+              onClick={() => onSectionChange('settings')}
+              className={`w-full group flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+                activeSection === 'settings' 
+                  ? 'bg-gradient-to-r from-purple-600/30 to-purple-500/30 text-white border border-purple-500/30 shadow-lg' 
+                  : 'text-smoke-300 hover:text-white hover:bg-smoke-800/50'
+              }`}
+            >
+              <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all ${
+                activeSection === 'settings' 
+                  ? 'bg-gradient-to-br from-purple-500 to-purple-600 text-white shadow-lg' 
+                  : 'bg-smoke-800/50 text-smoke-400 group-hover:bg-smoke-700 group-hover:text-white'
+              }`}>
+                <Settings className="w-5 h-5" />
               </div>
               <div className="flex-1 text-left">
                 <span>Settings</span>

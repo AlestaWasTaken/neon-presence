@@ -46,8 +46,8 @@ const Index = () => {
           <div className="text-center space-y-6">
             <div className="space-y-4">
               <h1 className="text-4xl sm:text-5xl font-black">
-                <span className="text-gradient bg-gradient-to-r from-smoke-100 to-smoke-300 bg-clip-text text-transparent">
-                  Enter the hideout
+                 <span className="text-gradient bg-gradient-to-r from-smoke-100 to-smoke-300 bg-clip-text text-transparent">
+                  Enter devious
                 </span>
               </h1>
               <p className="text-smoke-400 text-sm leading-relaxed max-w-sm mx-auto">

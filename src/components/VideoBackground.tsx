@@ -71,7 +71,7 @@ export default function VideoBackground({ profileUserId, videoRef }: VideoBackgr
     video.addEventListener('canplay', handleLoad);
     video.addEventListener('error', handleError);
     
-    video.muted = true;
+    video.muted = false;
     video.loop = true;
     video.playsInline = true;
     video.preload = 'metadata';

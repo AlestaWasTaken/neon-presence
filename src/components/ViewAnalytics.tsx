@@ -89,7 +89,8 @@ export default function ViewAnalytics({ profileUserId }: ViewAnalyticsProps) {
           id,
           viewer_user_id,
           browser_type,
-          created_at
+          created_at,
+          username
         `)
         .eq('profile_user_id', profileUserId)
         .not('viewer_user_id', 'is', null)
@@ -120,26 +121,13 @@ export default function ViewAnalytics({ profileUserId }: ViewAnalyticsProps) {
         todayViews: todayResult || 0,
         weekViews: weekResult || 0,
         monthViews: monthResult || 0,
-        viewers: (viewersResult || []).map((viewer: any) => {
-          // Get username from profiles if viewer is registered
-          const getViewerUsername = async (viewerId: string) => {
-            if (!viewerId) return null;
-            const { data: profile } = await supabase
-              .from('profiles')
-              .select('username')
-              .eq('user_id', viewerId)
-              .single();
-            return profile?.username || null;
-          };
-
-          return {
-            id: viewer.id,
-            username: viewer.viewer_user_id ? 'Loading...' : 'Anonymous User',
-            viewer_user_id: viewer.viewer_user_id,
-            browser_type: viewer.browser_type,
-            created_at: viewer.created_at
-          };
-        }),
+        viewers: (viewersResult || []).map((viewer: any) => ({
+          id: viewer.id,
+          username: viewer.username || 'Anonymous User',
+          viewer_user_id: viewer.viewer_user_id,
+          browser_type: viewer.browser_type,
+          created_at: viewer.created_at
+        })),
         dailyViews: dailyViewsData
       });
 

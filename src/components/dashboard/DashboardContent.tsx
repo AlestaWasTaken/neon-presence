@@ -7,6 +7,7 @@ import { SocialLinksPage } from './pages/SocialLinksPage';
 import { PremiumPage } from './pages/PremiumPage';
 import { MediaPage } from './pages/MediaPage';
 import { TemplatesPage } from './pages/TemplatesPage';
+import { SettingsPage } from './pages/SettingsPage';
 
 interface DashboardContentProps {
   activeSection: string;
@@ -58,6 +59,8 @@ export function DashboardContent({
         return <MediaPage />;
       case 'templates':
         return <TemplatesPage />;
+      case 'settings':
+        return <SettingsPage profile={profile} onSave={onSave} />;
       default:
         return <OverviewPage profile={profile} user={user} />;
     }
