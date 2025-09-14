@@ -8,8 +8,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Switch } from '@/components/ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
 import VideoBackground from '@/components/VideoBackground';
-import ViewStats from '@/components/ViewStats';
+import ViewAnalytics from '@/components/ViewAnalytics';
+import { MediaUploader } from '@/components/MediaUploader';
+import ColorCustomizer from '@/components/ColorCustomizer';
 import { 
   Settings, 
   User, 
@@ -19,6 +24,11 @@ import {
   Plus,
   Trash2,
   Save,
+  Upload,
+  Palette,
+  Music,
+  Image,
+  Video,
   Globe,
   Github,
   Twitter,
@@ -26,7 +36,11 @@ import {
   Linkedin,
   Youtube,
   Mail,
-  Phone
+  Phone,
+  RotateCcw,
+  Volume2,
+  Sparkles,
+  MapPin
 } from 'lucide-react';
 
 export default function DashboardPage() {
@@ -38,6 +52,28 @@ export default function DashboardPage() {
     bio: '',
     background_video_url: '',
     audio_url: '',
+    avatar_url: '',
+    custom_cursor_url: '',
+    primary_color: '#000000',
+    accent_color: '#ffffff',
+    theme: 'dark' as 'dark' | 'light' | 'system',
+    cursor_style: 'default' as 'default' | 'pointer' | 'crosshair' | 'neon-dot' | 'custom',
+  });
+
+  const [customizationSettings, setCustomizationSettings] = useState({
+    accentColor: '#000000',
+    textColor: '#ffffff',
+    backgroundColor: '#111111',
+    iconColor: '#666666',
+    profileOpacity: 100,
+    profileBlur: 0,
+    enableGradient: false,
+    monochromeIcons: false,
+    animatedTitle: false,
+    volumeControl: true,
+    location: '',
+    backgroundEffect: 'none' as 'none' | 'rain' | 'snow' | 'particles',
+    usernameEffect: 'none' as 'none' | 'glow' | 'shadow' | 'neon',
   });
 
   const [newLink, setNewLink] = useState({
@@ -58,7 +94,20 @@ export default function DashboardPage() {
         bio: profile.bio || '',
         background_video_url: profile.background_video_url || '',
         audio_url: profile.audio_url || '',
+        avatar_url: profile.avatar_url || '',
+        custom_cursor_url: profile.custom_cursor_url || '',
+        primary_color: profile.primary_color || '#000000',
+        accent_color: profile.accent_color || '#ffffff',
+        theme: profile.theme || 'dark',
+        cursor_style: profile.cursor_style || 'default',
       });
+
+      // Map profile colors to customization settings
+      setCustomizationSettings(prev => ({
+        ...prev,
+        accentColor: profile.primary_color || '#000000',
+        textColor: profile.accent_color || '#ffffff',
+      }));
     }
   }, [profile]);
 
@@ -80,7 +129,11 @@ export default function DashboardPage() {
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      await updateProfile(formData);
+      await updateProfile({
+        ...formData,
+        primary_color: customizationSettings.accentColor,
+        accent_color: customizationSettings.textColor,
+      });
     } catch (error) {
       console.error('Error saving profile:', error);
     } finally {
@@ -104,6 +157,10 @@ export default function DashboardPage() {
     }
   };
 
+  const handleCustomizationChange = (key: string, value: any) => {
+    setCustomizationSettings(prev => ({ ...prev, [key]: value }));
+  };
+
   const iconOptions = [
     { value: 'globe', label: 'Website', icon: Globe },
     { value: 'github', label: 'GitHub', icon: Github },
@@ -121,7 +178,7 @@ export default function DashboardPage() {
       <VideoBackground profileUserId={user?.id} />
       
       <div className="relative z-10 container mx-auto px-6 py-8">
-        <div className="max-w-6xl mx-auto space-y-6">
+        <div className="max-w-7xl mx-auto space-y-6">
           
           {/* Header */}
           <div className="flex items-center justify-between">
@@ -130,22 +187,36 @@ export default function DashboardPage() {
                 Dashboard
               </h1>
               <p className="text-smoke-400 text-sm mt-1">
-                Profilini yönet ve analitiklerini görüntüle
+                Profilini tamamen özelleştir ve analitiklerini gör
               </p>
             </div>
-            <Button asChild variant="ghost" size="sm" className="glass border-smoke-700/30">
-              <Link to="/">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Ana Sayfa
-              </Link>
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={handleSave} disabled={isSaving}>
+                <Save className="h-4 w-4 mr-2" />
+                {isSaving ? 'Kaydediliyor...' : 'Kaydet'}
+              </Button>
+              <Button asChild variant="ghost" size="sm" className="glass border-smoke-700/30">
+                <Link to="/">
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Ana Sayfa
+                </Link>
+              </Button>
+            </div>
           </div>
 
-          <Tabs defaultValue="profile" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-3 glass border-smoke-700/30">
-              <TabsTrigger value="profile" className="flex items-center gap-2">
-                <User className="h-4 w-4" />
-                Profil
+          <Tabs defaultValue="assets" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-5 glass border-smoke-700/30">
+              <TabsTrigger value="assets" className="flex items-center gap-2">
+                <Upload className="h-4 w-4" />
+                Medya
+              </TabsTrigger>
+              <TabsTrigger value="customization" className="flex items-center gap-2">
+                <Settings className="h-4 w-4" />
+                Özelleştirme
+              </TabsTrigger>
+              <TabsTrigger value="colors" className="flex items-center gap-2">
+                <Palette className="h-4 w-4" />
+                Renkler
               </TabsTrigger>
               <TabsTrigger value="links" className="flex items-center gap-2">
                 <LinkIcon className="h-4 w-4" />
@@ -157,63 +228,228 @@ export default function DashboardPage() {
               </TabsTrigger>
             </TabsList>
 
-            {/* Profile Tab */}
-            <TabsContent value="profile" className="space-y-6">
-              <Card className="glass border-smoke-700/30">
-                <CardHeader>
-                  <CardTitle className="text-smoke-100">Profil Bilgileri</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Assets Uploader Tab */}
+            <TabsContent value="assets" className="space-y-6">
+              <div className="space-y-6">
+                <div className="text-center p-6 glass border-smoke-700/30 rounded-lg">
+                  <Upload className="w-12 h-12 mx-auto mb-4 text-smoke-300" />
+                  <h2 className="text-xl font-bold text-smoke-100 mb-2">Medya Yükleyici</h2>
+                  <p className="text-smoke-400">
+                    Arka plan, ses, profil resmi ve özel cursor dosyalarını yükle
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <MediaUploader
+                    type="background"
+                    currentUrl={formData.background_video_url}
+                    onUpload={(url) => setFormData(prev => ({ ...prev, background_video_url: url }))}
+                    onRemove={() => setFormData(prev => ({ ...prev, background_video_url: '' }))}
+                  />
+                  
+                  <MediaUploader
+                    type="audio"
+                    currentUrl={formData.audio_url}
+                    onUpload={(url) => setFormData(prev => ({ ...prev, audio_url: url }))}
+                    onRemove={() => setFormData(prev => ({ ...prev, audio_url: '' }))}
+                  />
+                  
+                  <MediaUploader
+                    type="avatar"
+                    currentUrl={formData.avatar_url}
+                    onUpload={(url) => setFormData(prev => ({ ...prev, avatar_url: url }))}
+                    onRemove={() => setFormData(prev => ({ ...prev, avatar_url: '' }))}
+                  />
+                  
+                  <MediaUploader
+                    type="cursor"
+                    currentUrl={formData.custom_cursor_url}
+                    onUpload={(url) => setFormData(prev => ({ ...prev, custom_cursor_url: url }))}
+                    onRemove={() => setFormData(prev => ({ ...prev, custom_cursor_url: '' }))}
+                  />
+                </div>
+              </div>
+            </TabsContent>
+
+            {/* General Customization Tab */}
+            <TabsContent value="customization" className="space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                {/* Basic Info */}
+                <Card className="glass border-smoke-700/30">
+                  <CardHeader>
+                    <CardTitle className="text-smoke-100 flex items-center gap-2">
+                      <User className="w-5 h-5" />
+                      Genel Özelleştirme
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="username">Kullanıcı Adı</Label>
-                      <Input
-                        id="username"
-                        value={formData.username}
-                        onChange={(e) => setFormData(prev => ({ ...prev, username: e.target.value }))}
-                        placeholder="kullaniciadi"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="bio">Biyografi</Label>
+                      <Label htmlFor="description">Açıklama</Label>
                       <Textarea
-                        id="bio"
+                        id="description"
                         value={formData.bio}
                         onChange={(e) => setFormData(prev => ({ ...prev, bio: e.target.value }))}
-                        placeholder="Kendini tanıt..."
+                        placeholder="marketing director & designer"
                         rows={3}
                       />
                     </div>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="background_video_url">Arka Plan Video/Resim URL</Label>
-                      <Input
-                        id="background_video_url"
-                        value={formData.background_video_url}
-                        onChange={(e) => setFormData(prev => ({ ...prev, background_video_url: e.target.value }))}
-                        placeholder="https://example.com/video.mp4"
+
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <Label>Profil Opaklığı</Label>
+                        <span className="text-sm text-smoke-400">{customizationSettings.profileOpacity}%</span>
+                      </div>
+                      <Slider
+                        value={[customizationSettings.profileOpacity]}
+                        onValueChange={(value) => handleCustomizationChange('profileOpacity', value[0])}
+                        max={100}
+                        min={0}
+                        step={5}
                       />
                     </div>
+
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <Label>Profil Bulanıklığı</Label>
+                        <span className="text-sm text-smoke-400">{customizationSettings.profileBlur}px</span>
+                      </div>
+                      <Slider
+                        value={[customizationSettings.profileBlur]}
+                        onValueChange={(value) => handleCustomizationChange('profileBlur', value[0])}
+                        max={20}
+                        min={0}
+                        step={1}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Arka Plan Efektleri</Label>
+                      <Select
+                        value={customizationSettings.backgroundEffect}
+                        onValueChange={(value) => handleCustomizationChange('backgroundEffect', value)}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">Yok</SelectItem>
+                          <SelectItem value="rain">Yağmur</SelectItem>
+                          <SelectItem value="snow">Kar</SelectItem>
+                          <SelectItem value="particles">Parçacık</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Kullanıcı Adı Efektleri</Label>
+                      <Select
+                        value={customizationSettings.usernameEffect}
+                        onValueChange={(value) => handleCustomizationChange('usernameEffect', value)}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">Yok</SelectItem>
+                          <SelectItem value="glow">Işık</SelectItem>
+                          <SelectItem value="shadow">Gölge</SelectItem>
+                          <SelectItem value="neon">Neon</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="location">Konum</Label>
+                      <div className="flex gap-2">
+                        <MapPin className="w-5 h-5 text-smoke-400 mt-2" />
+                        <Input
+                          id="location"
+                          value={customizationSettings.location}
+                          onChange={(e) => handleCustomizationChange('location', e.target.value)}
+                          placeholder="İstanbul"
+                        />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Other Customization */}
+                <Card className="glass border-smoke-700/30">
+                  <CardHeader>
+                    <CardTitle className="text-smoke-100 flex items-center gap-2">
+                      <Sparkles className="w-5 h-5" />
+                      Diğer Özelleştirmeler
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
                     
-                    <div className="space-y-2">
-                      <Label htmlFor="audio_url">Arka Plan Müzik URL</Label>
-                      <Input
-                        id="audio_url"
-                        value={formData.audio_url}
-                        onChange={(e) => setFormData(prev => ({ ...prev, audio_url: e.target.value }))}
-                        placeholder="https://example.com/music.mp3"
+                    <div className="flex items-center justify-between">
+                      <Label className="flex items-center gap-2">
+                        <Image className="w-4 h-4" />
+                        Monokrom İkonlar
+                      </Label>
+                      <Switch
+                        checked={customizationSettings.monochromeIcons}
+                        onCheckedChange={(checked) => handleCustomizationChange('monochromeIcons', checked)}
                       />
                     </div>
-                  </div>
-                  
-                  <Button onClick={handleSave} disabled={isSaving} className="w-full">
-                    <Save className="h-4 w-4 mr-2" />
-                    {isSaving ? 'Kaydediliyor...' : 'Kaydet'}
-                  </Button>
-                </CardContent>
-              </Card>
+
+                    <div className="flex items-center justify-between">
+                      <Label className="flex items-center gap-2">
+                        <Sparkles className="w-4 h-4" />
+                        Animasyonlu Başlık
+                      </Label>
+                      <Switch
+                        checked={customizationSettings.animatedTitle}
+                        onCheckedChange={(checked) => handleCustomizationChange('animatedTitle', checked)}
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <Label className="flex items-center gap-2">
+                        <Volume2 className="w-4 h-4" />
+                        Ses Kontrolü
+                      </Label>
+                      <Switch
+                        checked={customizationSettings.volumeControl}
+                        onCheckedChange={(checked) => handleCustomizationChange('volumeControl', checked)}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Cursor Stili</Label>
+                      <Select
+                        value={formData.cursor_style}
+                        onValueChange={(value) => setFormData(prev => ({ ...prev, cursor_style: value as any }))}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="default">Varsayılan</SelectItem>
+                          <SelectItem value="pointer">Pointer</SelectItem>
+                          <SelectItem value="crosshair">Artı İşareti</SelectItem>
+                          <SelectItem value="neon-dot">Neon Nokta</SelectItem>
+                          <SelectItem value="custom">Özel</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
+            {/* Color Customization Tab */}
+            <TabsContent value="colors" className="space-y-6">
+              <ColorCustomizer
+                onColorChange={handleCustomizationChange}
+                currentColors={{
+                  primary_color: customizationSettings.accentColor,
+                  accent_color: customizationSettings.textColor,
+                  theme: formData.theme
+                }}
+              />
             </TabsContent>
 
             {/* Links Tab */}
@@ -247,18 +483,21 @@ export default function DashboardPage() {
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="link-icon">İkon</Label>
-                        <select
-                          id="link-icon"
+                        <Select
                           value={newLink.icon}
-                          onChange={(e) => setNewLink(prev => ({ ...prev, icon: e.target.value }))}
-                          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors"
+                          onValueChange={(value) => setNewLink(prev => ({ ...prev, icon: value }))}
                         >
-                          {iconOptions.map(option => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </select>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {iconOptions.map(option => (
+                              <SelectItem key={option.value} value={option.value}>
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
                     </div>
                     <Button onClick={handleAddLink} disabled={!newLink.name || !newLink.url} size="sm">
@@ -298,7 +537,7 @@ export default function DashboardPage() {
 
             {/* Analytics Tab */}
             <TabsContent value="analytics" className="space-y-6">
-              <ViewStats profileUserId={user?.id} />
+              <ViewAnalytics profileUserId={user?.id} />
             </TabsContent>
           </Tabs>
         </div>
