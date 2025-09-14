@@ -77,6 +77,23 @@
     background-clip: text;
   }
   
+  .text-neon {
+    color: hsl(var(--smoke-100));
+    text-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 40px currentColor;
+  }
+
+  .text-shadow {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  }
+
+  .text-glow {
+    color: transparent;
+    background: linear-gradient(45deg, hsl(var(--smoke-100)), hsl(var(--smoke-300)));
+    background-clip: text;
+    -webkit-background-clip: text;
+    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.3));
+  }
+  
   /* Smooth animations */
   .animate-fade-in {
     animation: fadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;

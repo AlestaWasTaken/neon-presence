@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "13.0.4"
@@ -44,57 +44,84 @@ export type Database = {
       profiles: {
         Row: {
           accent_color: string | null
+          animated_title: boolean | null
           audio_url: string | null
           avatar_url: string | null
+          background_effect: string | null
           background_video_url: string | null
           bio: string | null
           created_at: string
           cursor_style: string | null
           custom_cursor_url: string | null
+          enable_gradient: boolean | null
           id: string
+          location: string | null
+          monochrome_icons: boolean | null
           primary_color: string | null
+          profile_blur: number | null
+          profile_opacity: number | null
           sequential_id: number
           theme: string | null
           updated_at: string
           user_id: string
           username: string
+          username_effect: string | null
           view_count: number | null
+          volume_control: boolean | null
         }
         Insert: {
           accent_color?: string | null
+          animated_title?: boolean | null
           audio_url?: string | null
           avatar_url?: string | null
+          background_effect?: string | null
           background_video_url?: string | null
           bio?: string | null
           created_at?: string
           cursor_style?: string | null
           custom_cursor_url?: string | null
+          enable_gradient?: boolean | null
           id?: string
+          location?: string | null
+          monochrome_icons?: boolean | null
           primary_color?: string | null
+          profile_blur?: number | null
+          profile_opacity?: number | null
           sequential_id?: number
           theme?: string | null
           updated_at?: string
           user_id: string
           username: string
+          username_effect?: string | null
           view_count?: number | null
+          volume_control?: boolean | null
         }
         Update: {
           accent_color?: string | null
+          animated_title?: boolean | null
           audio_url?: string | null
           avatar_url?: string | null
+          background_effect?: string | null
           background_video_url?: string | null
           bio?: string | null
           created_at?: string
           cursor_style?: string | null
           custom_cursor_url?: string | null
+          enable_gradient?: boolean | null
           id?: string
+          location?: string | null
+          monochrome_icons?: boolean | null
           primary_color?: string | null
+          profile_blur?: number | null
+          profile_opacity?: number | null
           sequential_id?: number
           theme?: string | null
           updated_at?: string
           user_id?: string
           username?: string
+          username_effect?: string | null
           view_count?: number | null
+          volume_control?: boolean | null
         }
         Relationships: []
       }
@@ -172,8 +199,8 @@ export type Database = {
       }
       has_role: {
         Args: {
-          _user_id: string
           _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
         }
         Returns: boolean
       }

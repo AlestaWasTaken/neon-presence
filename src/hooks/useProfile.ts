@@ -16,6 +16,15 @@ export interface Profile {
   custom_cursor_url: string | null;
   avatar_url: string | null;
   audio_url: string | null;
+  background_effect: 'none' | 'rain' | 'snow' | 'particles';
+  username_effect: 'none' | 'glow' | 'shadow' | 'neon';
+  location: string | null;
+  profile_opacity: number;
+  profile_blur: number;
+  enable_gradient: boolean;
+  monochrome_icons: boolean;
+  animated_title: boolean;
+  volume_control: boolean;
 }
 
 export interface SocialLink {

@@ -102,11 +102,20 @@ export default function DashboardPage() {
         cursor_style: profile.cursor_style || 'default',
       });
 
-      // Map profile colors to customization settings
+      // Map profile data to customization settings
       setCustomizationSettings(prev => ({
         ...prev,
         accentColor: profile.primary_color || '#000000',
         textColor: profile.accent_color || '#ffffff',
+        backgroundEffect: profile.background_effect || 'none',
+        usernameEffect: profile.username_effect || 'none',
+        location: profile.location || '',
+        profileOpacity: profile.profile_opacity || 100,
+        profileBlur: profile.profile_blur || 0,
+        enableGradient: profile.enable_gradient || false,
+        monochromeIcons: profile.monochrome_icons || false,
+        animatedTitle: profile.animated_title || false,
+        volumeControl: profile.volume_control !== undefined ? profile.volume_control : true,
       }));
     }
   }, [profile]);
@@ -133,6 +142,15 @@ export default function DashboardPage() {
         ...formData,
         primary_color: customizationSettings.accentColor,
         accent_color: customizationSettings.textColor,
+        background_effect: customizationSettings.backgroundEffect,
+        username_effect: customizationSettings.usernameEffect,
+        location: customizationSettings.location,
+        profile_opacity: customizationSettings.profileOpacity,
+        profile_blur: customizationSettings.profileBlur,
+        enable_gradient: customizationSettings.enableGradient,
+        monochrome_icons: customizationSettings.monochromeIcons,
+        animated_title: customizationSettings.animatedTitle,
+        volume_control: customizationSettings.volumeControl,
       });
     } catch (error) {
       console.error('Error saving profile:', error);

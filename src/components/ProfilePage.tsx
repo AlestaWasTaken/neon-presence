@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { Profile, SocialLink } from '@/types';
 import { useViewStats } from '@/hooks/useViewStats';
 import VideoBackground from '@/components/VideoBackground';
 import { SocialLinksDisplay } from '@/components/SocialLinksDisplay';
+import { BackgroundEffects } from '@/components/BackgroundEffects';
+import { UsernameEffects } from '@/components/UsernameEffects';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -41,7 +43,13 @@ export default function ProfilePage() {
         return;
       }
 
-      setProfile(profileData);
+      setProfile({
+        ...profileData,
+        theme: (profileData.theme as 'dark' | 'light' | 'system') || 'dark',
+        cursor_style: (profileData.cursor_style as any) || 'default',
+        background_effect: (profileData.background_effect as any) || 'none',
+        username_effect: (profileData.username_effect as any) || 'none',
+      });
 
       // Record view
       await recordView(profileData.user_id);
@@ -103,8 +111,12 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-smoke-950">
+    <div className="min-h-screen bg-gradient-to-b from-background to-smoke-950" style={{
+      filter: profile.profile_blur ? `blur(${profile.profile_blur}px)` : 'none',
+      opacity: profile.profile_opacity ? profile.profile_opacity / 100 : 1
+    }}>
       <VideoBackground profileUserId={profile.user_id} />
+      <BackgroundEffects effect={profile.background_effect || 'none'} />
       
       <div className="relative z-10 container mx-auto px-6 py-16 sm:py-24">
         <div className="max-w-xl mx-auto space-y-12">
@@ -125,14 +137,17 @@ export default function ProfilePage() {
             )}
             
             <div className="space-y-4">
-              <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-none">
-                <span className="text-gradient bg-gradient-to-r from-smoke-100 to-smoke-300 bg-clip-text text-transparent">
-                  {profile.username}
-                </span>
-              </h1>
+              <UsernameEffects
+                username={profile.username}
+                effect={profile.username_effect || 'none'}
+                className={profile.animated_title ? 'animate-pulse' : ''}
+              />
               <p className="text-base sm:text-lg text-smoke-400 font-light tracking-wide max-w-md mx-auto">
                 {profile.bio || 'dijital alemde gezinen bir ruh...'}
               </p>
+              {profile.location && (
+                <p className="text-sm text-smoke-500 font-mono">📍 {profile.location}</p>
+              )}
             </div>
             
             <div className="w-8 h-px bg-smoke-600 mx-auto" />

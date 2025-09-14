@@ -21,6 +21,15 @@ export interface Profile {
   theme: 'dark' | 'light' | 'system';
   cursor_style: 'default' | 'pointer' | 'crosshair' | 'neon-dot' | 'custom';
   custom_cursor_url: string | null;
+  background_effect: 'none' | 'rain' | 'snow' | 'particles';
+  username_effect: 'none' | 'glow' | 'shadow' | 'neon';
+  location: string | null;
+  profile_opacity: number;
+  profile_blur: number;
+  enable_gradient: boolean;
+  monochrome_icons: boolean;
+  animated_title: boolean;
+  volume_control: boolean;
   view_count: number;
   sequential_id: number;
   created_at: string;
