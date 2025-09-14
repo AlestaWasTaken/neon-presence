@@ -1,49 +1,39 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { ProfileView } from '@/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Eye, Users, TrendingUp, Clock, User, Globe, Calendar } from 'lucide-react';
-import { format } from 'date-fns';
+import { Eye, Users, Calendar, TrendingUp, User } from 'lucide-react';
+import { format, subDays, startOfDay, endOfDay } from 'date-fns';
 import { tr } from 'date-fns/locale';
-
-interface ViewerInfo {
-  id: string;
-  created_at: string;
-  viewer_user_id: string | null;
-  viewer_ip: string | null;
-  user_agent: string | null;
-  profiles?: {
-    username: string;
-    avatar_url: string | null;
-  } | null;
-}
-
-interface AnalyticsData {
-  totalViews: number;
-  todayViews: number;
-  weekViews: number;
-  monthViews: number;
-  viewers: ViewerInfo[];
-  dailyStats: Array<{
-    date: string;
-    views: number;
-  }>;
-}
 
 interface ViewAnalyticsProps {
   profileUserId?: string;
 }
 
+interface Viewer {
+  id: string;
+  username: string | null;
+  viewer_user_id: string | null;
+  viewer_ip: string | null;
+  created_at: string;
+}
+
+interface Analytics {
+  totalViews: number;
+  todayViews: number;
+  weekViews: number;
+  monthViews: number;
+  viewers: Viewer[];
+  dailyViews: Array<{ date: string; views: number }>;
+}
+
 export default function ViewAnalytics({ profileUserId }: ViewAnalyticsProps) {
-  const [analytics, setAnalytics] = useState<AnalyticsData>({
+  const [analytics, setAnalytics] = useState<Analytics>({
     totalViews: 0,
     todayViews: 0,
     weekViews: 0,
     monthViews: 0,
     viewers: [],
-    dailyStats: [],
+    dailyViews: []
   });
   const [loading, setLoading] = useState(true);
 
@@ -59,6 +49,11 @@ export default function ViewAnalytics({ profileUserId }: ViewAnalyticsProps) {
     try {
       setLoading(true);
 
+      const now = new Date();
+      const today = startOfDay(now);
+      const weekAgo = subDays(today, 7);
+      const monthAgo = subDays(today, 30);
+
       // Get total views from profile
       const { data: profile } = await supabase
         .from('profiles')
@@ -66,83 +61,76 @@ export default function ViewAnalytics({ profileUserId }: ViewAnalyticsProps) {
         .eq('user_id', profileUserId)
         .single();
 
-      // Time ranges
-      const now = new Date();
-      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-      const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-
-      // Get time-based views and detailed viewer info
-      const [todayResult, weekResult, monthResult, viewersResult] = await Promise.all([
-        supabase
-          .from('profile_views')
-          .select('id', { count: 'exact' })
-          .eq('profile_user_id', profileUserId)
-          .gte('created_at', today.toISOString()),
-        
-        supabase
-          .from('profile_views')
-          .select('id', { count: 'exact' })
-          .eq('profile_user_id', profileUserId)
-          .gte('created_at', weekAgo.toISOString()),
-        
-        supabase
-          .from('profile_views')
-          .select('id', { count: 'exact' })
-          .eq('profile_user_id', profileUserId)
-          .gte('created_at', monthAgo.toISOString()),
-        
-        supabase
-          .from('profile_views')
-          .select(`
-            id,
-            created_at,
-            viewer_user_id,
-            viewer_ip,
-            user_agent,
-            profiles:viewer_user_id (
-              username,
-              avatar_url
-            )
-          `)
-          .eq('profile_user_id', profileUserId)
-          .order('created_at', { ascending: false })
-          .limit(50)
-      ]);
-
-      // Get daily stats for the last 30 days
-      const dailyStatsResult = await supabase
+      // Get today's views
+      const { count: todayResult } = await supabase
         .from('profile_views')
-        .select('created_at')
+        .select('*', { count: 'exact', head: true })
+        .eq('profile_user_id', profileUserId)
+        .gte('created_at', today.toISOString());
+
+      // Get week's views
+      const { count: weekResult } = await supabase
+        .from('profile_views')
+        .select('*', { count: 'exact', head: true })
+        .eq('profile_user_id', profileUserId)
+        .gte('created_at', weekAgo.toISOString());
+
+      // Get month's views
+      const { count: monthResult } = await supabase
+        .from('profile_views')
+        .select('*', { count: 'exact', head: true })
         .eq('profile_user_id', profileUserId)
         .gte('created_at', monthAgo.toISOString());
 
-      // Process daily stats
-      const dailyStats = [];
+      // Get recent viewers with usernames
+      const { data: viewersResult } = await supabase
+        .from('profile_views')
+        .select(`
+          id,
+          viewer_user_id,
+          viewer_ip,
+          created_at,
+          profiles!inner(username)
+        `)
+        .eq('profile_user_id', profileUserId)
+        .not('viewer_user_id', 'is', null)
+        .order('created_at', { ascending: false })
+        .limit(50);
+
+      // Get daily views for the last 30 days
+      const dailyViewsData = [];
       for (let i = 29; i >= 0; i--) {
-        const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
-        const dateStr = date.toISOString().split('T')[0];
-        const views = dailyStatsResult.data?.filter(view => 
-          view.created_at.startsWith(dateStr)
-        ).length || 0;
+        const date = subDays(today, i);
+        const nextDate = subDays(today, i - 1);
         
-        dailyStats.push({
-          date: dateStr,
-          views,
+        const { count } = await supabase
+          .from('profile_views')
+          .select('*', { count: 'exact', head: true })
+          .eq('profile_user_id', profileUserId)
+          .gte('created_at', startOfDay(date).toISOString())
+          .lt('created_at', startOfDay(nextDate).toISOString());
+
+        dailyViewsData.push({
+          date: format(date, 'dd MMM', { locale: tr }),
+          views: count || 0
         });
       }
 
       setAnalytics({
         totalViews: profile?.view_count || 0,
-        todayViews: todayResult.count || 0,
-        weekViews: weekResult.count || 0,
-        monthViews: monthResult.count || 0,
-        viewers: (viewersResult.data || []).map((viewer: any) => ({
-          ...viewer,
-          profiles: Array.isArray(viewer.profiles) ? viewer.profiles[0] : viewer.profiles
-        })) as ViewerInfo[],
-        dailyStats,
+        todayViews: todayResult || 0,
+        weekViews: weekResult || 0,
+        monthViews: monthResult || 0,
+        viewers: (viewersResult || []).map((viewer: any) => ({
+          id: viewer.id,
+          username: viewer.profiles?.username || null,
+          viewer_user_id: viewer.viewer_user_id,
+          viewer_ip: viewer.viewer_ip,
+          created_at: viewer.created_at
+        })),
+        dailyViews: dailyViewsData
       });
+
     } catch (error) {
       console.error('Error fetching analytics:', error);
     } finally {
@@ -152,177 +140,137 @@ export default function ViewAnalytics({ profileUserId }: ViewAnalyticsProps) {
 
   if (loading) {
     return (
-      <Card className="glass border-smoke-700/30">
-        <CardContent className="p-6">
-          <div className="animate-pulse space-y-4">
-            <div className="h-6 bg-smoke-700 rounded w-1/3"></div>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="h-20 bg-smoke-700 rounded"></div>
-              ))}
-            </div>
+      <div className="space-y-6">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-700 rounded mb-4"></div>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="h-24 bg-gray-700 rounded"></div>
+            ))}
           </div>
-        </CardContent>
-      </Card>
+          <div className="h-64 bg-gray-700 rounded"></div>
+        </div>
+      </div>
     );
   }
 
-  const statItems = [
-    {
-      label: 'Toplam Görüntülenme',
-      value: analytics.totalViews,
-      icon: Eye,
-      color: 'text-blue-400',
-    },
-    {
-      label: 'Bu Hafta',
-      value: analytics.weekViews,
-      icon: TrendingUp,
-      color: 'text-green-400',
-    },
-    {
-      label: 'Bu Ay',
-      value: analytics.monthViews,
-      icon: Calendar,
-      color: 'text-purple-400',
-    },
-    {
-      label: 'Bugün',
-      value: analytics.todayViews,
-      icon: Clock,
-      color: 'text-orange-400',
-    },
-  ];
-
   return (
     <div className="space-y-6">
-      {/* Stats Overview */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {statItems.map((item, index) => (
-          <Card key={index} className="glass border-smoke-700/30 hover-lift">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className={`p-2 rounded-lg bg-smoke-800/50 ${item.color}`}>
-                  <item.icon className="w-4 h-4" />
-                </div>
-                <div>
-                  <p className="text-xs text-smoke-400 font-medium">{item.label}</p>
-                  <p className="text-lg font-bold text-smoke-100">{item.value}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+      <div>
+        <h2 className="text-2xl font-bold text-white mb-2">Profile Analytics</h2>
+        <p className="text-gray-400">Track your profile's performance and visitor insights</p>
       </div>
 
-      {/* Detailed Analytics */}
-      <Card className="glass border-smoke-700/30">
-        <CardHeader>
-          <CardTitle className="text-smoke-100 flex items-center gap-2">
-            <Users className="w-5 h-5" />
-            Detaylı Analitik
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="viewers" className="space-y-4">
-            <TabsList className="grid w-full grid-cols-2 glass border-smoke-700/30">
-              <TabsTrigger value="viewers">Ziyaretçiler</TabsTrigger>
-              <TabsTrigger value="charts">Grafik</TabsTrigger>
-            </TabsList>
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="bg-gray-800 border-gray-700">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-gray-300">Toplam Görüntülenme</CardTitle>
+            <Eye className="h-4 w-4 text-blue-400" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-white">{analytics.totalViews.toLocaleString()}</div>
+            <p className="text-xs text-gray-400">Tüm zamanlar</p>
+          </CardContent>
+        </Card>
 
-            <TabsContent value="viewers" className="space-y-4">
-              <div className="space-y-3">
-                <h3 className="text-sm font-medium text-smoke-200">Son Ziyaretçiler</h3>
-                {analytics.viewers.length === 0 ? (
-                  <div className="text-center py-8 text-smoke-400">
-                    Henüz ziyaretçi bulunmuyor
-                  </div>
-                ) : (
-                  <div className="space-y-2 max-h-80 overflow-y-auto">
-                    {analytics.viewers.map((viewer) => (
-                      <div key={viewer.id} className="flex items-center gap-3 p-3 rounded-lg bg-smoke-900/30 border border-smoke-700/20">
-                        <div className="flex-shrink-0">
-                          {viewer.profiles?.avatar_url ? (
-                            <img
-                              src={viewer.profiles.avatar_url}
-                              alt={viewer.profiles.username}
-                              className="w-8 h-8 rounded-full"
-                            />
-                          ) : (
-                            <div className="w-8 h-8 rounded-full bg-smoke-700 flex items-center justify-center">
-                              {viewer.viewer_user_id ? (
-                                <User className="w-4 h-4 text-smoke-400" />
-                              ) : (
-                                <Globe className="w-4 h-4 text-smoke-400" />
-                              )}
-                            </div>
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-smoke-200 truncate">
-                            {viewer.profiles?.username || 'Anonim Ziyaretçi'}
-                          </p>
-                          <p className="text-xs text-smoke-400">
-                            {format(new Date(viewer.created_at), 'dd MMM yyyy HH:mm', { locale: tr })}
-                          </p>
-                        </div>
-                        <div className="flex-shrink-0">
-                          <div className="text-xs text-smoke-500">
-                            {viewer.viewer_user_id ? (
-                              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-green-500/20 text-green-400">
-                                <div className="w-1.5 h-1.5 bg-green-400 rounded-full"></div>
-                                Kayıtlı
-                              </span>
-                            ) : (
-                              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-orange-500/20 text-orange-400">
-                                <div className="w-1.5 h-1.5 bg-orange-400 rounded-full"></div>
-                                Misafir
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </TabsContent>
+        <Card className="bg-gray-800 border-gray-700">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-gray-300">Bugün</CardTitle>
+            <Calendar className="h-4 w-4 text-green-400" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-white">{analytics.todayViews}</div>
+            <p className="text-xs text-gray-400">Son 24 saat</p>
+          </CardContent>
+        </Card>
 
-            <TabsContent value="charts" className="space-y-4">
-              <div className="space-y-3">
-                <h3 className="text-sm font-medium text-smoke-200">Son 30 Gün Görüntülenme</h3>
-                <div className="h-40 flex items-end gap-1 bg-smoke-900/30 rounded-lg p-4">
-                  {analytics.dailyStats.map((stat, index) => {
-                    const maxViews = Math.max(...analytics.dailyStats.map(s => s.views));
-                    const height = maxViews > 0 ? (stat.views / maxViews) * 100 : 0;
-                    
-                    return (
-                      <div
-                        key={index}
-                        className="flex-1 flex flex-col items-center group relative"
-                      >
-                        <div
-                          className="w-full bg-gradient-to-t from-primary/50 to-primary rounded-t min-h-[2px] transition-all group-hover:from-primary/70 group-hover:to-primary"
-                          style={{ height: `${height}%` }}
-                        />
-                        <div className="absolute -top-8 opacity-0 group-hover:opacity-100 transition-opacity bg-smoke-800 text-xs px-2 py-1 rounded whitespace-nowrap">
-                          {stat.views} görüntülenme
-                          <br />
-                          {format(new Date(stat.date), 'dd MMM', { locale: tr })}
-                        </div>
+        <Card className="bg-gray-800 border-gray-700">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-gray-300">Bu Hafta</CardTitle>
+            <TrendingUp className="h-4 w-4 text-purple-400" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-white">{analytics.weekViews}</div>
+            <p className="text-xs text-gray-400">Son 7 gün</p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gray-800 border-gray-700">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-gray-300">Bu Ay</CardTitle>
+            <Users className="h-4 w-4 text-orange-400" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-white">{analytics.monthViews}</div>
+            <p className="text-xs text-gray-400">Son 30 gün</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Daily Views Chart */}
+        <Card className="bg-gray-800 border-gray-700">
+          <CardHeader>
+            <CardTitle className="text-white">Son 30 Gün Görüntülenme</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-64 flex items-end justify-between gap-1">
+              {analytics.dailyViews.map((day, index) => (
+                <div key={index} className="flex flex-col items-center flex-1">
+                  <div
+                    className="w-full bg-purple-600 rounded-t transition-all duration-300 hover:bg-purple-500"
+                    style={{
+                      height: `${Math.max((day.views / Math.max(...analytics.dailyViews.map(d => d.views))) * 200, 2)}px`
+                    }}
+                    title={`${day.date}: ${day.views} görüntülenme`}
+                  />
+                  <span className="text-xs text-gray-400 mt-1 transform rotate-45 origin-left">
+                    {day.date}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Recent Viewers */}
+        <Card className="bg-gray-800 border-gray-700">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <Users className="w-5 h-5" />
+              Kimler Baktı ({analytics.viewers.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3 max-h-64 overflow-y-auto">
+              {analytics.viewers.length === 0 ? (
+                <p className="text-gray-400 text-sm text-center py-8">
+                  Henüz kayıtlı kullanıcı görüntülemesi yok
+                </p>
+              ) : (
+                analytics.viewers.map((viewer) => (
+                  <div key={viewer.id} className="flex items-center justify-between p-3 bg-gray-700/50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
+                        <User className="w-4 h-4 text-gray-300" />
                       </div>
-                    );
-                  })}
-                </div>
-                <div className="flex justify-between text-xs text-smoke-500">
-                  <span>30 gün önce</span>
-                  <span>Bugün</span>
-                </div>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
+                      <div>
+                        <p className="text-sm font-medium text-white">
+                          {viewer.username || 'Anonim Kullanıcı'}
+                        </p>
+                        <p className="text-xs text-gray-400">
+                          {format(new Date(viewer.created_at), 'dd MMM yyyy, HH:mm', { locale: tr })}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

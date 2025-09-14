@@ -10,7 +10,7 @@ import { UsernameEffects } from '@/components/UsernameEffects';
 import BackgroundAudio from '@/components/BackgroundAudio';
 import { VolumeControl } from '@/components/VolumeControl';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function ProfilePage() {
@@ -162,10 +162,15 @@ export default function ProfilePage() {
             
             <div className="w-8 h-px bg-smoke-600 mx-auto" />
           </div>
-
           {/* Social Links */}
           <div className="animate-fade-in-delay">
             <SocialLinksDisplay socialLinks={socialLinks} />
+          </div>
+
+          {/* View Count */}
+          <div className="flex items-center justify-center gap-2 text-sm text-smoke-400 animate-fade-in-delay">
+            <Eye className="w-4 h-4" />
+            <span>{profile.view_count || 0}</span>
           </div>
 
           {/* Back button */}

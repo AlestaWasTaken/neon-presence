@@ -51,11 +51,11 @@ export function AccountOverview({ profile }: AccountOverviewProps) {
         <h2 className="text-xl font-semibold text-white mb-4">Account Overview</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {stats.map((stat, index) => (
-            <div key={index} className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+            <div key={index} className="bg-black/30 backdrop-blur-md rounded-lg p-4 border border-white/10">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-gray-400">{stat.label}</span>
+                <span className="text-sm text-white/70">{stat.label}</span>
                 {stat.editable && (
-                  <button className="text-gray-400 hover:text-white">
+                  <button className="text-white/70 hover:text-white">
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                     </svg>

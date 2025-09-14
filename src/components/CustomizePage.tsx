@@ -33,7 +33,7 @@ export function CustomizePage({
         <h2 className="text-xl font-semibold text-white mb-4">Assets Uploader</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div>
-            <h3 className="text-sm font-medium text-gray-300 mb-2">Background</h3>
+            <h3 className="text-sm font-medium text-white/80 mb-2">Background</h3>
             <MediaUploader
               type="background"
               currentUrl={formData.background_video_url}

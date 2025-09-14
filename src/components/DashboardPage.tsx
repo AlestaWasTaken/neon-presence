@@ -6,6 +6,7 @@ import { DashboardSidebar } from '@/components/DashboardSidebar';
 import { AccountOverview } from '@/components/AccountOverview';
 import { CustomizePage } from '@/components/CustomizePage';
 import ViewAnalytics from '@/components/ViewAnalytics';
+import VideoBackground from '@/components/VideoBackground';
 import { Toaster } from '@/components/ui/sonner';
 import { toast } from 'sonner';
 
@@ -178,18 +179,25 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 flex">
-      <DashboardSidebar
+    <div className="min-h-screen bg-gradient-to-br from-background via-smoke-950 to-background">
+      {/* Video Background */}
+      <div className="fixed inset-0 z-0">
+        <VideoBackground profileUserId={user?.id} />
+      </div>
+      
+      <div className="relative z-10 flex min-h-screen">
+        <DashboardSidebar
         activeSection={activeSection}
         onSectionChange={setActiveSection}
         profile={profile}
-      />
-      
-      <main className="flex-1 overflow-y-auto">
-        <div className="p-8">
-          {renderContent()}
-        </div>
-      </main>
+        />
+        
+        <main className="flex-1 overflow-y-auto backdrop-blur-sm">
+          <div className="p-8">
+            {renderContent()}
+          </div>
+        </main>
+      </div>
       
       <Toaster />
     </div>
