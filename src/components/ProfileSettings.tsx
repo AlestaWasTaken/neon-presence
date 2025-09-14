@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Trash2, Eye, EyeOff, Save, RotateCcw, Upload, Video, Image } from 'lucide-react';
+import { Plus, Trash2, Eye, EyeOff, Save, RotateCcw, Upload, Video, Image, Music } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import ColorCustomizer from '@/components/ColorCustomizer';
 
@@ -24,6 +24,7 @@ const ProfileSettings = () => {
     accent_color: '0 0% 10%',
     theme: 'dark' as 'dark' | 'light' | 'system',
     background_video_url: '',
+    audio_url: '',
     cursor_style: 'default' as 'default' | 'pointer' | 'crosshair' | 'neon-dot' | 'custom',
     custom_cursor_url: ''
   });
@@ -45,6 +46,7 @@ const ProfileSettings = () => {
         accent_color: profile.accent_color || '0 0% 10%',
         theme: profile.theme || 'dark',
         background_video_url: profile.background_video_url || '',
+        audio_url: profile.audio_url || '',
         cursor_style: profile.cursor_style || 'default',
         custom_cursor_url: profile.custom_cursor_url || ''
       });
@@ -96,6 +98,7 @@ const ProfileSettings = () => {
         accent_color: profile.accent_color || '0 0% 10%',
         theme: profile.theme || 'dark',
         background_video_url: profile.background_video_url || '',
+        audio_url: profile.audio_url || '',
         cursor_style: profile.cursor_style || 'default',
         custom_cursor_url: profile.custom_cursor_url || ''
       });
@@ -263,6 +266,45 @@ const ProfileSettings = () => {
                 >
                   Temizle
                 </Button>
+              </div>
+
+              {/* Audio URL */}
+              <div className="space-y-2">
+                <Label className="flex items-center gap-2">
+                  <Music className="w-4 h-4" />
+                  Arka Plan Müziği
+                </Label>
+                <Input
+                  value={formData.audio_url}
+                  onChange={(e) => handleFormChange('audio_url', e.target.value)}
+                  placeholder="https://example.com/music.mp3"
+                />
+                <p className="text-xs text-muted-foreground">
+                  MP3 formatında müzik dosyası URL'si girin. Ziyaretçiler ses açıp kapatabilir.
+                </p>
+                
+                {/* Audio test buttons */}
+                <div className="grid grid-cols-2 gap-2">
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleFormChange('audio_url', 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav')}
+                    className="text-xs flex items-center gap-1"
+                  >
+                    <Music className="w-3 h-3" />
+                    Test Müzik
+                  </Button>
+                  <Button 
+                    type="button" 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => handleFormChange('audio_url', '')}
+                    className="text-xs"
+                  >
+                    Temizle
+                  </Button>
+                </div>
               </div>
 
               {/* Color Customizer Integration */}

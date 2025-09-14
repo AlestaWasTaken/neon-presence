@@ -172,39 +172,47 @@ export default function OptimizedVideoBackground({ profileUserId }: OptimizedVid
       console.log('Loading video:', videoUrl);
       resetVideo();
       
-      // Set video properties before loading
+      // Set video source first
+      video.src = videoUrl;
+      
+      // Set video properties
       video.muted = true;
       video.playsInline = true;
       video.loop = true;
       video.autoplay = true;
-      video.preload = 'metadata'; // Changed from 'auto' for better performance
+      video.preload = 'metadata';
       
-      // Set video source and properties
-      video.src = videoUrl;
+      // Load and play
       video.load();
       
-      // Try to play after sufficient data is loaded
-      const playWhenReady = async () => {
+      // Handle play after load
+      const handleCanPlay = async () => {
         try {
+          video.currentTime = 0;
           await video.play();
           setIsPlaying(true);
           setError(false);
+          console.log('Video playing successfully');
         } catch (err) {
-          console.error('Initial play failed:', err);
+          console.error('Play failed:', err);
           setError(true);
         }
       };
       
-      video.addEventListener('canplaythrough', playWhenReady, { once: true });
-      video.addEventListener('loadeddata', () => {
-        if (video.readyState >= 2) { // HAVE_CURRENT_DATA
-          playWhenReady();
-        }
-      }, { once: true });
+      video.addEventListener('canplaythrough', handleCanPlay, { once: true });
+      video.addEventListener('error', () => setError(true));
     } else {
       resetVideo();
       video.src = '';
     }
+    
+    return () => {
+      if (video) {
+        video.pause();
+        video.removeEventListener('canplaythrough', () => {});
+        video.removeEventListener('error', () => {});
+      }
+    };
   }, [videoUrl, resetVideo]);
 
   // Intersection Observer for performance

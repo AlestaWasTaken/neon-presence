@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import ViewStats from '@/components/ViewStats';
 import OptimizedVideoBackground from '@/components/OptimizedVideoBackground';
-import CursorStyle from '@/components/CursorStyle';
+import AudioManager from '@/components/AudioManager';
 import ClickToEnter from '@/components/ClickToEnter';
 import { SocialLinksDisplay } from '@/components/SocialLinksDisplay';
 import { Settings, LogOut } from 'lucide-react';
@@ -130,8 +130,8 @@ const Index = () => {
       {/* Optimized Video Background */}
       <OptimizedVideoBackground profileUserId={user?.id} />
       
-      {/* Cursor Style */}
-      <CursorStyle profileUserId={user?.id} />
+      {/* Audio Manager */}
+      <AudioManager profileUserId={user?.id} />
       
       <div className="relative z-10 container mx-auto px-6 py-16 sm:py-24">
         <div className="max-w-xl mx-auto space-y-12">

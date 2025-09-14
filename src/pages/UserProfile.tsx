@@ -9,7 +9,7 @@ import EmbeddedView from '@/components/EmbeddedView';
 import ProfileSettings from '@/components/ProfileSettings';
 import ViewAnalytics from '@/components/ViewAnalytics';
 import OptimizedVideoBackground from '@/components/OptimizedVideoBackground';
-import CursorStyle from '@/components/CursorStyle';
+import AudioManager from '@/components/AudioManager';
 import { SocialLinksDisplay } from '@/components/SocialLinksDisplay';
 import { LogOut, ArrowLeft, Settings } from 'lucide-react';
 
@@ -147,8 +147,8 @@ const UserProfile = () => {
       {/* Video Background */}
       <OptimizedVideoBackground profileUserId={profileData?.user_id} />
       
-      {/* Cursor Style */}
-      <CursorStyle profileUserId={profileData?.user_id} />
+      {/* Audio Manager */}
+      <AudioManager profileUserId={profileData?.user_id} />
       
       <div className="relative z-10 container mx-auto px-6 py-16 sm:py-24">
         <div className="max-w-xl mx-auto space-y-12">
