@@ -73,8 +73,14 @@ export function MediaUploader({ type, currentUrl, onUpload, onRemove }: MediaUpl
   const uploadFile = async (file: File) => {
     setUploading(true);
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error('Lütfen önce giriş yapın');
+        return;
+      }
+
       const fileExt = file.name.split('.').pop();
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const fileName = `${user.id}/${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
       const bucket = bucketMap[type];
 
       const { error: uploadError } = await supabase.storage
