@@ -28,12 +28,24 @@ export function CustomizePage({
 }: CustomizePageProps) {
   return (
     <div className="space-y-8">
+      {/* Header */}
+      <div className="text-center">
+        <h1 className="text-3xl font-bold text-white text-gradient mb-2">Customize Your Profile</h1>
+        <p className="text-smoke-400">Personalize your profile with unique assets and styling</p>
+      </div>
+
       {/* Assets Uploader */}
-      <div>
-        <h2 className="text-xl font-semibold text-white mb-4">Assets Uploader</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div>
-            <h3 className="text-sm font-medium text-white/80 mb-2">Background</h3>
+      <div className="glass rounded-xl p-8">
+        <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
+          <div className="w-2 h-6 bg-gradient-to-b from-purple-500 to-purple-600 rounded-full" />
+          Media Assets
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="space-y-3">
+            <h3 className="text-sm font-medium text-white flex items-center gap-2">
+              <div className="w-2 h-2 bg-purple-500 rounded-full" />
+              Background Video
+            </h3>
             <MediaUploader
               type="background"
               currentUrl={formData.background_video_url}
@@ -42,8 +54,11 @@ export function CustomizePage({
             />
           </div>
           
-          <div>
-            <h3 className="text-sm font-medium text-gray-300 mb-2">Audio</h3>
+          <div className="space-y-3">
+            <h3 className="text-sm font-medium text-white flex items-center gap-2">
+              <div className="w-2 h-2 bg-blue-500 rounded-full" />
+              Background Audio
+            </h3>
             <MediaUploader
               type="audio"
               currentUrl={formData.audio_url}
@@ -52,8 +67,11 @@ export function CustomizePage({
             />
           </div>
           
-          <div>
-            <h3 className="text-sm font-medium text-gray-300 mb-2">Profile Avatar</h3>
+          <div className="space-y-3">
+            <h3 className="text-sm font-medium text-white flex items-center gap-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full" />
+              Profile Avatar
+            </h3>
             <MediaUploader
               type="avatar"
               currentUrl={formData.avatar_url}
@@ -62,8 +80,11 @@ export function CustomizePage({
             />
           </div>
           
-          <div>
-            <h3 className="text-sm font-medium text-gray-300 mb-2">Custom Cursor</h3>
+          <div className="space-y-3">
+            <h3 className="text-sm font-medium text-white flex items-center gap-2">
+              <div className="w-2 h-2 bg-orange-500 rounded-full" />
+              Custom Cursor
+            </h3>
             <MediaUploader
               type="cursor"
               currentUrl={formData.custom_cursor_url}
@@ -75,38 +96,43 @@ export function CustomizePage({
       </div>
 
       {/* Premium Banner */}
-      <div className="bg-gradient-to-r from-purple-900 to-purple-700 rounded-lg p-4 border border-purple-600">
-        <div className="flex items-center justify-center gap-2 text-white">
-          <Crown className="w-5 h-5" />
-          <span className="font-medium">Want exclusive features? Unlock more with Premium</span>
+      <div className="glass rounded-xl p-6 bg-gradient-to-r from-purple-900/20 to-purple-700/20 border border-purple-500/30">
+        <div className="flex items-center justify-center gap-3 text-white">
+          <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
+            <Crown className="w-5 h-5" />
+          </div>
+          <span className="font-semibold text-lg">Want exclusive features? Unlock more with Premium</span>
         </div>
       </div>
 
       {/* General Customization */}
-      <div>
-        <h2 className="text-xl font-semibold text-white mb-4">General Customization</h2>
+      <div className="glass rounded-xl p-8">
+        <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
+          <div className="w-2 h-6 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full" />
+          General Customization
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           
           {/* Description */}
-          <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-            <Label className="text-gray-300 mb-2 block">Description</Label>
+          <div className="bg-smoke-900/30 rounded-xl p-6 border border-smoke-700/30">
+            <Label className="text-white mb-3 block font-medium">Profile Description</Label>
             <Textarea
               value={formData.bio}
               onChange={(e) => setFormData(prev => ({ ...prev, bio: e.target.value }))}
               placeholder="marketing director & designer"
-              className="bg-gray-900 border-gray-600 text-white resize-none"
+              className="bg-smoke-800 border-smoke-600 text-white resize-none focus:border-purple-500 transition-colors"
               rows={3}
             />
           </div>
 
           {/* Discord Presence */}
-          <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-            <Label className="text-gray-300 mb-2 block">Discord Presence</Label>
+          <div className="bg-smoke-900/30 rounded-xl p-6 border border-smoke-700/30">
+            <Label className="text-white mb-3 block font-medium">Discord Presence</Label>
             <Select defaultValue="disabled">
-              <SelectTrigger className="bg-gray-900 border-gray-600 text-white">
+              <SelectTrigger className="bg-smoke-800 border-smoke-600 text-white focus:border-purple-500 transition-colors">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-smoke-900 border-smoke-700">
                 <SelectItem value="disabled">Disabled</SelectItem>
                 <SelectItem value="enabled">Enabled</SelectItem>
               </SelectContent>
@@ -114,10 +140,10 @@ export function CustomizePage({
           </div>
 
           {/* Profile Opacity */}
-          <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-            <div className="flex justify-between items-center mb-3">
-              <Label className="text-gray-300">Profile Opacity</Label>
-              <span className="text-sm text-gray-400">{customizationSettings.profileOpacity}%</span>
+          <div className="bg-smoke-900/30 rounded-xl p-6 border border-smoke-700/30">
+            <div className="flex justify-between items-center mb-4">
+              <Label className="text-white font-medium">Profile Opacity</Label>
+              <span className="text-sm text-purple-400 bg-purple-500/10 px-2 py-1 rounded-full">{customizationSettings.profileOpacity}%</span>
             </div>
             <Slider
               value={[customizationSettings.profileOpacity]}
@@ -216,8 +242,11 @@ export function CustomizePage({
       </div>
 
       {/* Color Customization */}
-      <div>
-        <h2 className="text-xl font-semibold text-white mb-4">Color Customization</h2>
+      <div className="glass rounded-xl p-8">
+        <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
+          <div className="w-2 h-6 bg-gradient-to-b from-green-500 to-green-600 rounded-full" />
+          Color Customization
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           
           {/* Accent Color */}
@@ -369,13 +398,20 @@ export function CustomizePage({
       </div>
 
       {/* Save Button */}
-      <div className="flex justify-end">
+      <div className="flex justify-center">
         <Button 
           onClick={onSave}
           disabled={isSaving}
-          className="bg-purple-600 hover:bg-purple-700 text-white px-8"
+          className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white px-12 py-3 text-lg font-semibold rounded-xl shadow-lg hover-lift disabled:opacity-50"
         >
-          {isSaving ? 'Kaydediliyor...' : 'Kaydet'}
+          {isSaving ? (
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+              Kaydediliyor...
+            </div>
+          ) : (
+            'Değişiklikleri Kaydet'
+          )}
         </Button>
       </div>
     </div>

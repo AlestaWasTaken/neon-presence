@@ -179,22 +179,25 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-smoke-950 to-background">
+    <div className="min-h-screen bg-gradient-to-br from-smoke-950 via-background to-smoke-900">
       {/* Video Background */}
       <div className="fixed inset-0 z-0">
         <VideoBackground profileUserId={user?.id} />
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
       </div>
       
       <div className="relative z-10 flex min-h-screen">
         <DashboardSidebar
-        activeSection={activeSection}
-        onSectionChange={setActiveSection}
-        profile={profile}
+          activeSection={activeSection}
+          onSectionChange={setActiveSection}
+          profile={profile}
         />
         
-        <main className="flex-1 overflow-y-auto backdrop-blur-sm">
-          <div className="p-8">
-            {renderContent()}
+        <main className="flex-1 overflow-y-auto">
+          <div className="p-6 lg:p-8">
+            <div className="glass rounded-2xl p-6 lg:p-8 min-h-[calc(100vh-3rem)]">
+              {renderContent()}
+            </div>
           </div>
         </main>
       </div>
