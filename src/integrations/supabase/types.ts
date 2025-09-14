@@ -16,27 +16,33 @@ export type Database = {
     Tables: {
       profile_views: {
         Row: {
+          browser_type: string | null
           created_at: string
           id: string
           profile_user_id: string
           user_agent: string | null
           viewer_ip: string | null
+          viewer_ip_hash: string | null
           viewer_user_id: string | null
         }
         Insert: {
+          browser_type?: string | null
           created_at?: string
           id?: string
           profile_user_id: string
           user_agent?: string | null
           viewer_ip?: string | null
+          viewer_ip_hash?: string | null
           viewer_user_id?: string | null
         }
         Update: {
+          browser_type?: string | null
           created_at?: string
           id?: string
           profile_user_id?: string
           user_agent?: string | null
           viewer_ip?: string | null
+          viewer_ip_hash?: string | null
           viewer_user_id?: string | null
         }
         Relationships: []
@@ -191,6 +197,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      cleanup_old_profile_views: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
       get_user_roles: {
         Args: { _user_id: string }
         Returns: {
@@ -210,6 +220,15 @@ export type Database = {
       }
       sanitize_user_agent: {
         Args: { user_agent_input: string }
+        Returns: string
+      }
+      track_profile_view: {
+        Args: {
+          p_profile_user_id: string
+          p_user_agent?: string
+          p_viewer_ip?: string
+          p_viewer_user_id?: string
+        }
         Returns: string
       }
     }
