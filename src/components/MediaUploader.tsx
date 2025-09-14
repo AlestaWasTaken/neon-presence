@@ -119,11 +119,11 @@ export function MediaUploader({ type, currentUrl, onUpload, onRemove }: MediaUpl
   const isAudio = displayUrl && /\.(mp3|wav|ogg|m4a)$/i.test(displayUrl);
 
   return (
-    <Card className="glass border-smoke-700/30">
+    <Card className="bg-gray-800 border-gray-700">
       <CardContent className="p-4">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-medium text-smoke-200 flex items-center gap-2">
+            <h3 className="text-sm font-medium text-gray-300 flex items-center gap-2">
               <IconComponent className="w-4 h-4" />
               {getTitle()}
             </h3>
@@ -140,9 +140,9 @@ export function MediaUploader({ type, currentUrl, onUpload, onRemove }: MediaUpl
           </div>
 
           {/* Preview Area */}
-          <div className="relative aspect-video bg-smoke-900/50 rounded-lg border border-smoke-700/30 overflow-hidden">
+          <div className="relative aspect-video bg-gray-900 rounded-lg border border-gray-600 overflow-hidden">
             {!displayUrl ? (
-              <div className="flex flex-col items-center justify-center h-full text-smoke-400">
+              <div className="flex flex-col items-center justify-center h-full text-gray-400">
                 <IconComponent className="w-8 h-8 mb-2" />
                 <span className="text-sm">Dosya seç</span>
               </div>
@@ -167,7 +167,7 @@ export function MediaUploader({ type, currentUrl, onUpload, onRemove }: MediaUpl
                 )}
                 {isAudio && (
                   <div className="flex flex-col items-center justify-center h-full">
-                    <Music className="w-12 h-12 text-smoke-300 mb-4" />
+                    <Music className="w-12 h-12 text-gray-300 mb-4" />
                     <audio
                       ref={audioRef}
                       src={displayUrl}
@@ -192,13 +192,13 @@ export function MediaUploader({ type, currentUrl, onUpload, onRemove }: MediaUpl
             <Button
               onClick={() => fileInputRef.current?.click()}
               disabled={uploading}
-              className="w-full glass border-smoke-700/30"
+              className="w-full bg-gray-700 hover:bg-gray-600 border-gray-600 text-white"
               variant="outline"
             >
               <Upload className="w-4 h-4 mr-2" />
               {uploading ? 'Yükleniyor...' : displayUrl ? 'Değiştir' : 'Dosya Seç'}
             </Button>
-            <p className="text-xs text-smoke-500 text-center">
+            <p className="text-xs text-gray-400 text-center">
               Maksimum 10MB • {acceptedTypes[type].replace('/*', '').toUpperCase()} formatları
             </p>
           </div>
