@@ -101,7 +101,7 @@ export default function VideoBackground({ profileUserId, videoRef }: VideoBackgr
           ref={currentVideoRef}
           className="w-full h-full object-cover"
           loop
-          muted
+          muted={false}
           playsInline
           style={{ filter: 'brightness(0.4) contrast(1.1) saturate(0.8)' }}
         />

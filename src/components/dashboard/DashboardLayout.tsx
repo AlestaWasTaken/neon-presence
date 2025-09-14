@@ -124,10 +124,11 @@ export default function DashboardLayout() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-smoke-950 via-background to-smoke-900">
-      {/* Video Background */}
+      {/* Static gradient background for dashboard */}
       <div className="fixed inset-0 z-0">
-        <VideoBackground profileUserId={user?.id} />
-        <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+        <div className="absolute inset-0 bg-gradient-to-br from-smoke-950 via-background to-smoke-900" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,_hsl(var(--smoke-800))_0%,_transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,_hsl(var(--smoke-700))_0%,_transparent_50%)]" />
       </div>
       
       <div className="relative z-10 flex min-h-screen">

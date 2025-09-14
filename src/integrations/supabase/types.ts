@@ -245,15 +245,6 @@ export type Database = {
         Args: { user_agent_input: string }
         Returns: string
       }
-      track_profile_view: {
-        Args: {
-          p_profile_user_id: string
-          p_user_agent?: string
-          p_viewer_ip?: string
-          p_viewer_user_id?: string
-        }
-        Returns: string
-      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"

@@ -237,29 +237,36 @@ export function CustomizePage({
           <div className="bg-smoke-900/30 rounded-xl p-6 border border-smoke-700/30">
             <Label className="text-white mb-4 block font-medium flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-yellow-500" />
-              Glow Settings
+              Glow Effects
             </Label>
-            <div className="grid grid-cols-3 gap-3">
-              <Button 
-                size="sm" 
-                className="h-10 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg"
-              >
-                Username
-              </Button>
-              <Button 
-                size="sm" 
-                variant="outline" 
-                className="h-10 border-smoke-600 text-smoke-300 hover:bg-smoke-700 hover:text-white transition-colors"
-              >
-                Socials
-              </Button>
-              <Button 
-                size="sm" 
-                variant="outline" 
-                className="h-10 border-smoke-600 text-smoke-300 hover:bg-smoke-700 hover:text-white transition-colors"
-              >
-                Badges
-              </Button>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <Label className="text-sm text-white">Username Glow</Label>
+                <Switch
+                  checked={customizationSettings.usernameEffect === 'glow'}
+                  onCheckedChange={(checked) => 
+                    handleCustomizationChange('usernameEffect', checked ? 'glow' : 'none')
+                  }
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <Label className="text-sm text-white">Social Icons Glow</Label>
+                <Switch
+                  checked={customizationSettings.glowSocials || false}
+                  onCheckedChange={(checked) => 
+                    handleCustomizationChange('glowSocials', checked)
+                  }
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <Label className="text-sm text-white">Badge Glow</Label>
+                <Switch
+                  checked={customizationSettings.glowBadges || false}
+                  onCheckedChange={(checked) => 
+                    handleCustomizationChange('glowBadges', checked)
+                  }
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -370,19 +377,24 @@ export function CustomizePage({
           </div>
         </div>
 
-        {/* Enable Profile Gradient */}
-        <div className="mt-8">
-          <Button 
-            className="w-full h-14 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white text-lg font-semibold rounded-xl shadow-lg hover-lift transition-all"
-            onClick={() => handleCustomizationChange('enableGradient', !customizationSettings.enableGradient)}
-          >
+        {/* Profile Gradient Toggle */}
+        <div className="mt-8 bg-smoke-900/30 rounded-xl p-6 border border-smoke-700/30">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-6 h-6 bg-gradient-to-br from-red-400 to-red-500 rounded-lg flex items-center justify-center">
-                <Sparkles className="w-4 h-4 text-white" />
+              <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-white" />
               </div>
-              {customizationSettings.enableGradient ? 'Disable Profile Gradient' : 'Enable Profile Gradient'}
+              <div>
+                <Label className="text-white font-medium text-lg">Profile Gradient</Label>
+                <p className="text-smoke-400 text-sm">Add a beautiful gradient overlay to your profile</p>
+              </div>
             </div>
-          </Button>
+            <Switch
+              checked={customizationSettings.enableGradient}
+              onCheckedChange={(checked) => handleCustomizationChange('enableGradient', checked)}
+              className="scale-125"
+            />
+          </div>
         </div>
       </div>
 
