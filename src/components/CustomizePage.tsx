@@ -156,10 +156,12 @@ export function CustomizePage({
           </div>
 
           {/* Profile Blur */}
-          <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-            <div className="flex justify-between items-center mb-3">
-              <Label className="text-gray-300">Profile Blur</Label>
-              <span className="text-sm text-gray-400">{customizationSettings.profileBlur}px</span>
+          <div className="bg-smoke-900/30 rounded-xl p-6 border border-smoke-700/30">
+            <div className="flex justify-between items-center mb-4">
+              <Label className="text-white font-medium">Profile Blur</Label>
+              <span className="text-sm text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full font-medium">
+                {customizationSettings.profileBlur}px
+              </span>
             </div>
             <Slider
               value={[customizationSettings.profileBlur]}
@@ -172,16 +174,19 @@ export function CustomizePage({
           </div>
 
           {/* Background Effects */}
-          <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-            <Label className="text-gray-300 mb-2 block">Background Effects</Label>
+          <div className="bg-smoke-900/30 rounded-xl p-6 border border-smoke-700/30">
+            <Label className="text-white mb-3 block font-medium flex items-center gap-2">
+              <div className="w-3 h-3 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full" />
+              Background Effects
+            </Label>
             <Select 
               value={customizationSettings.backgroundEffect}
               onValueChange={(value) => handleCustomizationChange('backgroundEffect', value)}
             >
-              <SelectTrigger className="bg-gray-900 border-gray-600 text-white">
-                <SelectValue />
+              <SelectTrigger className="bg-smoke-800 border-smoke-600 text-white focus:border-orange-500 transition-colors h-12">
+                <SelectValue placeholder="Choose background effect..." />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-smoke-900 border-smoke-700">
                 <SelectItem value="none">None</SelectItem>
                 <SelectItem value="rain">Rain</SelectItem>
                 <SelectItem value="snow">Snow</SelectItem>
@@ -191,17 +196,20 @@ export function CustomizePage({
           </div>
 
           {/* Username Effects */}
-          <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-            <Label className="text-gray-300 mb-2 block">Username Effects</Label>
+          <div className="bg-smoke-900/30 rounded-xl p-6 border border-smoke-700/30">
+            <Label className="text-white mb-3 block font-medium flex items-center gap-2">
+              <div className="w-3 h-3 bg-gradient-to-br from-pink-500 to-pink-600 rounded-full" />
+              Username Effects
+            </Label>
             <Select 
               value={customizationSettings.usernameEffect}
               onValueChange={(value) => handleCustomizationChange('usernameEffect', value)}
             >
-              <SelectTrigger className="bg-gray-900 border-gray-600 text-white">
-                <SelectValue />
+              <SelectTrigger className="bg-smoke-800 border-smoke-600 text-white focus:border-pink-500 transition-colors h-12">
+                <SelectValue placeholder="Choose username effects..." />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">Choose Username Effects</SelectItem>
+              <SelectContent className="bg-smoke-900 border-smoke-700">
+                <SelectItem value="none">None</SelectItem>
                 <SelectItem value="glow">Glow</SelectItem>
                 <SelectItem value="shadow">Shadow</SelectItem>
                 <SelectItem value="neon">Neon</SelectItem>
@@ -210,30 +218,46 @@ export function CustomizePage({
           </div>
 
           {/* Location */}
-          <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-            <Label className="text-gray-300 mb-2 flex items-center gap-2">
-              <MapPin className="w-4 h-4" />
+          <div className="bg-smoke-900/30 rounded-xl p-6 border border-smoke-700/30">
+            <Label className="text-white mb-3 block font-medium flex items-center gap-2">
+              <MapPin className="w-4 h-4 text-green-500" />
               Location
             </Label>
-            <Input
-              value={customizationSettings.location}
-              onChange={(e) => handleCustomizationChange('location', e.target.value)}
-              placeholder="İstanbul"
-              className="bg-gray-900 border-gray-600 text-white"
-            />
+            <div className="relative">
+              <Input
+                value={customizationSettings.location}
+                onChange={(e) => handleCustomizationChange('location', e.target.value)}
+                placeholder="Enter your location..."
+                className="bg-smoke-800 border-smoke-600 text-white focus:border-green-500 transition-colors h-12 pl-4"
+              />
+            </div>
           </div>
 
           {/* Glow Settings */}
-          <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-            <Label className="text-gray-300 mb-2 block">Glow Settings</Label>
-            <div className="grid grid-cols-3 gap-2">
-              <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white">
+          <div className="bg-smoke-900/30 rounded-xl p-6 border border-smoke-700/30">
+            <Label className="text-white mb-4 block font-medium flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-yellow-500" />
+              Glow Settings
+            </Label>
+            <div className="grid grid-cols-3 gap-3">
+              <Button 
+                size="sm" 
+                className="h-10 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg"
+              >
                 Username
               </Button>
-              <Button size="sm" variant="outline" className="border-gray-600 text-gray-300">
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="h-10 border-smoke-600 text-smoke-300 hover:bg-smoke-700 hover:text-white transition-colors"
+              >
                 Socials
               </Button>
-              <Button size="sm" variant="outline" className="border-gray-600 text-gray-300">
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="h-10 border-smoke-600 text-smoke-300 hover:bg-smoke-700 hover:text-white transition-colors"
+              >
                 Badges
               </Button>
             </div>
@@ -250,85 +274,114 @@ export function CustomizePage({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           
           {/* Accent Color */}
-          <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-            <Label className="text-gray-300 mb-2 block">Accent Color</Label>
-            <div className="flex items-center gap-2">
-              <input
-                type="color"
-                value={customizationSettings.accentColor}
-                onChange={(e) => handleCustomizationChange('accentColor', e.target.value)}
-                className="w-8 h-8 rounded border border-gray-600"
-              />
+          <div className="bg-smoke-900/30 rounded-xl p-6 border border-smoke-700/30">
+            <Label className="text-white mb-4 block font-medium flex items-center gap-2">
+              <div className="w-3 h-3 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full" />
+              Accent Color
+            </Label>
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <input
+                  type="color"
+                  value={customizationSettings.accentColor}
+                  onChange={(e) => handleCustomizationChange('accentColor', e.target.value)}
+                  className="w-12 h-12 rounded-xl border-2 border-smoke-600 cursor-pointer"
+                />
+              </div>
               <Input
                 value={customizationSettings.accentColor}
                 onChange={(e) => handleCustomizationChange('accentColor', e.target.value)}
-                className="bg-gray-900 border-gray-600 text-white"
+                className="bg-smoke-800 border-smoke-600 text-white focus:border-purple-500 transition-colors h-12"
+                placeholder="#000000"
               />
             </div>
           </div>
 
           {/* Text Color */}
-          <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-            <Label className="text-gray-300 mb-2 block">Text Color</Label>
-            <div className="flex items-center gap-2">
-              <input
-                type="color"
-                value={customizationSettings.textColor}
-                onChange={(e) => handleCustomizationChange('textColor', e.target.value)}
-                className="w-8 h-8 rounded border border-gray-600"
-              />
+          <div className="bg-smoke-900/30 rounded-xl p-6 border border-smoke-700/30">
+            <Label className="text-white mb-4 block font-medium flex items-center gap-2">
+              <div className="w-3 h-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full" />
+              Text Color
+            </Label>
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <input
+                  type="color"
+                  value={customizationSettings.textColor}
+                  onChange={(e) => handleCustomizationChange('textColor', e.target.value)}
+                  className="w-12 h-12 rounded-xl border-2 border-smoke-600 cursor-pointer"
+                />
+              </div>
               <Input
                 value={customizationSettings.textColor}
                 onChange={(e) => handleCustomizationChange('textColor', e.target.value)}
-                className="bg-gray-900 border-gray-600 text-white"
+                className="bg-smoke-800 border-smoke-600 text-white focus:border-blue-500 transition-colors h-12"
+                placeholder="#ffffff"
               />
             </div>
           </div>
 
           {/* Background Color */}
-          <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-            <Label className="text-gray-300 mb-2 block">Background Color</Label>
-            <div className="flex items-center gap-2">
-              <input
-                type="color"
-                value={customizationSettings.backgroundColor}
-                onChange={(e) => handleCustomizationChange('backgroundColor', e.target.value)}
-                className="w-8 h-8 rounded border border-gray-600"
-              />
+          <div className="bg-smoke-900/30 rounded-xl p-6 border border-smoke-700/30">
+            <Label className="text-white mb-4 block font-medium flex items-center gap-2">
+              <div className="w-3 h-3 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full" />
+              Background Color
+            </Label>
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <input
+                  type="color"
+                  value={customizationSettings.backgroundColor}
+                  onChange={(e) => handleCustomizationChange('backgroundColor', e.target.value)}
+                  className="w-12 h-12 rounded-xl border-2 border-smoke-600 cursor-pointer"
+                />
+              </div>
               <Input
                 value={customizationSettings.backgroundColor}
                 onChange={(e) => handleCustomizationChange('backgroundColor', e.target.value)}
-                className="bg-gray-900 border-gray-600 text-white"
+                className="bg-smoke-800 border-smoke-600 text-white focus:border-orange-500 transition-colors h-12"
+                placeholder="#111111"
               />
             </div>
           </div>
 
           {/* Icon Color */}
-          <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-            <Label className="text-gray-300 mb-2 block">Icon Color</Label>
-            <div className="flex items-center gap-2">
-              <input
-                type="color"
-                value={customizationSettings.iconColor}
-                onChange={(e) => handleCustomizationChange('iconColor', e.target.value)}
-                className="w-8 h-8 rounded border border-gray-600"
-              />
+          <div className="bg-smoke-900/30 rounded-xl p-6 border border-smoke-700/30">
+            <Label className="text-white mb-4 block font-medium flex items-center gap-2">
+              <div className="w-3 h-3 bg-gradient-to-br from-pink-500 to-pink-600 rounded-full" />
+              Icon Color
+            </Label>
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <input
+                  type="color"
+                  value={customizationSettings.iconColor}
+                  onChange={(e) => handleCustomizationChange('iconColor', e.target.value)}
+                  className="w-12 h-12 rounded-xl border-2 border-smoke-600 cursor-pointer"
+                />
+              </div>
               <Input
                 value={customizationSettings.iconColor}
                 onChange={(e) => handleCustomizationChange('iconColor', e.target.value)}
-                className="bg-gray-900 border-gray-600 text-white"
+                className="bg-smoke-800 border-smoke-600 text-white focus:border-pink-500 transition-colors h-12"
+                placeholder="#666666"
               />
             </div>
           </div>
         </div>
 
         {/* Enable Profile Gradient */}
-        <div className="mt-6">
+        <div className="mt-8">
           <Button 
-            className="w-full bg-red-600 hover:bg-red-700 text-white py-3"
+            className="w-full h-14 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white text-lg font-semibold rounded-xl shadow-lg hover-lift transition-all"
             onClick={() => handleCustomizationChange('enableGradient', !customizationSettings.enableGradient)}
           >
-            Enable Profile Gradient
+            <div className="flex items-center gap-3">
+              <div className="w-6 h-6 bg-gradient-to-br from-red-400 to-red-500 rounded-lg flex items-center justify-center">
+                <Sparkles className="w-4 h-4 text-white" />
+              </div>
+              {customizationSettings.enableGradient ? 'Disable Profile Gradient' : 'Enable Profile Gradient'}
+            </div>
           </Button>
         </div>
       </div>
