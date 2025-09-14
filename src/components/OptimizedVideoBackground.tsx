@@ -120,17 +120,30 @@ export default function OptimizedVideoBackground({ profileUserId }: OptimizedVid
           // If auto-play with sound fails, try muted first
           video.muted = true;
           setIsMuted(true);
-          video.play().then(() => {
-            setIsPlaying(true);
-          }).catch(console.error);
           
-          // User can unmute manually
-          document.addEventListener('click', () => {
-            if (video.muted) {
+          const retryPlay = async () => {
+            try {
+              await video.play();
+              setIsPlaying(true);
+              setError(false);
+            } catch (retryError) {
+              console.error('Muted play also failed:', retryError);
+              setError(true);
+            }
+          };
+          
+          retryPlay();
+          
+          // User can unmute manually after first interaction
+          const enableSound = () => {
+            if (video.muted && isPlaying) {
               video.muted = false;
               setIsMuted(false);
             }
-          }, { once: true });
+          };
+          
+          document.addEventListener('click', enableSound, { once: true });
+          document.addEventListener('touchstart', enableSound, { once: true });
         });
     }
   }, [volume]);
@@ -164,15 +177,29 @@ export default function OptimizedVideoBackground({ profileUserId }: OptimizedVid
       video.playsInline = true;
       video.loop = true;
       video.autoplay = true;
-      video.preload = 'auto';
+      video.preload = 'metadata'; // Changed from 'auto' for better performance
       
       // Set video source and properties
       video.src = videoUrl;
       video.load();
       
-      // Try to play immediately after load
-      video.addEventListener('canplay', () => {
-        video.play().catch(console.error);
+      // Try to play after sufficient data is loaded
+      const playWhenReady = async () => {
+        try {
+          await video.play();
+          setIsPlaying(true);
+          setError(false);
+        } catch (err) {
+          console.error('Initial play failed:', err);
+          setError(true);
+        }
+      };
+      
+      video.addEventListener('canplaythrough', playWhenReady, { once: true });
+      video.addEventListener('loadeddata', () => {
+        if (video.readyState >= 2) { // HAVE_CURRENT_DATA
+          playWhenReady();
+        }
       }, { once: true });
     } else {
       resetVideo();

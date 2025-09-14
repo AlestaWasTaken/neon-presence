@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import OptimizedVideoBackground from '@/components/OptimizedVideoBackground';
+import { useAuth } from '@/hooks/useAuth';
+import { useProfile } from '@/hooks/useProfile';
 
 interface ClickToEnterProps {
   onEnter: () => void;
@@ -8,6 +10,11 @@ interface ClickToEnterProps {
 
 export default function ClickToEnter({ onEnter }: ClickToEnterProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const { user } = useAuth();
+  const { profile } = useProfile();
+  
+  // Use profile username if available, otherwise use user metadata or default
+  const displayName = profile?.username || user?.user_metadata?.username || "alesta";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95">
@@ -17,7 +24,7 @@ export default function ClickToEnter({ onEnter }: ClickToEnterProps) {
         <div className="space-y-4">
           <h1 className="text-5xl sm:text-7xl font-black tracking-tight">
             <span className="text-gradient bg-gradient-to-r from-smoke-100 to-smoke-300 bg-clip-text text-transparent">
-              alesta
+              {displayName}
             </span>
           </h1>
           <p className="text-smoke-400 text-lg font-light tracking-wide">
