@@ -13,7 +13,7 @@ interface Viewer {
   id: string;
   username: string | null;
   viewer_user_id: string | null;
-  viewer_ip: string | null;
+  browser_type: string | null;
   created_at: string;
 }
 
@@ -82,15 +82,14 @@ export default function ViewAnalytics({ profileUserId }: ViewAnalyticsProps) {
         .eq('profile_user_id', profileUserId)
         .gte('created_at', monthAgo.toISOString());
 
-      // Get recent viewers with usernames
+      // Get recent viewers with usernames - now using secure analytics view
       const { data: viewersResult } = await supabase
-        .from('profile_views')
+        .from('profile_analytics')
         .select(`
           id,
           viewer_user_id,
-          viewer_ip,
-          created_at,
-          profiles!inner(username)
+          browser_type,
+          created_at
         `)
         .eq('profile_user_id', profileUserId)
         .not('viewer_user_id', 'is', null)
@@ -121,13 +120,26 @@ export default function ViewAnalytics({ profileUserId }: ViewAnalyticsProps) {
         todayViews: todayResult || 0,
         weekViews: weekResult || 0,
         monthViews: monthResult || 0,
-        viewers: (viewersResult || []).map((viewer: any) => ({
-          id: viewer.id,
-          username: viewer.profiles?.username || null,
-          viewer_user_id: viewer.viewer_user_id,
-          viewer_ip: viewer.viewer_ip,
-          created_at: viewer.created_at
-        })),
+        viewers: (viewersResult || []).map((viewer: any) => {
+          // Get username from profiles if viewer is registered
+          const getViewerUsername = async (viewerId: string) => {
+            if (!viewerId) return null;
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('username')
+              .eq('user_id', viewerId)
+              .single();
+            return profile?.username || null;
+          };
+
+          return {
+            id: viewer.id,
+            username: viewer.viewer_user_id ? 'Loading...' : 'Anonymous User',
+            viewer_user_id: viewer.viewer_user_id,
+            browser_type: viewer.browser_type,
+            created_at: viewer.created_at
+          };
+        }),
         dailyViews: dailyViewsData
       });
 
@@ -256,9 +268,16 @@ export default function ViewAnalytics({ profileUserId }: ViewAnalyticsProps) {
                         <User className="w-4 h-4 text-gray-300" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-white">
-                          {viewer.username || 'Anonim Kullanıcı'}
-                        </p>
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-medium text-white">
+                            {viewer.username || 'Anonymous User'}
+                          </p>
+                          {viewer.browser_type && (
+                            <span className="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded-full">
+                              {viewer.browser_type}
+                            </span>
+                          )}
+                        </div>
                         <p className="text-xs text-gray-400">
                           {format(new Date(viewer.created_at), 'dd MMM yyyy, HH:mm', { locale: tr })}
                         </p>

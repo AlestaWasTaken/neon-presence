@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Profile, SocialLink } from '@/types';
-import { useViewStats } from '@/hooks/useViewStats';
+import { useSecureTracking } from '@/hooks/useSecureTracking';
 import VideoBackground from '@/components/VideoBackground';
 import { SocialLinksDisplay } from '@/components/SocialLinksDisplay';
 import { BackgroundEffects } from '@/components/BackgroundEffects';
@@ -22,7 +22,7 @@ export default function ProfilePage() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   
-  const { recordView } = useViewStats();
+  const { trackView } = useSecureTracking();
 
   useEffect(() => {
     if (username) {
@@ -55,8 +55,8 @@ export default function ProfilePage() {
         username_effect: (profileData.username_effect as any) || 'none',
       });
 
-      // Record view
-      await recordView(profileData.user_id);
+      // Record view securely
+      await trackView({ profileUserId: profileData.user_id });
 
       // Fetch social links
       const { data: linksData } = await supabase

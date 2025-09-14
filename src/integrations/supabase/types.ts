@@ -197,7 +197,6 @@ export type Database = {
           id: string | null
           profile_user_id: string | null
           viewer_user_id: string | null
-          viewer_username: string | null
         }
         Insert: {
           browser_type?: string | null
@@ -205,7 +204,6 @@ export type Database = {
           id?: string | null
           profile_user_id?: string | null
           viewer_user_id?: string | null
-          viewer_username?: never
         }
         Update: {
           browser_type?: string | null
@@ -213,7 +211,6 @@ export type Database = {
           id?: string | null
           profile_user_id?: string | null
           viewer_user_id?: string | null
-          viewer_username?: never
         }
         Relationships: []
       }
