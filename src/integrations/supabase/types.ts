@@ -190,7 +190,33 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      profile_analytics: {
+        Row: {
+          browser_type: string | null
+          created_at: string | null
+          id: string | null
+          profile_user_id: string | null
+          viewer_user_id: string | null
+          viewer_username: string | null
+        }
+        Insert: {
+          browser_type?: string | null
+          created_at?: string | null
+          id?: string | null
+          profile_user_id?: string | null
+          viewer_user_id?: string | null
+          viewer_username?: never
+        }
+        Update: {
+          browser_type?: string | null
+          created_at?: string | null
+          id?: string | null
+          profile_user_id?: string | null
+          viewer_user_id?: string | null
+          viewer_username?: never
+        }
+        Relationships: []
+      }
     }
     Functions: {
       assign_sequential_ids: {
