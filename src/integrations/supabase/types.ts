@@ -204,6 +204,14 @@ export type Database = {
         }
         Returns: boolean
       }
+      hash_ip_address: {
+        Args: { ip_address: string }
+        Returns: string
+      }
+      sanitize_user_agent: {
+        Args: { user_agent_input: string }
+        Returns: string
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
