@@ -4,13 +4,17 @@ import { Profile } from '@/types';
 
 interface VideoBackgroundProps {
   profileUserId?: string;
+  videoRef?: React.RefObject<HTMLVideoElement>;
 }
 
-export default function VideoBackground({ profileUserId }: VideoBackgroundProps) {
-  const videoRef = useRef<HTMLVideoElement>(null);
+export default function VideoBackground({ profileUserId, videoRef }: VideoBackgroundProps) {
+  const internalVideoRef = useRef<HTMLVideoElement>(null);
   const [mediaUrl, setMediaUrl] = useState<string | null>(null);
   const [isVideo, setIsVideo] = useState(false);
   const [error, setError] = useState(false);
+
+  // Use external ref if provided, otherwise use internal ref
+  const currentVideoRef = videoRef || internalVideoRef;
 
   useEffect(() => {
     const fetchMedia = async () => {
@@ -43,7 +47,7 @@ export default function VideoBackground({ profileUserId }: VideoBackgroundProps)
   useEffect(() => {
     if (!isVideo || !mediaUrl) return;
 
-    const video = videoRef.current;
+    const video = currentVideoRef.current;
     if (!video) return;
 
     const handleLoad = () => {
@@ -94,7 +98,7 @@ export default function VideoBackground({ profileUserId }: VideoBackgroundProps)
     <div className="fixed inset-0 z-0">
       {isVideo ? (
         <video
-          ref={videoRef}
+          ref={currentVideoRef}
           className="w-full h-full object-cover"
           loop
           muted

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Profile, SocialLink } from '@/types';
@@ -7,6 +7,8 @@ import VideoBackground from '@/components/VideoBackground';
 import { SocialLinksDisplay } from '@/components/SocialLinksDisplay';
 import { BackgroundEffects } from '@/components/BackgroundEffects';
 import { UsernameEffects } from '@/components/UsernameEffects';
+import BackgroundAudio from '@/components/BackgroundAudio';
+import { VolumeControl } from '@/components/VolumeControl';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -17,6 +19,8 @@ export default function ProfilePage() {
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
   
   const { recordView } = useViewStats();
 
@@ -115,8 +119,14 @@ export default function ProfilePage() {
       filter: profile.profile_blur ? `blur(${profile.profile_blur}px)` : 'none',
       opacity: profile.profile_opacity ? profile.profile_opacity / 100 : 1
     }}>
-      <VideoBackground profileUserId={profile.user_id} />
+      <VideoBackground profileUserId={profile.user_id} videoRef={videoRef} />
       <BackgroundEffects effect={profile.background_effect || 'none'} />
+      <VolumeControl 
+        videoRef={videoRef}
+        audioRef={audioRef}
+        isVisible={profile.volume_control !== false}
+      />
+      <BackgroundAudio profileUserId={profile.user_id} audioRef={audioRef} />
       
       <div className="relative z-10 container mx-auto px-6 py-16 sm:py-24">
         <div className="max-w-xl mx-auto space-y-12">
