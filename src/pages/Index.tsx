@@ -4,8 +4,8 @@ import { useProfile } from '@/hooks/useProfile';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import ViewStats from '@/components/ViewStats';
-import OptimizedVideoBackground from '@/components/OptimizedVideoBackground';
-import AudioManager from '@/components/AudioManager';
+import VideoBackground from '@/components/VideoBackground';
+import BackgroundAudio from '@/components/BackgroundAudio';
 import ClickToEnter from '@/components/ClickToEnter';
 import { SocialLinksDisplay } from '@/components/SocialLinksDisplay';
 import { Settings, LogOut } from 'lucide-react';
@@ -39,7 +39,7 @@ const Index = () => {
   if (!isLoading && !user) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-smoke-950 to-background flex items-center justify-center p-6">
-        <OptimizedVideoBackground />
+        <VideoBackground />
         
         <div className="relative z-10 w-full max-w-md space-y-8">
           {/* Header */}
@@ -118,7 +118,7 @@ const Index = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background to-smoke-950 flex items-center justify-center">
-        <OptimizedVideoBackground />
+        <VideoBackground />
         <div className="relative z-10 text-smoke-300 animate-pulse text-sm font-light tracking-wider">
           loading...
         </div>
@@ -127,11 +127,11 @@ const Index = () => {
   }
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-smoke-950">
-      {/* Optimized Video Background */}
-      <OptimizedVideoBackground profileUserId={user?.id} />
+      {/* Video Background */}
+      <VideoBackground profileUserId={user?.id} />
       
-      {/* Audio Manager */}
-      <AudioManager profileUserId={user?.id} />
+      {/* Background Audio */}
+      <BackgroundAudio profileUserId={user?.id} />
       
       <div className="relative z-10 container mx-auto px-6 py-16 sm:py-24">
         <div className="max-w-xl mx-auto space-y-12">

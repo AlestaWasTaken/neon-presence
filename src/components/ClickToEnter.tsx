@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import OptimizedVideoBackground from '@/components/OptimizedVideoBackground';
+import VideoBackground from '@/components/VideoBackground';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
 
@@ -18,7 +18,7 @@ export default function ClickToEnter({ onEnter }: ClickToEnterProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95">
-      <OptimizedVideoBackground />
+      <VideoBackground />
       
       <div className="relative z-10 text-center space-y-8 animate-fade-in">
         <div className="space-y-4">

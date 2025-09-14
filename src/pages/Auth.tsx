@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
 import { useNavigate } from 'react-router-dom';
-import OptimizedVideoBackground from '@/components/OptimizedVideoBackground';
+import VideoBackground from '@/components/VideoBackground';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
@@ -40,7 +40,7 @@ export default function Auth() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-smoke-950 to-background flex items-center justify-center p-6">
-      <OptimizedVideoBackground />
+      <VideoBackground />
       
       <div className="relative z-10 w-full max-w-md">
         <div className="text-center mb-8 space-y-4">

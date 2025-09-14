@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useProfile } from '@/hooks/useProfile';
 import { supabase } from '@/integrations/supabase/client';
-import OptimizedVideoBackground from '@/components/OptimizedVideoBackground';
+import VideoBackground from '@/components/VideoBackground';
 import CursorStyle from '@/components/CursorStyle';
 import ColorCustomizer from '@/components/ColorCustomizer';
 import { SocialLinksManager } from '@/components/SocialLinksManager';
@@ -60,7 +60,7 @@ export default function Settings() {
   if (authLoading || profileLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background to-smoke-950 flex items-center justify-center">
-        <OptimizedVideoBackground />
+        <VideoBackground />
         <div className="relative z-10 text-smoke-300 animate-pulse text-sm font-light tracking-wider">
           loading...
         </div>
@@ -251,8 +251,7 @@ export default function Settings() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-smoke-950 flex">
-      <OptimizedVideoBackground 
-        key={`${profile?.background_video_url}-${Date.now()}`} 
+      <VideoBackground 
         profileUserId={user.id} 
       />
       <CursorStyle profileUserId={user.id} />

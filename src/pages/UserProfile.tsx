@@ -8,8 +8,8 @@ import { Button } from '@/components/ui/button';
 import EmbeddedView from '@/components/EmbeddedView';
 import ProfileSettings from '@/components/ProfileSettings';
 import ViewAnalytics from '@/components/ViewAnalytics';
-import OptimizedVideoBackground from '@/components/OptimizedVideoBackground';
-import AudioManager from '@/components/AudioManager';
+import VideoBackground from '@/components/VideoBackground';
+import BackgroundAudio from '@/components/BackgroundAudio';
 import { SocialLinksDisplay } from '@/components/SocialLinksDisplay';
 import { LogOut, ArrowLeft, Settings } from 'lucide-react';
 
@@ -102,7 +102,7 @@ const UserProfile = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background to-smoke-950 flex items-center justify-center">
-        <OptimizedVideoBackground />
+        <VideoBackground />
         <div className="relative z-10 text-smoke-300 animate-pulse text-sm font-light tracking-wider">
           loading...
         </div>
@@ -113,7 +113,7 @@ const UserProfile = () => {
   if (notFound) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background to-smoke-950 flex items-center justify-center p-6">
-        <OptimizedVideoBackground />
+        <VideoBackground />
         
         <div className="relative z-10 text-center space-y-6 max-w-md">
           <div className="space-y-4">
@@ -145,10 +145,10 @@ const UserProfile = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-smoke-950">
       {/* Video Background */}
-      <OptimizedVideoBackground profileUserId={profileData?.user_id} />
+      <VideoBackground profileUserId={profileData?.user_id} />
       
-      {/* Audio Manager */}
-      <AudioManager profileUserId={profileData?.user_id} />
+      {/* Background Audio */}
+      <BackgroundAudio profileUserId={profileData?.user_id} />
       
       <div className="relative z-10 container mx-auto px-6 py-16 sm:py-24">
         <div className="max-w-xl mx-auto space-y-12">
